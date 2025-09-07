@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# 检查提交信息中是否包含中文冒号
+grep -m 1 '：' "$1" >/dev/null && {
+  echo "❌ 提交信息中包含中文冒号，请使用英文冒号(:)代替中文冒号(：) ❌"
+  exit 1
+}
+
+# 使用 commitlint 进行标准验证
+# npx --no -- commitlint --edit "$1" || exit 1
+bunx commitlint --edit $1
+
+# 如果 commitlint 验证通过，输出成功信息
+echo "✅✅✅ 提交格式正确 ✅✅✅"
+exit 0
