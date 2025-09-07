@@ -19,6 +19,7 @@ export default antfu(
     rules: {
       'no-undef': 'off', // 关闭未定义变量检查，避免Vue模板变量报错
       'no-unused-vars': 'off', // 关闭原生未使用变量检查，由TS规则处理
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
       'padding-line-between-statements': [
         'error',
         { blankLine: 'never', prev: 'import', next: 'import' }, // 禁止多个 import 语句之间的空行
