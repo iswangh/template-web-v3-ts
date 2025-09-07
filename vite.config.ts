@@ -5,9 +5,11 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import compression from 'vite-plugin-compression'
+import inspect from 'vite-plugin-inspect'
 import progress from 'vite-plugin-progress'
 import { VitePWA } from 'vite-plugin-pwa'
 import vueDevTools from 'vite-plugin-vue-devtools'
+import Inspector from 'vite-plugin-vue-inspector'
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const isDev = mode === 'development'
@@ -16,7 +18,6 @@ export default defineConfig(({ mode }) => {
     plugins: [
       vue(),
       vueJsx(),
-      isDev && vueDevTools(),
       // 自动导入插件
       AutoImport({
       // 预设自动导入
@@ -40,6 +41,15 @@ export default defineConfig(({ mode }) => {
         resolvers: [
         // 示例：ElementPlusResolver()
         ],
+      }),
+      isDev && vueDevTools(),
+      // 开发调试神器 - 点击页面组件直接跳转到VSCode对应源码
+      isDev && Inspector({
+        toggleButtonVisibility: 'always', // 控制按钮可见性
+      }),
+      // 用于调试和分析 Vite 构建过程的工具插件
+      isDev && inspect({
+        build: true, // 构建时也启用
       }),
       // 生产环境资源压缩插件（gzip压缩）
       !isDev && compression({
