@@ -31,3 +31,8 @@ coverage
 
 test-results/
 playwright-report/
+
+# Auto import generated files
+.eslintrc-auto-import.json
+src/types/auto-imports.d.ts
+src/types/components.d.ts
