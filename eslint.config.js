@@ -1,5 +1,4 @@
 import antfu from '@antfu/eslint-config'
-import unusedImports from 'eslint-plugin-unused-imports'
 
 export default antfu(
   {
@@ -10,9 +9,7 @@ export default antfu(
   },
   {
     // 插件支持
-    plugins: [
-      unusedImports, // 移除未使用的导入
-    ],
+    plugins: [],
   },
   {
     // 规则覆盖与自定义
