@@ -36,3 +36,5 @@ playwright-report/
 .eslintrc-auto-import.json
 src/types/auto-imports.d.ts
 src/types/components.d.ts
+
+.vite-inspect/
