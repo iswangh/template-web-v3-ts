@@ -1,6 +1,29 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+echo "🔍 正在运行提交前检查..."
+echo "────────────────────────────────────────"
+
+# 检查是否有暂存文件
+if ! git diff --cached --quiet; then
+  echo "📁 待提交的文件:"
+  git diff --cached --name-only | sed 's/^/   /'
+  echo ""
+else
+  echo "⚠️ 没有文件被暂存"
+  exit 0
+fi
+
 # 使用 lint-staged 运行暂存文件的检查
 # npx --no -- lint-staged
-bunx  lint-staged
+echo "🛠️ 正在运行代码检查..."
+if bunx lint-staged; then
+  echo "✅ ESLint 检查通过"
+  echo "✅ 代码格式化检查通过"
+else
+  echo "❌ 代码检查失败!"
+  echo "💡 提示: 运行 'bun run lint:fix' 自动修复部分问题"
+  exit 1
+fi
+
+echo "🎉 所有检查已通过，可以提交代码!"
