@@ -9,7 +9,6 @@ import inspect from 'vite-plugin-inspect'
 import progress from 'vite-plugin-progress'
 import { VitePWA } from 'vite-plugin-pwa'
 import vueDevTools from 'vite-plugin-vue-devtools'
-import Inspector from 'vite-plugin-vue-inspector'
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
@@ -44,14 +43,8 @@ export default defineConfig(({ mode }) => {
         ],
       }),
       isDev && vueDevTools(),
-      // 开发调试神器 - 点击页面组件直接跳转到VSCode对应源码
-      isDev && Inspector({
-        toggleButtonVisibility: 'always', // 控制按钮可见性
-      }),
       // 用于调试和分析 Vite 构建过程的工具插件
-      isDev && inspect({
-        build: true, // 构建时也启用
-      }),
+      isDev && inspect(),
       // 生产环境资源压缩插件（gzip压缩）
       !isDev && compression({
         threshold: 10240, // 只压缩大于10KB的文件
