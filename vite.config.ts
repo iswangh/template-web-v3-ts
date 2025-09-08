@@ -10,6 +10,7 @@ import progress from 'vite-plugin-progress'
 import { VitePWA } from 'vite-plugin-pwa'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import Inspector from 'vite-plugin-vue-inspector'
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const isDev = mode === 'development'
