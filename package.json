@@ -47,6 +47,8 @@
     "jsdom": "^26.1.0",
     "lint-staged": "^16.1.6",
     "npm-run-all2": "^8.0.4",
+    "rollup-plugin-visualizer": "^6.0.3",
+    "sass": "^1.92.1",
     "typescript": "~5.8.0",
     "unplugin-auto-import": "^20.1.0",
     "unplugin-vue-components": "^29.0.0",

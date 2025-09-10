@@ -1,6 +1,7 @@
 import { fileURLToPath, URL } from 'node:url'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import visualizer from 'rollup-plugin-visualizer'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
@@ -63,10 +64,25 @@ export default defineConfig(({ mode }) => {
           start_url: '/', // 应用启动路径
         },
       }),
+      // 打包分析工具
+      !isDev && visualizer({
+        filename: 'dist/stats.html',
+        open: true, // 打包完成后自动在浏览器打开分析报告
+        gzipSize: true, // 显示各模块 gzip 压缩后的体积
+        brotliSize: true, // 显示各模块 brotli 压缩后的体积
+        template: 'treemap', // 可选：sunburst, treemap, network
+      }),
     ].filter(Boolean),
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
+      },
+    },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: '@use "@/assets/styles/variables.scss" as *;', // 全局变量混入（自动导入）
+        },
       },
     },
     server: {
