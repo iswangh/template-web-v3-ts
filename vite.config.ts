@@ -21,7 +21,7 @@ export default defineConfig(({ mode }) => {
       vueJsx(),
       // 自动导入插件
       AutoImport({
-      // 预设自动导入
+        // 预设自动导入
         imports: ['vue', 'vue-router', 'pinia'],
         // 自定义自动导入
         dirs: ['./src/apis', './src/composables', './src/stores', './src/utils'],
@@ -29,18 +29,18 @@ export default defineConfig(({ mode }) => {
         dts: './src/types/auto-imports.d.ts',
         // 解析器（如果使用 UI 组件库）
         resolvers: [
-        // 示例：ElementPlusResolver()
+          // 示例：ElementPlusResolver()
         ],
       }),
       // 自动注册组件
       Components({
-      // 指定组件位置
+        // 指定组件位置
         dirs: ['src/components'],
         // 生成对应的 .d.ts 文件
         dts: './src/types/components.d.ts',
         // 解析器（如果使用 UI 组件库）
         resolvers: [
-        // 示例：ElementPlusResolver()
+          // 示例：ElementPlusResolver()
         ],
       }),
       isDev && vueDevTools(),
@@ -81,7 +81,7 @@ export default defineConfig(({ mode }) => {
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: '@use "@/assets/styles/variables.scss" as *;', // 全局变量混入（自动导入）
+          additionalData: '@use "@/assets/styles/variables.scss" as *;', // 样式变量全局混入（自动导入）
         },
       },
     },
@@ -95,7 +95,7 @@ export default defineConfig(({ mode }) => {
       minify: isDev ? false : 'esbuild',
       rollupOptions: {
         output: {
-        // js 打包位置
+          // js 打包位置
           chunkFileNames: 'assets/js/[name]-[hash].js',
           entryFileNames: 'assets/js/[name]-[hash].js',
           // 其他资源保持原有目录结构
