@@ -3,6 +3,9 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { visualizer } from 'rollup-plugin-visualizer'
 import AutoImport from 'unplugin-auto-import/vite'
+import { FileSystemIconLoader } from 'unplugin-icons/loaders'
+import IconsResolver from 'unplugin-icons/resolver'
+import Icons from 'unplugin-icons/vite'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import compression from 'vite-plugin-compression'
@@ -40,8 +43,29 @@ export default defineConfig(({ mode }) => {
         dts: './src/types/components.d.ts',
         // 解析器（如果使用 UI 组件库）
         resolvers: [
-          // 示例：ElementPlusResolver()
+          IconsResolver({
+            prefix: 'Icon', // 图标组件前缀
+            customCollections: ['user', 'setting'], // 自定义图标集名称
+          }),
         ],
+      }),
+      /**
+       * unplugin-icons 插件配置
+       * @description 用于自动按需加载海量图标
+       * @see https://github.com/antfu/unplugin-icons 插件文档
+       * @see https://icones.js.org/ 查看所有可用图标
+       * @note 修改 customCollections 配置后，需要删除 src/types/components.d.ts 文件并重启开发服务器
+       */
+      Icons({
+        autoInstall: true,
+        compiler: 'vue3',
+        jsx: 'react',
+        customCollections: {
+          user: FileSystemIconLoader('src/assets/svgs/user', svg =>
+            svg.replace(/^<svg /, '<svg fill="currentColor" ')),
+          setting: FileSystemIconLoader('src/assets/svgs/setting', svg =>
+            svg.replace(/^<svg /, '<svg fill="currentColor" ')),
+        },
       }),
       isDev && vueDevTools(),
       // 用于调试和分析 Vite 构建过程的工具插件
