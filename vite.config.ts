@@ -10,6 +10,7 @@ import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import compression from 'vite-plugin-compression'
 import inspect from 'vite-plugin-inspect'
+import { viteMockServe } from 'vite-plugin-mock'
 import progress from 'vite-plugin-progress'
 import { VitePWA } from 'vite-plugin-pwa'
 import vueDevTools from 'vite-plugin-vue-devtools'
@@ -22,6 +23,12 @@ export default defineConfig(({ mode }) => {
     plugins: [
       vue(),
       vueJsx(),
+      viteMockServe({
+        mockPath: 'mock', // 指定mock文件夹路径
+        enable: isDev, // 仅在开发环境启用
+        logger: true, // 在控制台显示请求日志
+        watchFiles: true, // 监听mock文件更改
+      }),
       // 自动导入插件
       AutoImport({
         // 预设自动导入
