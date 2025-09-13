@@ -1,5 +1,5 @@
 {
-
+  // * 编辑器格式化设置
   "editor.formatOnSave": true,
   // * 编辑器核心设置
   "editor.codeActionsOnSave": {
@@ -8,13 +8,17 @@
   },
   // * 代码质量与格式化
   "eslint.useFlatConfig": true, // 使用扁平配置文件
-  "explorer.fileNesting.enabled": true,
+  // * 文件嵌套配置
+  "explorer.fileNesting.enabled": true, // 启用文件嵌套功能
+  "explorer.fileNesting.expand": false, // 不展开文件
   "explorer.fileNesting.patterns": {
     "eslint.config.*": ".editorconfig, lint-staged.config.js, commitlint.config.js",
     "tsconfig.json": "tsconfig.*.json, env.d.ts",
     "vite.config.*": "jsconfig*, vitest.config.*, cypress.config.*, playwright.config.*",
-    "package.json": "bun.lock,.gitattributes,.gitignore,.node-version"
+    "package.json": "bun.lock,.gitattributes,.gitignore,.node-version",
+    ".env": ".env.*"
   },
+  // * 拼写检查
   "cSpell.words": [
     "bunx",
     "commitlint",
@@ -22,6 +26,7 @@
     "persistedstate",
     "svgs",
     "treemap",
-    "unplugin"
+    "unplugin",
+    "VITE"
   ]
 }

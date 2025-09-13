@@ -16,8 +16,15 @@ import { VitePWA } from 'vite-plugin-pwa'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
-export default defineConfig(({ mode }) => {
-  const isDev = mode === 'development'
+export default defineConfig(({ command }) => {
+  const isServe = command === 'serve'
+  const isBuild = command === 'build'
+
+  // 处理环境变量
+  const dropConsole = import.meta.env.VITE_BUILD_DROP_CONSOLE === 'true'
+  const dropDebugger = import.meta.env.VITE_BUILD_DROP_DEBUGGER === 'true'
+  const sourcemap = import.meta.env.VITE_BUILD_SOURCEMAP === 'true'
+  const useMock = import.meta.env.VITE_USE_MOCK === 'true'
 
   return {
     plugins: [
@@ -25,7 +32,7 @@ export default defineConfig(({ mode }) => {
       vueJsx(),
       viteMockServe({
         mockPath: 'mock', // 指定mock文件夹路径
-        enable: isDev, // 仅在开发环境启用
+        enable: isServe && useMock,
         logger: true, // 在控制台显示请求日志
         watchFiles: true, // 监听mock文件更改
       }),
@@ -74,15 +81,15 @@ export default defineConfig(({ mode }) => {
             svg.replace(/^<svg /, '<svg fill="currentColor" ')),
         },
       }),
-      isDev && vueDevTools(),
+      isServe && vueDevTools(),
       // 用于调试和分析 Vite 构建过程的工具插件
-      isDev && inspect(),
+      isServe && inspect(),
       // 生产环境资源压缩插件（gzip压缩）
-      !isDev && compression({
+      isBuild && compression({
         threshold: 10240, // 只压缩大于10KB的文件
       }),
       // 生产环境构建进度条显示
-      !isDev && progress(),
+      isBuild && progress(),
       // 生产环境PWA支持（渐进式Web应用）
       VitePWA({
         registerType: 'autoUpdate', // 自动更新模式
@@ -96,7 +103,7 @@ export default defineConfig(({ mode }) => {
         },
       }),
       // 打包分析工具
-      !isDev && visualizer({
+      isBuild && visualizer({
         filename: 'dist/stats.html',
         open: true, // 打包完成后自动在浏览器打开分析报告
         gzipSize: true, // 显示各模块 gzip 压缩后的体积
@@ -120,10 +127,9 @@ export default defineConfig(({ mode }) => {
       open: true,
       port: 8080,
     },
-    esbuild: { drop: isDev ? [] : ['console', 'debugger'] },
     build: {
-      sourcemap: isDev,
-      minify: isDev ? false : 'esbuild',
+      sourcemap,
+      minify: isBuild ? 'esbuild' : false,
       rollupOptions: {
         output: {
           // js 打包位置
@@ -138,6 +144,14 @@ export default defineConfig(({ mode }) => {
           },
         },
       },
+    },
+    esbuild: {
+      drop: isBuild
+        ? [
+            ...(dropConsole ? ['console'] : []),
+            ...(dropDebugger ? ['debugger'] : []),
+          ] as ('console' | 'debugger')[]
+        : [],
     },
   }
 })

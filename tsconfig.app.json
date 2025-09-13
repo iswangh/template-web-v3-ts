@@ -7,6 +7,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/types/env.d.ts", "src/**/*", "src/**/*.vue"],
+  "include": ["src/**/*", "src/**/*.vue"],
   "exclude": ["src/**/__tests__/*"]
 }
