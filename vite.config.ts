@@ -20,11 +20,14 @@ export default defineConfig(({ command }) => {
   const isServe = command === 'serve'
   const isBuild = command === 'build'
 
+  // 安全地处理环境变量，提供默认值
+  const env = import.meta.env || {}
+
   // 处理环境变量
-  const dropConsole = import.meta.env.VITE_BUILD_DROP_CONSOLE === 'true'
-  const dropDebugger = import.meta.env.VITE_BUILD_DROP_DEBUGGER === 'true'
-  const sourcemap = import.meta.env.VITE_BUILD_SOURCEMAP === 'true'
-  const useMock = import.meta.env.VITE_USE_MOCK === 'true'
+  const dropConsole = env.VITE_BUILD_DROP_CONSOLE === 'true'
+  const dropDebugger = env.VITE_BUILD_DROP_DEBUGGER === 'true'
+  const sourcemap = env.VITE_BUILD_SOURCEMAP === 'true'
+  const useMock = env.VITE_USE_MOCK === 'true'
 
   return {
     plugins: [
@@ -147,10 +150,7 @@ export default defineConfig(({ command }) => {
     },
     esbuild: {
       drop: isBuild
-        ? [
-            ...(dropConsole ? ['console'] : []),
-            ...(dropDebugger ? ['debugger'] : []),
-          ] as ('console' | 'debugger')[]
+        ? [...(dropConsole ? ['console'] : []), ...(dropDebugger ? ['debugger'] : [])] as ('console' | 'debugger')[]
         : [],
     },
   }
