@@ -14,6 +14,9 @@ export default antfu(
   {
     // 规则覆盖与自定义
     rules: {
+      'antfu/top-level-function': 'off', // 允许使用箭头函数声明顶级函数
+      'antfu/if-newline': 'off', // 允许简写 if 语句不换行
+
       'no-undef': 'off', // 关闭未定义变量检查，避免Vue模板变量报错
       'no-unused-vars': 'off', // 关闭原生未使用变量检查，由TS规则处理
       'no-console': ['warn', { allow: ['warn', 'error'] }],
