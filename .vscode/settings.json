@@ -24,6 +24,7 @@
     "commitlint",
     "oneline",
     "persistedstate",
+    "styl",
     "svgs",
     "treemap",
     "unplugin",

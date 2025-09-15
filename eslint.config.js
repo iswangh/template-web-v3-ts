@@ -1,3 +1,11 @@
+/**
+ * @file ESLint 配置文件
+ * @description 基于 @antfu/eslint-config 的代码规范配置，集成了 Vue、TypeScript 和 JSX 支持，
+ *              统一项目代码风格，提高代码质量和可维护性
+ * @see https://eslint.org/
+ * @see https://github.com/antfu/eslint-config
+ */
+
 import antfu from '@antfu/eslint-config'
 
 export default antfu(
