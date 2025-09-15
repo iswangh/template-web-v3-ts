@@ -11,16 +11,57 @@ else
   exit 0
 fi
 
-# 使用 lint-staged 运行暂存文件的检查
-# npx --no -- lint-staged
-echo "🛠️ 正在运行代码检查..."
-if npx lint-staged; then
+# # 使用 lint-staged 运行暂存文件的检查
+# # npx --no -- lint-staged
+# echo "🛠️ 正在运行代码检查..."
+# if bunx lint-staged; then
+#   echo "✅ ESLint 检查通过"
+#   echo "✅ 代码格式化检查通过"
+# else
+#   echo "❌ 代码检查失败!"
+#   echo "💡 提示: 运行 'bun run lint:fix' 自动修复部分问题"
+#   exit 1
+# fi#
+# echo "🎉 所有检查已通过，可以提交代码!"
+
+
+# 以下版本是为了解决部分电脑或环境执行 bunx lint-staged 后 husky 会报错的问题（bun 与 lint-staged 兼容问题）
+
+# 初始化命令变量，用于存储最终要执行的代码检查命令（后续会根据环境赋值）
+LINT_CMD=""
+# 兼容 Windows 的临时文件路径（确保目录存在）
+ERROR_LOG="${TMPDIR:-/tmp}/husky-lint-error.log"
+# 确保临时目录存在
+mkdir -p "$(dirname "$ERROR_LOG")"
+
+# 解决部分环境 执行 bunx lint-staged husky报错问题。Bun 环境优先使用，但失败时需自动降级到 npx
+if command -v bun &>/dev/null; then
+  echo "ℹ️ 检测到 Bun 环境，尝试使用 bunx 执行..."
+  LINT_CMD="bunx --no-install lint-staged"
+
+  # 执行命令并捕获错误输出
+  if ! eval $LINT_CMD > "$ERROR_LOG" 2>&1; then
+    echo "⚠️ bunx 执行失败，尝试降级为 npx..."
+    cat "$ERROR_LOG"  # 输出 bunx 错误详情
+    LINT_CMD="npx --no lint-staged"
+  fi
+else
+  echo "ℹ️ 未检测到 Bun 环境，直接使用 npx 执行..."
+  LINT_CMD="npx --no lint-staged"
+fi
+
+# 执行最终确定的命令
+echo "🛠️ 正在运行代码检查: $LINT_CMD"
+if eval $LINT_CMD; then
   echo "✅ ESLint 检查通过"
   echo "✅ 代码格式化检查通过"
 else
   echo "❌ 代码检查失败!"
-  echo "💡 提示: 运行 'bun run lint:fix' 自动修复部分问题"
+  echo "💡 提示: 运行 'bun run lint:fix' 或 'npm run lint:fix' 自动修复部分问题"
   exit 1
 fi
+
+# 清理临时文件
+rm -f "$ERROR_LOG"
 
 echo "🎉 所有检查已通过，可以提交代码!"
