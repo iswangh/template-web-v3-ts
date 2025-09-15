@@ -1,6 +1,3 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 echo "🔍 正在运行提交前检查..."
 echo "────────────────────────────────────────"
 
@@ -17,7 +14,7 @@ fi
 # 使用 lint-staged 运行暂存文件的检查
 # npx --no -- lint-staged
 echo "🛠️ 正在运行代码检查..."
-if bunx lint-staged; then
+if npx lint-staged; then
   echo "✅ ESLint 检查通过"
   echo "✅ 代码格式化检查通过"
 else
