@@ -44,7 +44,7 @@ export default defineConfig(({ command }) => {
         // 预设自动导入
         imports: ['vue', 'vue-router', 'pinia'],
         // 自定义自动导入
-        dirs: ['./src/apis', './src/composables', './src/stores', './src/utils'],
+        dirs: ['./src/apis', './src/composables', './src/stores'],
         // 生成对应的 .d.ts 文件
         dts: './src/types/auto-imports.d.ts',
         // 解析器（如果使用 UI 组件库）
