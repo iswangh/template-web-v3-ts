@@ -28,6 +28,8 @@ export default defineConfig(({ command }) => {
   const dropDebugger = env.VITE_BUILD_DROP_DEBUGGER === 'true'
   const sourcemap = env.VITE_BUILD_SOURCEMAP === 'true'
   const useMock = env.VITE_USE_MOCK === 'true'
+  const serverOpen = env.VITE_SERVE_OPEN === 'true'
+  const serverPort = env.VITE_SERVE_PORT || 3000
 
   return {
     plugins: [
@@ -97,8 +99,8 @@ export default defineConfig(({ command }) => {
       VitePWA({
         registerType: 'autoUpdate', // 自动更新模式
         manifest: {
-          name: 'template-web-v3-ts', // 应用名称
-          short_name: 'template-web', // 应用简称
+          name: env.VITE_APP_TITLE, // 应用名称
+          short_name: env.VITE_APP_SHORT_TITLE, // 应用简称
           theme_color: '#ffffff', // 主题颜色
           background_color: '#ffffff', // 背景颜色
           display: 'standalone', // 显示模式（独立应用）
@@ -127,8 +129,8 @@ export default defineConfig(({ command }) => {
       },
     },
     server: {
-      open: true,
-      port: 8080,
+      open: serverOpen,
+      port: serverPort,
     },
     build: {
       sourcemap,

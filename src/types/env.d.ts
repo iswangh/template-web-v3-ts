@@ -14,6 +14,11 @@ interface ImportMetaEnv {
 
   // 功能开关
   readonly VITE_USE_MOCK: string
+  readonly VITE_SERVER_OPEN: string
+  readonly VITE_SERVER_PORT: string
+
+  readonly VITE_APP_TITLE: string
+  readonly VITE_APP_SHORT_TITLE: string
 }
 
 interface ImportMeta {
