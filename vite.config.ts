@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { fileURLToPath, URL } from 'node:url'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
@@ -7,7 +8,7 @@ import { FileSystemIconLoader } from 'unplugin-icons/loaders'
 import IconsResolver from 'unplugin-icons/resolver'
 import Icons from 'unplugin-icons/vite'
 import Components from 'unplugin-vue-components/vite'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import compression from 'vite-plugin-compression'
 import inspect from 'vite-plugin-inspect'
 import { viteMockServe } from 'vite-plugin-mock'
@@ -16,20 +17,22 @@ import { VitePWA } from 'vite-plugin-pwa'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
-export default defineConfig(({ command }) => {
+export default defineConfig(({ mode, command }) => {
   const isServe = command === 'serve'
   const isBuild = command === 'build'
 
-  // 安全地处理环境变量，提供默认值
-  const env = import.meta.env || {}
+  const env = loadEnv(mode, process.cwd(), '')
 
   // 处理环境变量
   const dropConsole = env.VITE_BUILD_DROP_CONSOLE === 'true'
   const dropDebugger = env.VITE_BUILD_DROP_DEBUGGER === 'true'
   const sourcemap = env.VITE_BUILD_SOURCEMAP === 'true'
   const useMock = env.VITE_USE_MOCK === 'true'
-  const serverOpen = env.VITE_SERVE_OPEN === 'true'
-  const serverPort = env.VITE_SERVE_PORT || 3000
+  const serverOpen = isServe && env.VITE_SERVER_OPEN === 'true'
+  const serverPort = (() => {
+    const port = Number.parseInt(env.VITE_SERVER_PORT, 10)
+    return Number.isNaN(port) || port < 1 || port > 65535 ? 3000 : port
+  })()
 
   return {
     plugins: [
