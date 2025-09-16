@@ -127,10 +127,12 @@ export const dateUtil = {
       return dayjs(null)
     }
     // 2. 已为 Dayjs 实例
-    if (dayjs.isDayjs(date)) return date
+    if (dayjs.isDayjs(date))
+      return date
     // 3. 格式错误
     const day = dayjs(date)
-    if (!day.isValid()) console.warn(`[dateUtil] 无效日期：格式错误（输入：${JSON.stringify(date)}，已处理为无效实例）`)
+    if (!day.isValid())
+      console.warn(`[dateUtil] 无效日期：格式错误（输入：${JSON.stringify(date)}，已处理为无效实例）`)
     return day
   },
 
@@ -595,7 +597,8 @@ export const dateUtil = {
   formatDuration: (duration: Duration | number, maxUnits: number = 2): string => {
     const dur = typeof duration === 'number' ? dayjs.duration(duration) : duration
 
-    if (dur.asMilliseconds() === 0 && typeof duration !== 'number') return '0分钟'
+    if (dur.asMilliseconds() === 0 && typeof duration !== 'number')
+      return '0分钟'
 
     // 定义单位优先级（从大到小）
     const units = [
@@ -682,11 +685,13 @@ export const dateUtil = {
    */
   age: (birthday: DateInput): number => {
     const birthdayDay = dateUtil._getValidDayjs(birthday)
-    if (!birthdayDay.isValid()) return 0
+    if (!birthdayDay.isValid())
+      return 0
 
     const current = dateUtil.now()
     let age = current.diff(birthdayDay, 'year')
-    if (current.isBefore(birthdayDay.add(age, 'year'))) age--
+    if (current.isBefore(birthdayDay.add(age, 'year')))
+      age--
     return age
   },
 
@@ -700,12 +705,14 @@ export const dateUtil = {
    */
   nextBirthday: (birthday: DateInput): NextBirthdayResult | null => {
     const birthdayDay = dateUtil._getValidDayjs(birthday)
-    if (!birthdayDay.isValid()) return null
+    if (!birthdayDay.isValid())
+      return null
 
     const current = dateUtil.now()
     const age = current.diff(birthdayDay, 'year')
     let next = birthdayDay.add(age + 1, 'year')
-    if (current.isAfter(next)) next = next.add(1, 'year')
+    if (current.isAfter(next))
+      next = next.add(1, 'year')
 
     return {
       date: next,
