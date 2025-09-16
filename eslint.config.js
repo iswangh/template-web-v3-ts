@@ -14,7 +14,9 @@ export default antfu(
     vue: true, // Vue 支持
     typescript: true, // TypeScript 支持
     jsx: true, // JSX 支持
-    formatters: true,
+    formatters: {
+      css: true,
+    },
     stylistic: {
       printWidth: 100, // 定义单行最大长度
     },
