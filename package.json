@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "dayjs": "^1.11.18",
+    "lodash-es": "^4.17.21",
     "pinia": "^3.0.3",
     "pinia-plugin-persistedstate": "^4.5.0",
     "unplugin-icons": "^22.3.0",

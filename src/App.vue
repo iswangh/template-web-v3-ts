@@ -2,6 +2,10 @@
 import { dateUtil } from './utils'
 
 const countStore = useCounterStore()
+
+const onClick = debounce(() => {
+  console.log('点击事件触发（1秒内只执行一次）')
+}, 1000)
 </script>
 
 <template>
@@ -31,6 +35,11 @@ const countStore = useCounterStore()
   <div>format(dayjs 原生方法)：{{ dateUtil.now().format() }}</div>
   <div>format(dateUtil 方法)：{{ dateUtil.format(dateUtil.now()) }}</div>
   <div>{{ dateUtil.raw()('2024').isLeapYear() }}</div>
+  <hr />
+
+  <strong>lodash 按需引入</strong>
+
+  <button @click="onClick">按钮</button>
   <hr />
 </template>
 

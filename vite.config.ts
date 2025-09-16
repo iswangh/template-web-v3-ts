@@ -47,7 +47,10 @@ export default defineConfig(({ mode, command }) => {
       // 自动导入插件
       AutoImport({
         // 预设自动导入
-        imports: ['vue', 'vue-router', 'pinia'],
+        imports: ['vue', 'vue-router', 'pinia', {
+          'lodash-es': ['get', 'set', 'cloneDeep', 'omit', 'pick', 'isEmpty', 'debounce', 'throttle', 'once', 'isString', 'isNumber', 'isArray', 'isObject', 'isFunction', ['map', 'lodashMap'], ['filter', 'lodashFilter'], ['find', 'lodashFind'], ['orderBy', 'lodashOrderBy'],
+          ],
+        }],
         // 自定义自动导入
         dirs: ['./src/apis', './src/composables', './src/stores'],
         // 生成对应的 .d.ts 文件
