@@ -1,4 +1,5 @@
 <script setup lang='ts'>
+import { useCounterStore } from './stores'
 import { dateUtil } from './utils'
 
 const countStore = useCounterStore()
@@ -9,7 +10,7 @@ const onClick = debounce(() => {
 </script>
 
 <template>
-  <div class="text"> 全局混入颜色变量 </div>
+  <div class="text">全局混入颜色变量</div>
   <hr />
 
   <div>
@@ -26,8 +27,12 @@ const onClick = debounce(() => {
 
   <strong>pinia 持久化</strong>
   <div>{{ countStore.count }}</div>
-  <button @click="countStore.count++">+</button>
-  <button @click="countStore.count--">-</button>
+  <button @click="countStore.count++">
+    +
+  </button>
+  <button @click="countStore.count--">
+    -
+  </button>
   <hr />
 
   <strong>dayjs 封装</strong>
@@ -50,7 +55,7 @@ svg {
   fill: currentColor;
 }
 
-.text{
+.text {
   color: $color-primary;
 }
 </style>
