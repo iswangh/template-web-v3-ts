@@ -3,6 +3,7 @@ import { fileURLToPath, URL } from 'node:url'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { visualizer } from 'rollup-plugin-visualizer'
+import UnoCSS from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import { FileSystemIconLoader } from 'unplugin-icons/loaders'
 import IconsResolver from 'unplugin-icons/resolver'
@@ -38,6 +39,7 @@ export default defineConfig(({ mode, command }) => {
     plugins: [
       vue(),
       vueJsx(),
+      UnoCSS(),
       viteMockServe({
         mockPath: 'mock', // 指定mock文件夹路径
         enable: isServe && useMock,

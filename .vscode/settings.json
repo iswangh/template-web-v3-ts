@@ -20,14 +20,17 @@
   },
   // * 拼写检查
   "cSpell.words": [
+    "Attributify",
     "bunx",
     "commitlint",
+    "iconify",
     "oneline",
     "persistedstate",
     "pinia",
     "styl",
     "svgs",
     "treemap",
+    "unocss",
     "unplugin",
     "VITE"
   ]

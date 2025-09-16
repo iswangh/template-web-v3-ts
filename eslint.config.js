@@ -7,6 +7,7 @@
  */
 
 import antfu from '@antfu/eslint-config'
+import unocss from '@unocss/eslint-plugin'
 
 export default antfu(
   {
@@ -22,8 +23,13 @@ export default antfu(
     },
   },
   {
-    // 插件支持
-    plugins: [],
+    plugins: { unocss },
+    rules: {
+      // 启用 UnoCSS 相关规则
+      'unocss/order': 'warn', // 类名排序
+      'unocss/order-attributify': 'warn', // 属性化模式排序
+      'unocss/blocklist': 'error', // 禁止使用的类名
+    },
   },
   {
     // 对 antfu 预设规则的覆盖
@@ -48,10 +54,7 @@ export default antfu(
       // TypeScript 特定规则
       '@typescript-eslint/no-explicit-any': 'warn', // 允许使用 any 但不推荐，会警告
       '@typescript-eslint/no-empty-interface': ['warn', { allowSingleExtends: true }], // 允许接口定义为空，但会警告，继承不会
-      // '@typescript-eslint/explicit-module-boundary-types': 'off', // 不强制要求函数返回类型
-      '@typescript-eslint/explicit-module-boundary-types': ['warn', {
-        allowArgumentsExplicitlyTypedAsAny: true, // 强制导出函数显式声明返回类型，允许参数为any
-      }],
+      '@typescript-eslint/explicit-module-boundary-types': 'off', // 不强制要求函数返回类型
       '@typescript-eslint/no-unused-expressions': [
         'error',
         { allowShortCircuit: true, allowTernary: true }, // 允许短路运算符和三元运算符
