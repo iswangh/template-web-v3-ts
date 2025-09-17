@@ -17,8 +17,8 @@ interface ImportMetaEnv {
   readonly VITE_SERVER_OPEN: string
   readonly VITE_SERVER_PORT: string
 
-  readonly VITE_APP_TITLE: string
-  readonly VITE_APP_SHORT_TITLE: string
+  readonly VITE_APP_NAME: string
+  readonly VITE_APP_SHORT_NAME: string
 }
 
 interface ImportMeta {

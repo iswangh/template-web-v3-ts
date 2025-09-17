@@ -107,8 +107,8 @@ export default defineConfig(({ mode, command }) => {
       VitePWA({
         registerType: 'autoUpdate', // 自动更新模式
         manifest: {
-          name: env.VITE_APP_TITLE, // 应用名称
-          short_name: env.VITE_APP_SHORT_TITLE, // 应用简称
+          name: env.VITE_APP_NAME, // 应用名称
+          short_name: env.VITE_APP_SHORT_NAME, // 应用简称
           theme_color: '#ffffff', // 主题颜色
           background_color: '#ffffff', // 背景颜色
           display: 'standalone', // 显示模式（独立应用）
