@@ -12,7 +12,7 @@
   "explorer.fileNesting.enabled": true, // 启用文件嵌套功能
   "explorer.fileNesting.expand": false, // 不展开文件
   "explorer.fileNesting.patterns": {
-    "eslint.config.*": ".editorconfig, lint-staged.config.js, commitlint.config.js",
+    "eslint.config.*": ".editorconfig, lint-staged.config.js, commitlint.config.js,.eslintrc-auto-import.json",
     "tsconfig.json": "tsconfig.*.json, env.d.ts",
     "vite.config.*": "jsconfig*, vitest.config.*, cypress.config.*, playwright.config.*",
     "package.json": "bun.lock,.gitattributes,.gitignore,.node-version",
