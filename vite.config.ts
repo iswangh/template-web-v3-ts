@@ -11,6 +11,7 @@ import Icons from 'unplugin-icons/vite'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig, loadEnv } from 'vite'
 import compression from 'vite-plugin-compression'
+import { createHtmlPlugin } from 'vite-plugin-html'
 import inspect from 'vite-plugin-inspect'
 import { viteMockServe } from 'vite-plugin-mock'
 import progress from 'vite-plugin-progress'
@@ -92,6 +93,14 @@ export default defineConfig(({ mode, command }) => {
             svg.replace(/^<svg /, '<svg fill="currentColor" ')),
           setting: FileSystemIconLoader('src/assets/svgs/setting', svg =>
             svg.replace(/^<svg /, '<svg fill="currentColor" ')),
+        },
+      }),
+      createHtmlPlugin({
+        minify: isBuild,
+        inject: {
+          data: {
+            title: env.VITE_APP_NAME || '',
+          },
         },
       }),
       isServe && vueDevTools(),
