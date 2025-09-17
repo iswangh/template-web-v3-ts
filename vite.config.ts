@@ -151,11 +151,10 @@ export default defineConfig(({ mode, command }) => {
           // 其他资源保持原有目录结构
           assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
           manualChunks: {
-            // vue 及周边库分组
             'vue-vendor': ['vue', 'vue-router', 'pinia'],
-            // 工具库分组
             'lib-vendor': ['lodash-es', 'dayjs'],
-            // 将 UI 库分组
+            'css-vendor': ['unocss'],
+            'icon-vendor': ['unplugin-icons'],
             // 'ui-vendor': [''],
           },
         },
