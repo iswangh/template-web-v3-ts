@@ -50,7 +50,7 @@ export default defineConfig(({ mode, command }) => {
       // 自动导入插件
       AutoImport({
         // 预设自动导入
-        imports: ['vue', 'vue-router', 'pinia', {
+        imports: ['vue', 'vue-router', 'pinia', '@vueuse/core', {
           'lodash-es': ['get', 'set', 'cloneDeep', 'omit', 'pick', 'isEmpty', 'debounce', 'throttle', 'once', 'isString', 'isNumber', 'isArray', 'isObject', 'isFunction', ['map', 'lodashMap'], ['filter', 'lodashFilter'], ['find', 'lodashFind'], ['orderBy', 'lodashOrderBy'],
           ],
         }],
@@ -161,7 +161,7 @@ export default defineConfig(({ mode, command }) => {
           assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
           manualChunks: {
             'vue-vendor': ['vue', 'vue-router', 'pinia'],
-            'lib-vendor': ['lodash-es', 'dayjs'],
+            'lib-vendor': ['lodash-es', 'dayjs', '@vueuse/core'],
             'css-vendor': ['unocss'],
             'icon-vendor': ['unplugin-icons'],
             // 'ui-vendor': [''],

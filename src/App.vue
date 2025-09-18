@@ -7,6 +7,8 @@ const countStore = useCounterStore()
 const onClick = debounce(() => {
   console.log('点击事件触发（1秒内只执行一次）')
 }, 1000)
+
+const windowSize = useWindowSize()
 </script>
 
 <template>
@@ -131,6 +133,12 @@ const onClick = debounce(() => {
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="demo-item">
+    <h4>vueuse 监听窗口尺寸</h4>
+    <p>宽度: {{ windowSize.width }}px</p>
+    <p>高度: {{ windowSize.height }}px</p>
   </div>
 </template>
 
