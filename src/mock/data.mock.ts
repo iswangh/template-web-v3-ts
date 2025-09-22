@@ -4,7 +4,7 @@ import Mock from 'mockjs'
 
 export default [
   {
-    url: '/api/mock-data',
+    url: '/api/test/base',
     method: 'get',
     response: () => {
       return {

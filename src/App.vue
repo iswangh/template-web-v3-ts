@@ -1,4 +1,5 @@
 <script setup lang='ts'>
+import { baseTestAPI } from './apis'
 import { useCounterStore } from './stores'
 import { dateUtil } from './utils'
 
@@ -9,9 +10,20 @@ const onClick = _debounce(() => {
 }, 1000)
 
 const windowSize = useWindowSize()
+
+const onTestAxiosBase = async () => {
+  const res = await baseTestAPI()
+  console.log('页面打印', res)
+}
 </script>
 
 <template>
+  <div>
+    请求测试
+    <div>
+      <button @click="onTestAxiosBase">axios - baseTestAPI</button>
+    </div>
+  </div>
   <div class="text">全局混入颜色变量</div>
   <hr />
 
