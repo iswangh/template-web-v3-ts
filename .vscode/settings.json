@@ -8,6 +8,8 @@
   },
   // * 代码质量与格式化
   "eslint.useFlatConfig": true, // 使用扁平配置文件
+  "prettier.enable": false,
+  "markdownlint": false,
   // * 文件嵌套配置
   "explorer.fileNesting.enabled": true, // 启用文件嵌套功能
   "explorer.fileNesting.expand": false, // 不展开文件
