@@ -4,7 +4,7 @@ import { dateUtil } from './utils'
 
 const countStore = useCounterStore()
 
-const onClick = debounce(() => {
+const onClick = _debounce(() => {
   console.log('点击事件触发（1秒内只执行一次）')
 }, 1000)
 
