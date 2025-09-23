@@ -1,7 +1,8 @@
 <script setup lang='ts'>
+import { useRequest } from 'alova/client'
 import { baseTestAPI } from './apis'
 import { useCounterStore } from './stores'
-import { axios, dateUtil } from './utils'
+import { alovaInstance, axios, dateUtil } from './utils'
 
 const countStore = useCounterStore()
 
@@ -13,12 +14,34 @@ const windowSize = useWindowSize()
 
 const onTestAxiosBase = async () => {
   const res = await baseTestAPI({ dictType: 'VSP_rule_type', arr: [1, 2, 3] })
-  console.log('页面打印', res)
+  console.log('页面打印 axios', res)
 }
 
 const onTestAxiosFormData = async () => {
   const formData = new FormData()
   await axios.post('/qi/key-word/import/123', formData)
+}
+
+const { loading, data, error, send } = useRequest(() => {
+  return alovaInstance.Get('/biz/dict/data/list', {
+    // cacheFor: 1000,
+    params: { dictType: 'VSP_rule_type', arr: [1, 2, 3] },
+  })
+}, {
+  immediate: false, // 是否立即发送请求，默认为 true
+  // initialData: [], // 初始数据
+  // manual: false, // 是否手动控制请求
+  // force: true, // 是否强制请求（忽略缓存）
+  // retry: 3, // 重试次数
+  // retryInterval: 1000, // 重试间隔（毫秒）
+
+})
+
+const onTestAlovaBase = async () => {
+  send()
+  console.log('调用了 send', import.meta.env)
+  // const res = await alovaInstance.Get('/biz/dict/data/list', { params: { dictType: 'VSP_rule_type', arr: [1, 2, 3] } })
+  // console.log('页面打印 alova', res)
 }
 </script>
 
@@ -28,6 +51,11 @@ const onTestAxiosFormData = async () => {
     <div>
       <button @click="onTestAxiosBase">axios - baseTestAPI</button>
       <button @click="onTestAxiosFormData">axios - FormData</button>
+      <div>useRequest:{{ loading }},{{ data }},{{ error }}</div>
+    </div>
+    <div>
+      <button @click="onTestAlovaBase">alova get</button>
+      <button>alova FormData</button>
     </div>
   </div>
   <div class="text">全局混入颜色变量</div>
