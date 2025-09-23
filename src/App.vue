@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import { baseTestAPI } from './apis'
 import { useCounterStore } from './stores'
-import { dateUtil } from './utils'
+import { axios, dateUtil } from './utils'
 
 const countStore = useCounterStore()
 
@@ -12,8 +12,13 @@ const onClick = _debounce(() => {
 const windowSize = useWindowSize()
 
 const onTestAxiosBase = async () => {
-  const res = await baseTestAPI()
+  const res = await baseTestAPI({ dictType: 'VSP_rule_type', arr: [1, 2, 3] })
   console.log('页面打印', res)
+}
+
+const onTestAxiosFormData = async () => {
+  const formData = new FormData()
+  await axios.post('/qi/key-word/import/123', formData)
 }
 </script>
 
@@ -22,6 +27,7 @@ const onTestAxiosBase = async () => {
     请求测试
     <div>
       <button @click="onTestAxiosBase">axios - baseTestAPI</button>
+      <button @click="onTestAxiosFormData">axios - FormData</button>
     </div>
   </div>
   <div class="text">全局混入颜色变量</div>

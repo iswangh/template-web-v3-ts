@@ -1,37 +1,39 @@
 import type { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import type { BaseResponse } from '../types'
-import { TOKEN } from '@/configs'
+import { SERIALIZE_OPTIONS, TOKEN } from '@/configs'
+import { serializeParams } from '../util'
 
 export const requestInterceptor = (config: InternalAxiosRequestConfig) => {
   // * token
-  config.headers.Authorization = `Bearer ${TOKEN}`
+  config.headers.Auth = `${TOKEN}`
 
-  // * get 请求处理数组参数
+  // * get 请求处理数组参数序列化
+  if (config.method?.toLowerCase() === 'get' && config.params) {
+    config.paramsSerializer = params => serializeParams(params, SERIALIZE_OPTIONS)
+  }
 
   // * FormData 参数处理 Content-Type
   if (config.data instanceof FormData) {
     config.headers['Content-Type'] = 'multipart/form-data'
   }
 
-  console.log('请求拦截:', config)
   return config
 }
 
 export const responseInterceptor = (response: AxiosResponse) => {
-  console.log('响应拦截:', response)
   const { data }: { data: BaseResponse } = response
-  const { code, msg } = data ?? {}
+  const { code, message } = data ?? {}
 
   if (code === 401) {
     // * 退出登录
   }
 
   if (code !== 200) {
-    console.error('请求失败：', msg)
-    return Promise.reject(msg)
+    console.error('请求失败：', message)
+    return Promise.reject(message)
   }
 
-  return response
+  return response.data
 }
 
 export const errorHandler = (error: AxiosError) => {

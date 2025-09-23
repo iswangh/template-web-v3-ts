@@ -10,3 +10,5 @@ axiosInstance.interceptors.request.use(requestInterceptor, errorHandler)
 
 // 响应拦截器
 axiosInstance.interceptors.response.use(responseInterceptor, errorHandler)
+
+export default axios

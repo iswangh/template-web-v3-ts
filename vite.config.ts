@@ -54,6 +54,7 @@ export default defineConfig(({ mode, command }) => {
           'lodash-es': [
             ['get', '_get'],
             ['set', '_set'],
+            ['has', '_has'],
             ['cloneDeep', '_cloneDeep'],
             ['omit', '_omit'],
             ['pick', '_pick'],
