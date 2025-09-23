@@ -1,4 +1,4 @@
-import type { SerializeOptions } from '@/utils'
+import type { ParamsSerializerOptions } from '@/utils'
 
 /** API 接口基础请求地址 */
 export const BASE_URL = import.meta.env.VITE_API_BASE_URL
@@ -6,8 +6,8 @@ export const BASE_URL = import.meta.env.VITE_API_BASE_URL
 /** API 请求超时时间 */
 export const TIMEOUT = 10000
 
-/** 请求参数序列化配置 */
-export const SERIALIZE_OPTIONS: SerializeOptions = {
+/** GET请求参数序列化配置 */
+export const PARAMS_SERIALIZE_OPTIONS: ParamsSerializerOptions = {
   format: 'repeat',
 }
 

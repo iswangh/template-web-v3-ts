@@ -1,7 +1,7 @@
 import type { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import type { BaseResponse } from '../types'
-import { SERIALIZE_OPTIONS, TOKEN } from '@/configs'
-import { serializeParams } from '../util'
+import { PARAMS_SERIALIZE_OPTIONS, TOKEN } from '@/configs'
+import { paramsSerializer } from '../util'
 
 export const requestInterceptor = (config: InternalAxiosRequestConfig) => {
   // * token
@@ -9,7 +9,7 @@ export const requestInterceptor = (config: InternalAxiosRequestConfig) => {
 
   // * get 请求处理数组参数序列化
   if (config.method?.toLowerCase() === 'get' && config.params) {
-    config.paramsSerializer = params => serializeParams(params, SERIALIZE_OPTIONS)
+    config.paramsSerializer = params => paramsSerializer(params, PARAMS_SERIALIZE_OPTIONS)
   }
 
   // * FormData 参数处理 Content-Type

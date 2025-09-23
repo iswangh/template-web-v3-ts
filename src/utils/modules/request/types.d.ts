@@ -2,6 +2,12 @@ import type { ExtendableObject } from '@/types'
 
 /**
  * 基础响应结构
+ * @interface BaseResponse
+ * @description 定义了API响应的基本结构，包含状态码、消息和数据
+ * @template T - 响应数据的类型，默认为 unknown
+ * @property {number} code - 响应状态码
+ * @property {string} message - 响应消息
+ * @property {T} data - 响应数据
  */
 export interface BaseResponse<T = unknown> extends ExtendableObject {
   code: number
@@ -11,6 +17,11 @@ export interface BaseResponse<T = unknown> extends ExtendableObject {
 
 /**
  * 分页数据格式
+ * @interface PaginatedData
+ * @description 分页数据格式，包含数据列表和数据总数
+ * @template T - 数据项的类型，默认为 unknown
+ * @property {T[]} rows - 数据列表
+ * @property {number} total - 数据总数
  */
 export interface PaginatedData<T = unknown> extends ExtendableObject {
   rows: T[]
@@ -19,28 +30,17 @@ export interface PaginatedData<T = unknown> extends ExtendableObject {
 
 /**
  * 分页响应结构
+ * @description 定义了分页响应的结构，是基础响应结构与分页数据结构的组合
+ * @template T - 数据项的类型，默认为 unknown
  */
 export type PaginatedResponse<T = unknown> = BaseResponse<PaginatedData<T>>
 
 /**
- * 请求配置选项
- * 用于 alova 请求方法的配置
- */
-export interface RequestOptions extends ExtendableObject {
-  /** 是否立即发起请求（useRequest 钩子使用） */
-  immediate?: boolean
-  /** 初始化数据（useRequest 钩子使用） */
-  initialData?: unknown
-  /** 请求超时时间（毫秒），优先级高于全局配置 */
-  timeout?: number
-  /** 自定义请求头 */
-  headers?: ExtendableObject<string>
-  /** 查询参数（GET 请求使用） */
-  params?: ExtendableObject
-}
-
-/**
  * 分页查询参数
+ * @interface PaginationParams
+ * @description 定义了分页查询参数的结构
+ * @property {number} [pageNo] - 页码，默认为 1
+ * @property {number} [pageSize] - 页大小，默认为 10
  */
 export interface PaginationParams extends ExtendableObject {
   pageNo?: number
@@ -58,7 +58,7 @@ export interface PaginationParams extends ExtendableObject {
  * @property {number} [startIndex] - 数组索引起始值，仅在 format 为 'index' 时生效，默认为 0
  * @property {string} [separator] - 数组元素分隔符，仅在 format 为 'join' 时生效，默认为 ','
  */
-export interface SerializeOptions {
+export interface ParamsSerializerOptions {
   format?: 'repeat' | 'index' | 'join'
   startIndex?: number
   separator?: string
