@@ -8,6 +8,7 @@
 
 import antfu from '@antfu/eslint-config'
 import unocss from '@unocss/eslint-plugin'
+import playwright from 'eslint-plugin-playwright'
 
 export default antfu(
   {
@@ -22,6 +23,7 @@ export default antfu(
       printWidth: 100, // 定义单行最大长度
     },
   },
+  { plugins: { playwright } },
   {
     plugins: { unocss },
     rules: {
