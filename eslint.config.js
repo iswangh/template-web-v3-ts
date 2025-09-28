@@ -11,6 +11,7 @@
 import antfu from '@antfu/eslint-config'
 import unocss from '@unocss/eslint-plugin'
 import playwright from 'eslint-plugin-playwright'
+import unusedImports from 'eslint-plugin-unused-imports'
 
 export default antfu(
   {
@@ -25,14 +26,18 @@ export default antfu(
       printWidth: 100, // 定义单行最大长度
     },
   },
-  { plugins: { playwright } },
+  { plugins: { playwright, unusedImports, unocss } },
   {
-    plugins: { unocss },
     rules: {
-      // 启用 UnoCSS 相关规则
+      // unusedImports
+      'unused-imports/no-unused-imports': 'error',
+      'unused-imports/no-unused-vars': ['error', { vars: 'all', varsIgnorePattern: '^_' }],
+
+      // unocss
       'unocss/order': 'warn', // 类名排序
       'unocss/order-attributify': 'warn', // 属性化模式排序
       'unocss/blocklist': 'error', // 禁止使用的类名
+
     },
   },
   {
@@ -91,5 +96,25 @@ export default antfu(
       'vue/block-order': ['error', { order: ['script', 'template', 'style'] }], // 强制 SFC 块顺序: script → template → style
       'vue/block-lang': ['error', { script: { lang: 'ts' } }], // 块语言限制
     },
+  },
+  {
+    // 忽略文件配置
+    ignores: [
+      'dist/',
+      'build/',
+      'output/',
+      '**/.output/',
+      '**/.nuxt/',
+      '**/.vite/',
+      'node_modules/',
+      '.bun/',
+      '.pnpm-debug.log',
+      'yarn-error.log',
+      'coverage/',
+      'temp/',
+      'tmp/',
+      'src/types/generated/',
+      '**/*.generated.d.ts',
+    ],
   },
 )
