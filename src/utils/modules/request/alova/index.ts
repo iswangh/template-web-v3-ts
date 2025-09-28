@@ -5,7 +5,13 @@ import vueHook from 'alova/vue'
 import { BASE_URL, PARAMS_SERIALIZE_OPTIONS, TIMEOUT, TOKEN } from '@/configs'
 import { paramsSerializer } from '@/utils/modules/request/util'
 
-/** Alova 实例 */
+/**
+ * Alova 实例
+ *
+ * 用于发送 HTTP 请求的 Alova 实例，已配置基础 URL、超时时间和请求适配器
+ *
+ * @see {@link https://alova.js.org/ Alova 官方文档}
+ */
 export const alovaClient = createAlova({
   id: 'main-alova-instance',
   baseURL: BASE_URL,

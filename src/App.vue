@@ -2,7 +2,7 @@
 import { useRequest } from 'alova/client'
 import { baseTestAPI } from './apis'
 import { useCounterStore } from './stores'
-import { alovaInstance, axios, dateUtil } from './utils'
+import { alovaClient, axiosClient, dateUtil } from './utils'
 
 const countStore = useCounterStore()
 
@@ -14,17 +14,17 @@ const windowSize = useWindowSize()
 
 const onTestAxiosBase = async () => {
   const res = await baseTestAPI({ dictType: 'VSP_rule_type', arr: [1, 2, 3] })
-  console.log('页面打印 axios', res)
+  console.log('页面打印 axiosClient', res)
 }
 
 const onTestAxiosFormData = async () => {
   const formData = new FormData()
-  await axios.post('/qi/key-word/import/123', formData)
+  await axiosClient.post('/qi/key-word/import/123', formData)
 }
 
 const { loading, data, error, send } = useRequest(
   () => {
-    return alovaInstance.Get('/biz/dict/data/list', {
+    return alovaClient.Get('/biz/dict/data/list', {
       // cacheFor: 1000,
       params: { dictType: 'VSP_rule_type', arr: [1, 2, 3] },
     })
@@ -42,7 +42,7 @@ const { loading, data, error, send } = useRequest(
 const onTestAlovaBase = async () => {
   await send()
   console.log('调用了 send', data.value)
-  // const res = await alovaInstance.Get('/biz/dict/data/list', { params: { dictType: 'VSP_rule_type', arr: [1, 2, 3] } })
+  // const res = await alovaClient.Get('/biz/dict/data/list', { params: { dictType: 'VSP_rule_type', arr: [1, 2, 3] } })
   // console.log('页面打印 alova', res)
 }
 </script>
@@ -52,13 +52,13 @@ const onTestAlovaBase = async () => {
     请求测试
     <div>
       <button @click="onTestAxiosBase">
-        axios - baseTestAPI
+        axiosClient - baseTestAPI
       </button>
       <button
         id="123" name="2123" @click="onTestAxiosFormData"
         @dblclick="onTestAxiosFormData"
       >
-        axios - FormData
+        axiosClient - FormData
       </button>
       <div>useRequest:{{ loading }},{{ data }},{{ error }}</div>
     </div>

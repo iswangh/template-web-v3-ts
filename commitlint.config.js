@@ -1,7 +1,10 @@
 /**
  * @file Commitlint 配置文件
- * @description 专为规范化 Git 提交信息设计，验证 Git 提交信息格式，确保团队提交信息规范统一
- * @see https://www.conventionalcommits.org/zh-hans/v1.0.0/
+ *
+ * 专为规范化 Git 提交信息设计，验证 Git 提交信息格式，确保团队提交信息规范统一
+ *
+ * @see {@link https://commitlint.js.org/ Commitlint 官方网站}
+ * @see {@link https://www.conventionalcommits.org/zh-hans/v1.0.0/ Conventional Commits 规范}
  */
 
 export default {

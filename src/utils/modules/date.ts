@@ -57,13 +57,11 @@ export type { Dayjs } from 'dayjs'
 
 /**
  * 日期输入支持的类型（覆盖常见日期传入场景）
- * @typedef {string | number | Date | Dayjs | null | undefined} DateInput
  */
 export type DateInput = string | number | Date | Dayjs | null | undefined
 
 /**
  * 时长拆分结果的类型定义（按天、时、分、秒、毫秒拆分）
- * @typedef {object} DurationSplitResult
  * @property {number} days - 天数（>=0）
  * @property {number} hours - 小时数（0-23）
  * @property {number} minutes - 分钟数（0-59）
