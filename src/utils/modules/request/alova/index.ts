@@ -1,9 +1,9 @@
-import type { BaseResponse } from '../types'
+import type { InternalAxiosRequestConfig } from 'axios'
 import { axiosRequestAdapter } from '@alova/adapter-axios'
 import { createAlova } from 'alova'
 import vueHook from 'alova/vue'
-import { BASE_URL, PARAMS_SERIALIZE_OPTIONS, TIMEOUT, TOKEN } from '@/configs'
-import { paramsSerializer } from '@/utils/modules/request/util'
+import { BASE_URL, TIMEOUT } from '@/configs'
+import { errorHandler, requestInterceptor, responseInterceptor } from '../interceptors'
 
 /**
  * Alova 实例
@@ -20,41 +20,18 @@ export const alovaClient = createAlova({
   requestAdapter: axiosRequestAdapter(),
 
   beforeRequest: (method) => {
-    // * token
-    method.config.headers = {
-      ...method.config.headers,
-      Auth: `${TOKEN}`,
-    }
+    const { headers, paramsSerializer } = requestInterceptor({
+      headers: method.config.headers || {},
+      method: method.type,
+      params: method.config.params,
+      data: method.data,
+    } as InternalAxiosRequestConfig)
 
-    // * GET 请求处理数组参数序列化
-    if (method.type.toLowerCase() === 'get' && method.config.params) {
-      method.config.paramsSerializer = params => paramsSerializer(params, PARAMS_SERIALIZE_OPTIONS)
-    }
-
-    // * FormData 参数处理 Content-Type
-    if (method.data instanceof FormData) {
-      method.config.headers['Content-Type'] = 'multipart/form-data'
-    }
+    method.config.headers = headers
+    method.config.paramsSerializer = paramsSerializer
   },
   responded: {
-    onSuccess: (response) => {
-      const { data }: { data: BaseResponse } = response
-      const { code, message } = data ?? {}
-
-      if (code === 401) {
-        // * 退出登录
-      }
-
-      if (code !== 200) {
-        console.error('请求失败：', message)
-        return Promise.reject(message)
-      }
-
-      return response.data
-    },
-    onError: (error) => {
-      console.error('错误拦截:', error.message)
-      return Promise.reject(error.message)
-    },
+    onSuccess: responseInterceptor,
+    onError: errorHandler,
   },
 })

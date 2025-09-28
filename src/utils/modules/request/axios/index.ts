@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { BASE_URL, TIMEOUT } from '@/configs'
-import { errorHandler, requestInterceptor, responseInterceptor } from './interceptors'
+import { errorHandler, requestInterceptor, responseInterceptor } from '../interceptors'
 
 /**
  * Axios 实例
