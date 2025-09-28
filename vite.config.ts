@@ -98,7 +98,9 @@ export default defineConfig(({ mode, command }) => {
       }),
       /**
        * unplugin-icons 插件配置
-       * @description 用于自动按需加载海量图标
+       *
+       * 用于自动按需加载海量图标
+       *
        * @see https://github.com/antfu/unplugin-icons 插件文档
        * @see https://icones.js.org/ 查看所有可用图标
        * @note 修改 customCollections 配置后，需要删除 src/types/components.d.ts 文件并重启开发服务器
