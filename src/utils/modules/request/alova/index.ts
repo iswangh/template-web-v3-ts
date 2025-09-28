@@ -6,7 +6,7 @@ import { BASE_URL, PARAMS_SERIALIZE_OPTIONS, TIMEOUT, TOKEN } from '@/configs'
 import { paramsSerializer } from '@/utils/modules/request/util'
 
 /** Alova 实例 */
-export const alovaInstance = createAlova({
+export const alovaClient = createAlova({
   id: 'main-alova-instance',
   baseURL: BASE_URL,
   timeout: TIMEOUT,
