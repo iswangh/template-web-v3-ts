@@ -1,4 +1,4 @@
-<script setup lang='ts'>
+<script setup lang="ts">
 import { useRequest } from 'alova/client'
 import { baseTestAPI } from './apis'
 import { useCounterStore } from './stores'
@@ -22,20 +22,22 @@ const onTestAxiosFormData = async () => {
   await axios.post('/qi/key-word/import/123', formData)
 }
 
-const { loading, data, error, send } = useRequest(() => {
-  return alovaInstance.Get('/biz/dict/data/list', {
-    // cacheFor: 1000,
-    params: { dictType: 'VSP_rule_type', arr: [1, 2, 3] },
-  })
-}, {
-  immediate: false, // 是否立即发送请求，默认为 true
-  // initialData: [], // 初始数据
-  // manual: false, // 是否手动控制请求
-  // force: true, // 是否强制请求（忽略缓存）
-  // retry: 3, // 重试次数
-  // retryInterval: 1000, // 重试间隔（毫秒）
-
-})
+const { loading, data, error, send } = useRequest(
+  () => {
+    return alovaInstance.Get('/biz/dict/data/list', {
+      // cacheFor: 1000,
+      params: { dictType: 'VSP_rule_type', arr: [1, 2, 3] },
+    })
+  },
+  {
+    immediate: false, // 是否立即发送请求，默认为 true
+    // initialData: [], // 初始数据
+    // manual: false, // 是否手动控制请求
+    // force: true, // 是否强制请求（忽略缓存）
+    // retry: 3, // 重试次数
+    // retryInterval: 1000, // 重试间隔（毫秒）
+  },
+)
 
 const onTestAlovaBase = async () => {
   send()
@@ -49,7 +51,7 @@ const onTestAlovaBase = async () => {
   <div>
     请求测试
     <div>
-      <button @click="onTestAxiosBase">axios - baseTestAPI</button>
+      <button @click="onTestAxiosBase">      axios - baseTestAPI</button>
       <button @click="onTestAxiosFormData">axios - FormData</button>
       <div>useRequest:{{ loading }},{{ data }},{{ error }}</div>
     </div>
@@ -84,7 +86,7 @@ const onTestAlovaBase = async () => {
   <div>{{ dateUtil.now() }}</div>
   <div>format(dayjs 原生方法)：{{ dateUtil.now().format() }}</div>
   <div>format(dateUtil 方法)：{{ dateUtil.format(dateUtil.now()) }}</div>
-  <div>{{ dateUtil.raw()('2024').isLeapYear() }}</div>
+  <div>{{ dateUtil.raw()("2024").isLeapYear() }}</div>
   <hr />
 
   <strong>lodash 按需引入</strong>
@@ -144,7 +146,9 @@ const onTestAlovaBase = async () => {
     </div>
 
     <!-- 动画示例 -->
-    <div class="h-12 flex animate-pulse items-center justify-center rounded from-cyan-500 to-blue-500 bg-gradient-to-r text-white font-bold">
+    <div
+      class="h-12 flex animate-pulse items-center justify-center rounded from-cyan-500 to-blue-500 bg-gradient-to-r text-white font-bold"
+    >
       脉冲动画效果
     </div>
 
@@ -188,7 +192,7 @@ const onTestAlovaBase = async () => {
   </div>
 </template>
 
-<style scoped lang='scss'>
+<style scoped lang="scss">
 svg {
   width: 1em;
   height: 1em;
