@@ -183,8 +183,8 @@ export default defineConfig(({ mode, command }) => {
           // 其他资源保持原有目录结构
           assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
           manualChunks: {
-            'vue-vendor': ['vue', 'vue-router', 'pinia'],
-            'request-vendor': ['axios', 'alova', '@tanstack/vue-query'],
+            'vue-vendor': ['vue', 'vue-router', 'pinia', 'pinia-plugin-persistedstate'],
+            'request-vendor': ['axios', 'alova', '@alova/adapter-axios', '@tanstack/vue-query'],
             'utils-vendor': ['lodash-es', 'dayjs', '@vueuse/core'],
             'ui-vendor': ['unplugin-icons', 'unocss'],
           },
