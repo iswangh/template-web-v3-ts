@@ -181,10 +181,9 @@ export default defineConfig(({ mode, command }) => {
           assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
           manualChunks: {
             'vue-vendor': ['vue', 'vue-router', 'pinia'],
-            'lib-vendor': ['lodash-es', 'dayjs', '@vueuse/core'],
-            'css-vendor': ['unocss'],
-            'icon-vendor': ['unplugin-icons'],
-            // 'ui-vendor': [''],
+            'request-vendor': ['axios', 'alova', '@tanstack/vue-query'],
+            'utils-vendor': ['lodash-es', 'dayjs', '@vueuse/core'],
+            'ui-vendor': ['unplugin-icons', 'unocss'],
           },
         },
       },
