@@ -1,7 +1,7 @@
 import type { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import type { BaseResponse } from './types'
 import { PARAMS_SERIALIZE_OPTIONS, TOKEN } from '@/configs'
-import { paramsSerializer } from './util'
+import { paramsSerializer } from './utils'
 
 export const requestInterceptor = (config: InternalAxiosRequestConfig) => {
   // * token
