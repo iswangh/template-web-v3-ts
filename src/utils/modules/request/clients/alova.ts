@@ -2,7 +2,7 @@ import type { InternalAxiosRequestConfig } from 'axios'
 import { axiosRequestAdapter } from '@alova/adapter-axios'
 import { createAlova } from 'alova'
 import vueHook from 'alova/vue'
-import { BASE_URL, TIMEOUT } from '@/configs'
+import { REQUEST_CONFIG } from '../config'
 import { errorHandler, requestInterceptor, responseInterceptor } from '../interceptors'
 
 /**
@@ -13,12 +13,10 @@ import { errorHandler, requestInterceptor, responseInterceptor } from '../interc
  * @see {@link https://alova.js.org/ Alova 官方文档}
  */
 export const alovaClient = createAlova({
+  ...REQUEST_CONFIG,
   id: 'main-alova-instance',
-  baseURL: BASE_URL,
-  timeout: TIMEOUT,
   statesHook: vueHook,
   requestAdapter: axiosRequestAdapter(),
-
   beforeRequest: (method) => {
     const { headers, paramsSerializer } = requestInterceptor({
       headers: method.config.headers || {},
@@ -30,8 +28,5 @@ export const alovaClient = createAlova({
     method.config.headers = headers
     method.config.paramsSerializer = paramsSerializer
   },
-  responded: {
-    onSuccess: responseInterceptor,
-    onError: errorHandler,
-  },
+  responded: { onSuccess: responseInterceptor, onError: errorHandler },
 })

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { BASE_URL, TIMEOUT } from '@/configs'
+import { REQUEST_CONFIG } from '../config'
 import { errorHandler, requestInterceptor, responseInterceptor } from '../interceptors'
 
 /**
@@ -10,7 +10,7 @@ import { errorHandler, requestInterceptor, responseInterceptor } from '../interc
  * @see {@link https://axios-http.com/docs/intro Axios 官方文档}
  * @see {@link https://www.axios-http.cn/ Axios 中文文档}
  */
-export const axiosClient = axios.create({ baseURL: BASE_URL, timeout: TIMEOUT, headers: { 'Content-Type': 'application/json' } })
+export const axiosClient = axios.create(REQUEST_CONFIG)
 
 // 请求拦截器
 axiosClient.interceptors.request.use(requestInterceptor, errorHandler)

@@ -45,6 +45,11 @@ const onTestAlovaBase = async () => {
   // const res = await alovaClient.Get('/biz/dict/data/list', { params: { dictType: 'VSP_rule_type', arr: [1, 2, 3] } })
   // console.log('页面打印 alova', res)
 }
+
+const onTestAlovaFormData = async () => {
+  const formData = new FormData()
+  await alovaClient.Post('/qi/key-word/import/123', formData)
+}
 </script>
 
 <template>
@@ -66,7 +71,9 @@ const onTestAlovaBase = async () => {
       <button @click="onTestAlovaBase">
         alova get
       </button>
-      <button>alova FormData</button>
+      <button @click="onTestAlovaFormData">
+        alova FormData
+      </button>
     </div>
   </div>
   <div class="text">
