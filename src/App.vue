@@ -40,8 +40,8 @@ const { loading, data, error, send } = useRequest(
 )
 
 const onTestAlovaBase = async () => {
-  send()
-  console.log('调用了 send', import.meta.env)
+  await send()
+  console.log('调用了 send', data.value)
   // const res = await alovaInstance.Get('/biz/dict/data/list', { params: { dictType: 'VSP_rule_type', arr: [1, 2, 3] } })
   // console.log('页面打印 alova', res)
 }
@@ -51,16 +51,27 @@ const onTestAlovaBase = async () => {
   <div>
     请求测试
     <div>
-      <button @click="onTestAxiosBase">      axios - baseTestAPI</button>
-      <button @click="onTestAxiosFormData">axios - FormData</button>
+      <button @click="onTestAxiosBase">
+        axios - baseTestAPI
+      </button>
+      <button
+        id="123" name="2123" @click="onTestAxiosFormData"
+        @dblclick="onTestAxiosFormData"
+      >
+        axios - FormData
+      </button>
       <div>useRequest:{{ loading }},{{ data }},{{ error }}</div>
     </div>
     <div>
-      <button @click="onTestAlovaBase">alova get</button>
+      <button @click="onTestAlovaBase">
+        alova get
+      </button>
       <button>alova FormData</button>
     </div>
   </div>
-  <div class="text">全局混入颜色变量</div>
+  <div class="text">
+    全局混入颜色变量
+  </div>
   <hr />
 
   <div>
@@ -78,8 +89,12 @@ const onTestAlovaBase = async () => {
 
   <strong>pinia 持久化</strong>
   <div>{{ countStore.count }}</div>
-  <button @click="countStore.count++">+</button>
-  <button @click="countStore.count--">-</button>
+  <button @click="countStore.count++">
+    +
+  </button>
+  <button @click="countStore.count--">
+    -
+  </button>
   <hr />
 
   <strong>dayjs 封装</strong>
@@ -90,16 +105,22 @@ const onTestAlovaBase = async () => {
   <hr />
 
   <strong>lodash 按需引入</strong>
-  <button @click="onClick">按钮</button>
+  <button @click="onClick">
+    按钮
+  </button>
   <hr />
 
   <strong>unocss</strong>
   <!-- 基础样式示例 -->
   <div class="rounded-lg bg-blue-100 m-4 p-4">
-    <h2 class="text-2xl text-blue-800 font-bold mb-2">UnoCSS 示例</h2>
+    <h2 class="text-2xl text-blue-800 font-bold mb-2">
+      UnoCSS 示例
+    </h2>
 
     <!-- 文字样式 -->
-    <p class="text-green-600 font-medium mb-4">这是使用 UnoCSS 样式的文本</p>
+    <p class="text-green-600 font-medium mb-4">
+      这是使用 UnoCSS 样式的文本
+    </p>
 
     <!-- 按钮样式 -->
     <div class="flex flex-wrap gap-2 mb-4">
@@ -117,16 +138,28 @@ const onTestAlovaBase = async () => {
     <!-- 布局示例 -->
     <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-3">
       <div class="rounded bg-white shadow p-4">
-        <h3 class="text-lg font-bold mb-2">列 1</h3>
-        <p class="text-gray-600">这是第一列的内容</p>
+        <h3 class="text-lg font-bold mb-2">
+          列 1
+        </h3>
+        <p class="text-gray-600">
+          这是第一列的内容
+        </p>
       </div>
       <div class="rounded bg-white shadow p-4">
-        <h3 class="text-lg font-bold mb-2">列 2</h3>
-        <p class="text-gray-600">这是第二列的内容</p>
+        <h3 class="text-lg font-bold mb-2">
+          列 2
+        </h3>
+        <p class="text-gray-600">
+          这是第二列的内容
+        </p>
       </div>
       <div class="rounded bg-white shadow p-4">
-        <h3 class="text-lg font-bold mb-2">列 3</h3>
-        <p class="text-gray-600">这是第三列的内容</p>
+        <h3 class="text-lg font-bold mb-2">
+          列 3
+        </h3>
+        <p class="text-gray-600">
+          这是第三列的内容
+        </p>
       </div>
     </div>
 
@@ -156,25 +189,47 @@ const onTestAlovaBase = async () => {
     <div class="flex flex-col gap-4 p-4">
       <!-- 测试 margin 规则 -->
       <div>
-        <h3 class="font-bold mb-2">Margin 规则测试:</h3>
-        <div class="bg-blue-100 m-4 p-2">m-4 (margin: 1rem)</div>
-        <div class="bg-green-100 mt-6 p-2">mt-6 (margin-top: 1.5rem)</div>
-        <div class="bg-yellow-100 mx-8 p-2">mx-8 (margin-left & right: 2rem)</div>
-        <div class="bg-red-100 m-2-4 p-2">m-2-4 (margin: 0.5rem 1rem)</div>
+        <h3 class="font-bold mb-2">
+          Margin 规则测试:
+        </h3>
+        <div class="bg-blue-100 m-4 p-2">
+          m-4 (margin: 1rem)
+        </div>
+        <div class="bg-green-100 mt-6 p-2">
+          mt-6 (margin-top: 1.5rem)
+        </div>
+        <div class="bg-yellow-100 mx-8 p-2">
+          mx-8 (margin-left & right: 2rem)
+        </div>
+        <div class="bg-red-100 m-2-4 p-2">
+          m-2-4 (margin: 0.5rem 1rem)
+        </div>
       </div>
 
       <!-- 测试 padding 规则 -->
       <div>
-        <h3 class="font-bold mb-2">Padding 规则测试:</h3>
-        <div class="bg-blue-100 p-4">p-4 (padding: 1rem)</div>
-        <div class="bg-green-100 mt-2 pt-6">pt-6 (padding-top: 1.5rem)</div>
-        <div class="bg-yellow-100 mt-2 px-8">px-8 (padding-left & right: 2rem)</div>
-        <div class="bg-red-100 mt-2 p-2-4">p-2-4 (padding: 0.5rem 1rem)</div>
+        <h3 class="font-bold mb-2">
+          Padding 规则测试:
+        </h3>
+        <div class="bg-blue-100 p-4">
+          p-4 (padding: 1rem)
+        </div>
+        <div class="bg-green-100 mt-2 pt-6">
+          pt-6 (padding-top: 1.5rem)
+        </div>
+        <div class="bg-yellow-100 mt-2 px-8">
+          px-8 (padding-left & right: 2rem)
+        </div>
+        <div class="bg-red-100 mt-2 p-2-4">
+          p-2-4 (padding: 0.5rem 1rem)
+        </div>
       </div>
 
       <!-- 测试多行截断规则 -->
       <div>
-        <h3 class="font-bold mb-2">文本截断规则测试:</h3>
+        <h3 class="font-bold mb-2">
+          文本截断规则测试:
+        </h3>
         <div class="w-64 bg-gray-100 p-2">
           <!-- unocss 属性化语法 -->
           <div truncate-2>

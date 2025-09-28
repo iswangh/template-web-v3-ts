@@ -68,9 +68,14 @@ export default antfu(
     // 文件类型特定配置
     files: ['**/*.vue'],
     rules: {
-      'vue/no-v-html': 'off', // 允许使用 v-html,需要注意 XSS 安全
-      'vue/multi-word-component-names': 'off', // 允许使用单个单词的组件名称
-      'vue/singleline-html-element-content-newline': 'off', // 单行元素不换行
+    // 启用单行元素内容换行规则
+      'vue/singleline-html-element-content-newline': 'error',
+      // 启用多行元素内容换行规则
+      'vue/multiline-html-element-content-newline': ['error', {
+        ignoreWhenEmpty: true,
+        ignores: ['pre', 'textarea'],
+        allowEmptyLines: false,
+      }],
 
       'vue/html-self-closing': ['error', {
         html: {
@@ -79,29 +84,10 @@ export default antfu(
           component: 'always', // 组件使用自闭合 (<my-component/>)
         },
       }],
-
+      'vue/no-v-html': 'off', // 允许使用 v-html,需要注意 XSS 安全
+      'vue/multi-word-component-names': 'off', // 允许使用单个单词的组件名称
       'vue/block-order': ['error', { order: ['script', 'template', 'style'] }], // 强制 SFC 块顺序: script → template → style
       'vue/block-lang': ['error', { script: { lang: 'ts' } }], // 块语言限制
     },
-  },
-  {
-    // 忽略文件配置
-    ignores: [
-      'dist/',
-      'build/',
-      'output/',
-      '**/.output/',
-      '**/.nuxt/',
-      '**/.vite/',
-      'node_modules/',
-      '.bun/',
-      '.pnpm-debug.log',
-      'yarn-error.log',
-      'coverage/',
-      'temp/',
-      'tmp/',
-      'src/types/generated/',
-      '**/*.generated.d.ts',
-    ],
   },
 )
