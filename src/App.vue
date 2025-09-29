@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useQuery } from '@tanstack/vue-query'
 import { useRequest } from 'alova/client'
 import { baseTestAPI } from './apis'
 import { useCounterStore } from './stores'
@@ -15,6 +16,7 @@ const windowSize = useWindowSize()
 const onTestAxiosBase = async () => {
   const res = await baseTestAPI({ dictType: 'VSP_rule_type', arr: [1, 2, 3] })
   console.log('页面打印 axiosClient', res)
+  return res
 }
 
 const onTestAxiosFormData = async () => {
@@ -50,11 +52,25 @@ const onTestAlovaFormData = async () => {
   const formData = new FormData()
   await alovaClient.Post('/qi/key-word/import/123', formData)
 }
+
+const { data: tData, isLoading, isError } = useQuery({
+  queryKey: ['test'],
+  queryFn: () => onTestAxiosBase(),
+})
+
+const onTestTanstackQuery = async () => {
+  console.log('页面打印 tanstackQuery', tData.value, tData.value?.data, isLoading.value, isError.value)
+}
 </script>
 
 <template>
   <div>
     请求测试
+    <div>
+      <button @click="onTestTanstackQuery">
+        tanstack-query
+      </button>
+    </div>
     <div>
       <button @click="onTestAxiosBase">
         axiosClient - baseTestAPI
