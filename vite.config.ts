@@ -37,7 +37,7 @@ export default defineConfig(({ mode, command }) => {
   })()
 
   return {
-    base: import.meta.env.VITE_APP_BASE_PUBLIC_PATH ?? '/',
+    base: env.VITE_APP_BASE_PUBLIC_PATH ?? '/',
     plugins: [
       vue(),
       vueJsx(),
