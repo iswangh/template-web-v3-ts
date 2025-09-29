@@ -71,3 +71,66 @@ export function paramsSerializer(
     )
     .join('&')
 }
+
+/**
+ * 递归过滤值为 undefined 的属性/元素（仅处理 undefined，保留 null、空字符串、0 等其他值）
+ *
+ * @template {unknown} T - 输入值的类型，支持任意类型（自动推断或显式指定）
+ * @param {T} value - 待过滤的值
+ *   - 支持类型：纯对象（`{ key: any }`）、数组（`any[]`）、基础类型（`string`/`number` 等）、`FormData` 实例
+ *   - 特别说明：`null` 会被保留（不属于 `undefined` 处理范围）
+ * @returns {T} 过滤后的值，类型与输入一致，但移除了所有 `undefined` 相关内容：
+ *   - 数组：移除 `undefined` 元素，子元素递归过滤
+ *   - 对象：移除值为 `undefined` 的属性，子属性递归过滤
+ *   - 其他类型：原样返回（`FormData` 实例、基础类型等）
+ *
+ * @example
+ * // 示例1：过滤对象中的 undefined
+ * const obj = { a: 1, b: undefined, c: { d: undefined, e: null } };
+ * cleanUndefined(obj); // 返回 { a: 1, c: { e: null } }
+ *
+ * @example
+ * // 示例2：过滤数组中的 undefined
+ * const arr = [1, undefined, [2, undefined], null];
+ * cleanUndefined(arr); // 返回 [1, [2], null]
+ *
+ * @example
+ * // 示例3：保留 FormData
+ * const formData = new FormData();
+ * formData.append('file', new Blob());
+ * cleanUndefined(formData); // 返回原 FormData 实例（无修改）
+ *
+ * @note 依赖 lodash-es 的工具函数：
+ * - _isUndefined：判断值是否为 undefined（类型守卫，确保运行时类型准确）
+ * - _isArray：判断值是否为数组（类型守卫，用于分支类型收窄）
+ * - _omitBy：遍历对象并移除符合条件的属性（此处用于移除值为 undefined 的属性）
+ */
+export function cleanUndefined<T = unknown>(value: T): T {
+  if (_isUndefined(value))
+    return value
+
+  // 保留 FormData（避免破坏文件上传等二进制数据）
+  if (value instanceof FormData)
+    return value
+
+  // 递归处理数组
+  if (_isArray(value)) {
+    // 数组元素类型设为 unknown，避免 any
+    return (value as unknown[])
+      .map(item => cleanUndefined(item))
+      .filter(item => !_isUndefined(item)) as unknown as T
+  }
+
+  // 递归处理纯对象：移除值为 undefined 的属性
+  if (value !== null && typeof value === 'object') {
+    return _omitBy(
+      Object.fromEntries(
+        Object.entries(value).map(([key, val]) => [key, cleanUndefined(val)]),
+      ),
+      _isUndefined,
+    )
+  }
+
+  // 保留其他所有类型（null、字符串、数字、布尔等）
+  return value
+}

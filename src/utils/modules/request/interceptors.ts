@@ -1,16 +1,15 @@
 import type { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import type { BaseResponse } from './types'
 import { PARAMS_SERIALIZE_OPTIONS, TOKEN } from '@/configs'
-import { paramsSerializer } from './utils'
+import { cleanUndefined, paramsSerializer } from './utils'
 
 export const requestInterceptor = (config: InternalAxiosRequestConfig) => {
   // * token
   config.headers.Auth = `${TOKEN}`
 
-  // * FormData 参数处理 Content-Type
-  if (config.data instanceof FormData) {
-    config.headers['Content-Type'] = 'multipart/form-data'
-  }
+  // * 过滤 undefined
+  config.params = cleanUndefined(config.params)
+  config.data = cleanUndefined(config.data)
 
   // * get 请求处理数组参数序列化
   if (config.method?.toLowerCase() === 'get' && config.params) {
