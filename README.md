@@ -117,24 +117,29 @@ nr test:e2e
 
 Material Design Icons (mdi)：
 
-``vue
+```vue
 <IconMdiHome />    <!-- 主页 -->
+
 <IconMdiUser />    <!-- 用户 -->
+
 <IconMdiSettings /> <!-- 设置 -->
 ```
 
 Element Plus Icons (ep)：
 
-``vue
+```vue
 <IconEpSearch />   <!-- 搜索 -->
+
 <IconEpEdit />     <!-- 编辑 -->
+
 <IconEpDelete />   <!-- 删除 -->
 ```
 
 Font Awesome (fa)：
 
-``vue
+```vue
 <IconFaHeart />      <!-- 爱心 -->
+
 <IconFaShareNodes /> <!-- 分享 -->
 ```
 
@@ -148,6 +153,7 @@ Font Awesome (fa)：
 ## 📁 项目结构
 
 ```
+
 src/
 ├── apis/           # API接口调用
 ├── assets/         # 静态资源
@@ -190,9 +196,3 @@ src/
 - 样式引擎：`uno.config.ts`
 - 代码规范：`eslint.config.js`
 - Git Hooks：`.husky/`
-
-## 📄 许可证
-
-Apache License Version 2.0
-
-详见 [LICENSE](./LICENSE) 文件
