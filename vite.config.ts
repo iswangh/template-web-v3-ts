@@ -18,26 +18,50 @@ import progress from 'vite-plugin-progress'
 import { VitePWA } from 'vite-plugin-pwa'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
-const lodashImports: [string, string][] = [
-  ['get', '_get'],
-  ['set', '_set'],
-  ['has', '_has'],
-  ['cloneDeep', '_cloneDeep'],
-  ['omit', '_omit'],
-  ['pick', '_pick'],
-  ['isEmpty', '_isEmpty'],
-  ['debounce', '_debounce'],
-  ['throttle', '_throttle'],
-  ['once', '_once'],
-  ['isString', '_isString'],
-  ['isNumber', '_isNumber'],
-  ['isArray', '_isArray'],
-  ['isObject', '_isObject'],
-  ['isFunction', '_isFunction'],
-  ['map', '_map'],
-  ['filter', '_filter'],
-  ['find', '_find'],
-  ['orderBy', '_orderBy'],
+/**
+ * 生成lodash方法与别名的映射数组
+ * @param methods - 需要导入的lodash方法名数组
+ * @param aliasPrefix - 别名前缀（默认：'_'）
+ * @returns 格式为 [[方法名, 别名], ...] 的二维数组
+ *
+ * @example
+ * // 基础用法（默认前缀 '_'）
+ * createLodashImports(['get', 'set']);
+ * // 返回 [['get', '_get'], ['set', '_set']]
+ *
+ * @example
+ * // 自定义前缀
+ * createLodashImports(['debounce', 'throttle'], 'lodash_');
+ * // 返回 [['debounce', 'lodash_debounce'], ['throttle', 'lodash_throttle']]
+ */
+function createLodashImports(
+  methods: string[],
+  aliasPrefix = '_',
+): [string, string][] {
+  return methods.map(method => [method, `${aliasPrefix}${method}`])
+}
+
+// 需要导入的lodash方法列表
+const lodashMethods = [
+  'get',
+  'set',
+  'has',
+  'cloneDeep',
+  'omit',
+  'pick',
+  'isEmpty',
+  'debounce',
+  'throttle',
+  'once',
+  'isString',
+  'isNumber',
+  'isArray',
+  'isObject',
+  'isFunction',
+  'map',
+  'filter',
+  'find',
+  'orderBy',
 ]
 
 // https://vite.dev/config/
@@ -73,7 +97,7 @@ export default defineConfig(({ mode, command }) => {
       // 自动导入插件
       AutoImport({
         // 预设自动导入
-        imports: ['vue', 'vue-router', 'pinia', '@vueuse/core', { 'lodash-es': lodashImports }],
+        imports: ['vue', 'vue-router', 'pinia', '@vueuse/core', { 'lodash-es': createLodashImports(lodashMethods) }],
         // 自定义自动导入
         dirs: ['./src/apis', './src/composables', './src/stores'],
         // 生成对应的 .d.ts 文件
