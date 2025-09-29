@@ -18,6 +18,28 @@ import progress from 'vite-plugin-progress'
 import { VitePWA } from 'vite-plugin-pwa'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
+const lodashImports: [string, string][] = [
+  ['get', '_get'],
+  ['set', '_set'],
+  ['has', '_has'],
+  ['cloneDeep', '_cloneDeep'],
+  ['omit', '_omit'],
+  ['pick', '_pick'],
+  ['isEmpty', '_isEmpty'],
+  ['debounce', '_debounce'],
+  ['throttle', '_throttle'],
+  ['once', '_once'],
+  ['isString', '_isString'],
+  ['isNumber', '_isNumber'],
+  ['isArray', '_isArray'],
+  ['isObject', '_isObject'],
+  ['isFunction', '_isFunction'],
+  ['map', '_map'],
+  ['filter', '_filter'],
+  ['find', '_find'],
+  ['orderBy', '_orderBy'],
+]
+
 // https://vite.dev/config/
 export default defineConfig(({ mode, command }) => {
   const isServe = command === 'serve'
@@ -51,29 +73,7 @@ export default defineConfig(({ mode, command }) => {
       // 自动导入插件
       AutoImport({
         // 预设自动导入
-        imports: ['vue', 'vue-router', 'pinia', '@vueuse/core', {
-          'lodash-es': [
-            ['get', '_get'],
-            ['set', '_set'],
-            ['has', '_has'],
-            ['cloneDeep', '_cloneDeep'],
-            ['omit', '_omit'],
-            ['pick', '_pick'],
-            ['isEmpty', '_isEmpty'],
-            ['debounce', '_debounce'],
-            ['throttle', '_throttle'],
-            ['once', '_once'],
-            ['isString', '_isString'],
-            ['isNumber', '_isNumber'],
-            ['isArray', '_isArray'],
-            ['isObject', '_isObject'],
-            ['isFunction', '_isFunction'],
-            ['map', '_map'],
-            ['filter', '_filter'],
-            ['find', '_find'],
-            ['orderBy', '_orderBy'],
-          ],
-        }],
+        imports: ['vue', 'vue-router', 'pinia', '@vueuse/core', { 'lodash-es': lodashImports }],
         // 自定义自动导入
         dirs: ['./src/apis', './src/composables', './src/stores'],
         // 生成对应的 .d.ts 文件
