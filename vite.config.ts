@@ -44,7 +44,7 @@ export default defineConfig(({ mode, command }) => {
       vueJsx(),
       UnoCSS(),
       viteMockServe({
-        mockPath: 'mock', // 指定mock文件夹路径
+        mockPath: 'src/mock', // 指定mock文件夹路径
         enable: isServe && useMock,
         logger: true, // 在控制台显示请求日志
         watchFiles: true, // 监听mock文件更改
