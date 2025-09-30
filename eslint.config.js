@@ -104,7 +104,6 @@ export default antfu(
     // 忽略文件配置
     ignores: [
       'dist/',
-      'build/',
       'output/',
       '**/.output/',
       '**/.nuxt/',

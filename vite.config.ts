@@ -17,52 +17,7 @@ import { viteMockServe } from 'vite-plugin-mock'
 import progress from 'vite-plugin-progress'
 import { VitePWA } from 'vite-plugin-pwa'
 import vueDevTools from 'vite-plugin-vue-devtools'
-
-/**
- * 生成lodash方法与别名的映射数组
- * @param methods - 需要导入的lodash方法名数组
- * @param aliasPrefix - 别名前缀（默认：'_'）
- * @returns 格式为 [[方法名, 别名], ...] 的二维数组
- *
- * @example
- * // 基础用法（默认前缀 '_'）
- * createLodashImports(['get', 'set']);
- * // 返回 [['get', '_get'], ['set', '_set']]
- *
- * @example
- * // 自定义前缀
- * createLodashImports(['debounce', 'throttle'], 'lodash_');
- * // 返回 [['debounce', 'lodash_debounce'], ['throttle', 'lodash_throttle']]
- */
-function createLodashImports(
-  methods: string[],
-  aliasPrefix = '_',
-): [string, string][] {
-  return methods.map(method => [method, `${aliasPrefix}${method}`])
-}
-
-// 需要导入的lodash方法列表
-const lodashMethods = [
-  'get',
-  'set',
-  'has',
-  'cloneDeep',
-  'omit',
-  'pick',
-  'isEmpty',
-  'debounce',
-  'throttle',
-  'once',
-  'isString',
-  'isNumber',
-  'isArray',
-  'isObject',
-  'isFunction',
-  'map',
-  'filter',
-  'find',
-  'orderBy',
-]
+import { lodashImports } from './build'
 
 // https://vite.dev/config/
 export default defineConfig(({ mode, command }) => {
@@ -97,7 +52,7 @@ export default defineConfig(({ mode, command }) => {
       // 自动导入插件
       AutoImport({
         // 预设自动导入
-        imports: ['vue', 'vue-router', 'pinia', '@vueuse/core', { 'lodash-es': createLodashImports(lodashMethods) }],
+        imports: ['vue', 'vue-router', 'pinia', '@vueuse/core', { 'lodash-es': lodashImports }],
         // 自定义自动导入
         dirs: ['./src/apis', './src/composables', './src/stores'],
         // 生成对应的 .d.ts 文件
