@@ -4,12 +4,15 @@
   // * 编辑器核心设置
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit", // 保存时自动修复ESLint错误
-    "source.organizeImports": "never" // 禁止保存时自动整理导入语句
+    "source.organizeImports": "never", // 禁止保存时自动整理导入语句
   },
   // * 代码质量与格式化
   "eslint.useFlatConfig": true, // 使用扁平配置文件
   "prettier.enable": false,
   "markdownlint": false,
+    // * 语言工具配置
+  "javascript.updateImportsOnFileMove.enabled": "always", // 自动更新JS导入
+  "typescript.updateImportsOnFileMove.enabled": "always", // 自动更新TS导入
   // * 文件嵌套配置
   "explorer.fileNesting.enabled": true, // 启用文件嵌套功能
   "explorer.fileNesting.expand": false, // 不展开文件
@@ -39,5 +42,25 @@
     "unplugin",
     "VITE",
     "vueuse"
-  ]
+  ],
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#ab307e",
+    "activityBar.background": "#ab307e",
+    "activityBar.foreground": "#e7e7e7",
+    "activityBar.inactiveForeground": "#e7e7e799",
+    "activityBarBadge.background": "#25320e",
+    "activityBarBadge.foreground": "#e7e7e7",
+    "commandCenter.border": "#e7e7e799",
+    "sash.hoverBorder": "#ab307e",
+    "statusBar.background": "#832561",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#ab307e",
+    "statusBarItem.remoteBackground": "#832561",
+    "statusBarItem.remoteForeground": "#e7e7e7",
+    "titleBar.activeBackground": "#832561",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#83256199",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  },
+  "peacock.color": "#832561",
 }
