@@ -9,7 +9,6 @@
  */
 
 import antfu from '@antfu/eslint-config'
-import unocss from '@unocss/eslint-plugin'
 import playwright from 'eslint-plugin-playwright'
 import unusedImports from 'eslint-plugin-unused-imports'
 
@@ -18,31 +17,24 @@ export default antfu(
     vue: true,
     typescript: true,
     jsx: true,
-    formatters: { css: true },
+    unocss: true,
+    formatters: true,
     stylistic: { printWidth: 100 },
+    rules: {
+      'antfu/top-level-function': 'off', // 允许使用箭头函数声明顶级函数
+    },
   },
-  { plugins: { playwright, unusedImports, unocss } },
+  { plugins: { playwright, unusedImports } },
   {
     rules: {
       // unusedImports
       'unused-imports/no-unused-imports': 'error',
       'unused-imports/no-unused-vars': ['error', { vars: 'all', varsIgnorePattern: '^_' }],
-      // unocss
-      'unocss/order': 'warn', // 类名排序
-      'unocss/order-attributify': 'warn', // 属性化模式排序
-      'unocss/blocklist': 'error', // 禁止使用的类名
-    },
-  },
-  // 对 antfu 预设规则的覆盖
-  {
-    rules: {
-      'antfu/top-level-function': 'off', // 允许使用箭头函数声明顶级函数
     },
   },
   {
     files: ['**/*.vue'],
     rules: {
-      'vue/singleline-html-element-content-newline': 'error', // 启用单行元素内容换行规则
       'vue/multiline-html-element-content-newline': ['error', { // 启用多行元素内容换行规则
         ignoreWhenEmpty: true,
         ignores: ['pre', 'textarea'],
@@ -55,9 +47,6 @@ export default antfu(
           component: 'always', // 组件使用自闭合 (<my-component/>)
         },
       }],
-      'vue/no-v-html': 'off', // 允许使用 v-html,需要注意 XSS 安全
-      'vue/multi-word-component-names': 'off', // 允许使用单个单词的组件名称
-      'vue/block-order': ['error', { order: ['script', 'template', 'style'] }], // 强制 SFC 块顺序: script → template → style
       'vue/block-lang': ['error', { script: { lang: 'ts' } }], // 块语言限制
     },
   },
@@ -66,12 +55,6 @@ export default antfu(
     rules: {
       '@typescript-eslint/no-explicit-any': 'warn', // 允许使用 any 但不推荐，会警告
       '@typescript-eslint/no-empty-interface': ['warn', { allowSingleExtends: true }], // 允许接口定义为空，但会警告，继承不会
-      '@typescript-eslint/explicit-module-boundary-types': 'off', // 不强制要求函数返回类型
-      '@typescript-eslint/no-unused-expressions': [
-        'error',
-        { allowShortCircuit: true, allowTernary: true }, // 允许短路运算符和三元运算符
-      ],
-      '@typescript-eslint/no-non-null-assertion': 'off', // 允许 TypeScript 中使用更简洁的非空断言（!. 代替繁琐的类型守卫）
       '@typescript-eslint/naming-convention': [
         'error',
         {
@@ -90,8 +73,6 @@ export default antfu(
   // 全局规则
   {
     rules: {
-      'no-undef': 'off', // 关闭未定义变量检查，避免Vue模板变量报错
-      'no-unused-vars': 'off', // 关闭原生未使用变量检查，由TS规则处理
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'padding-line-between-statements': [
         'error',
