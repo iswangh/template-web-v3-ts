@@ -1,12 +1,9 @@
 {
-  // * 编辑器格式化设置
-  "editor.formatOnSave": true,
-  // * 编辑器核心设置
+  "editor.formatOnSave": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit", // 保存时自动修复ESLint错误
     "source.organizeImports": "never", // 禁止保存时自动整理导入语句
   },
-  // * 代码质量与格式化
   "eslint.useFlatConfig": true, // 使用扁平配置文件
   "prettier.enable": false,
   "markdownlint": false,
