@@ -4,7 +4,7 @@ import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders'
 import presetWind3 from '@unocss/preset-wind3'
 import transformerCompileClass from '@unocss/transformer-compile-class'
 import { defineConfig, presetAttributify, presetIcons, transformerDirectives, transformerVariantGroup } from 'unocss'
-import { unoRules, unoShortcuts } from './src/configs'
+import { unoRules, unoShortcuts } from './build'
 
 // 路径解析（集中管理路径，便于维护）
 const resolvePath = (relativePath: string) => resolve(__dirname, relativePath)
