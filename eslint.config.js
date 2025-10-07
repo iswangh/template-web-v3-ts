@@ -32,6 +32,17 @@ export default antfu(
       'unused-imports/no-unused-vars': ['error', { vars: 'all', varsIgnorePattern: '^_' }],
     },
   },
+  // 全局规则
+  {
+    rules: {
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'padding-line-between-statements': [
+        'error',
+        { blankLine: 'always', prev: 'import', next: '*' }, // import 语句后需要空行
+        { blankLine: 'never', prev: '*', next: 'import' }, // 禁止 import 前有空行
+      ],
+    },
+  },
   {
     files: ['**/*.vue'],
     rules: {
@@ -67,17 +78,6 @@ export default antfu(
         { selector: 'enum', format: ['PascalCase'] },
         { selector: 'interface', format: ['PascalCase'] },
         { selector: 'typeAlias', format: ['PascalCase'] },
-      ],
-    },
-  },
-  // 全局规则
-  {
-    rules: {
-      'no-console': ['warn', { allow: ['warn', 'error'] }],
-      'padding-line-between-statements': [
-        'error',
-        { blankLine: 'always', prev: 'import', next: '*' }, // import 语句后需要空行
-        { blankLine: 'never', prev: '*', next: 'import' }, // 禁止 import 前有空行
       ],
     },
   },
