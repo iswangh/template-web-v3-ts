@@ -1,7 +1,7 @@
 import { resolve } from 'node:path'
 import process from 'node:process'
 import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders'
-import presetWind3 from '@unocss/preset-wind3'
+import presetWind4 from '@unocss/preset-wind4'
 import transformerCompileClass from '@unocss/transformer-compile-class'
 import { defineConfig, presetAttributify, presetIcons, transformerDirectives, transformerVariantGroup } from 'unocss'
 import { unoRules, unoShortcuts } from './build'
@@ -14,8 +14,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 export default defineConfig({
   presets: [
-    // 默认预设（兼容 Tailwind 语法）
-    presetWind3(),
+    presetWind4(),
     // 属性化预设
     presetAttributify({
       prefix: 'un-', // 添加前缀避免与原生属性冲突
@@ -31,8 +30,7 @@ export default defineConfig({
       },
       collections: {
         // 本地自定义图标集
-        local: FileSystemIconLoader(resolvePath('src/assets/svgs'), svg => svg.replace(/^<svg /, '<svg fill="currentColor" '),
-        ),
+        local: FileSystemIconLoader(resolvePath('src/assets/svgs'), svg => svg.replace(/^<svg /, '<svg fill="currentColor" ')),
       },
     }),
   ],
