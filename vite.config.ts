@@ -162,7 +162,7 @@ export default defineConfig(({ mode, command }) => {
             'vue-vendor': ['vue', 'vue-router', 'pinia', 'pinia-plugin-persistedstate'],
             'request-vendor': ['axios', 'alova', '@alova/adapter-axios', '@tanstack/vue-query'],
             'utils-vendor': ['lodash-es', 'dayjs', '@vueuse/core'],
-            'ui-vendor': ['unplugin-icons', 'unocss'],
+            'ui-vendor': ['unplugin-icons', 'unocss', 'element-plus', '@element-plus/icons-vue'],
           },
         },
       },
