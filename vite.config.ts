@@ -5,7 +5,6 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import { visualizer } from 'rollup-plugin-visualizer'
 import UnoCSS from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
-import { FileSystemIconLoader } from 'unplugin-icons/loaders'
 import IconsResolver from 'unplugin-icons/resolver'
 import Icons from 'unplugin-icons/vite'
 import Components from 'unplugin-vue-components/vite'
@@ -17,7 +16,7 @@ import { viteMockServe } from 'vite-plugin-mock'
 import progress from 'vite-plugin-progress'
 import { VitePWA } from 'vite-plugin-pwa'
 import vueDevTools from 'vite-plugin-vue-devtools'
-import { lodashImports } from './build'
+import { createSvgLoader, lodashImports } from './build'
 
 // https://vite.dev/config/
 export default defineConfig(({ mode, command }) => {
@@ -90,10 +89,8 @@ export default defineConfig(({ mode, command }) => {
         compiler: 'vue3',
         jsx: 'react',
         customCollections: {
-          user: FileSystemIconLoader('src/assets/svgs/user', svg =>
-            svg.replace(/^<svg /, '<svg fill="currentColor" ')),
-          setting: FileSystemIconLoader('src/assets/svgs/setting', svg =>
-            svg.replace(/^<svg /, '<svg fill="currentColor" ')),
+          user: createSvgLoader('src/assets/svgs/user'),
+          setting: createSvgLoader('src/assets/svgs/setting'),
         },
       }),
       createHtmlPlugin({

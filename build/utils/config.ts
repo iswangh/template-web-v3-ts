@@ -1,3 +1,5 @@
+import { FileSystemIconLoader } from 'unplugin-icons/dist/loaders.js'
+
 /**
  * 生成方法与别名的映射数组
  * @param methods - 需要导入的方法名数组
@@ -19,4 +21,14 @@ export function createImportMappings(
   aliasPrefix = '',
 ): [string, string][] {
   return methods.map(method => [method, `${aliasPrefix}${method}`])
+}
+
+/**
+ * 创建 SVG 加载器的辅助函数
+ * @param dir - SVG 文件所在的目录路径
+ * @returns 配置好的 FileSystemIconLoader
+ */
+export function createSvgLoader(dir: string) {
+  return FileSystemIconLoader(dir, svg =>
+    svg.replace(/^<svg /, '<svg fill="currentColor" '))
 }
