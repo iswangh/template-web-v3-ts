@@ -5,9 +5,7 @@
     "source.organizeImports": "never", // 禁止保存时自动整理导入语句
   },
   "eslint.useFlatConfig": true, // 使用扁平配置文件
-  "prettier.enable": false,
-  "markdownlint": false,
-  // Silent the stylistic rules in you IDE, but still auto fix them
+    // 禁用您集成开发环境中的语法规则，但仍能自动进行修正
   "eslint.rules.customizations": [
     { "rule": "style/*", "severity": "off" },
     { "rule": "format/*", "severity": "off" },
@@ -20,7 +18,7 @@
     { "rule": "*quotes", "severity": "off" },
     { "rule": "*semi", "severity": "off" }
   ],
-  // Enable eslint for all supported languages
+  // 为所有支持的语言启用eslint
   "eslint.validate": [
     "javascript",
     "javascriptreact",
@@ -43,6 +41,8 @@
     "pcss",
     "postcss"
   ],
+  "prettier.enable": false,
+  "markdownlint": false,
     // * 语言工具配置
   "javascript.updateImportsOnFileMove.enabled": "always", // 自动更新JS导入
   "typescript.updateImportsOnFileMove.enabled": "always", // 自动更新TS导入
