@@ -16,6 +16,7 @@ import inspect from 'vite-plugin-inspect'
 import { viteMockServe } from 'vite-plugin-mock'
 import progress from 'vite-plugin-progress'
 import { VitePWA } from 'vite-plugin-pwa'
+import ViteRestart from 'vite-plugin-restart'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { createSvgLoader, lodashImports } from './build'
 
@@ -102,6 +103,14 @@ export default defineConfig(({ mode, command }) => {
         },
       }),
       isServe && vueDevTools(),
+      // 监听文件变化并重启开发服务器
+      isServe && ViteRestart({
+        restart: [
+          'vite.config.*',
+          'uno.config.*',
+          'eslint.config.*',
+        ],
+      }),
       // 用于调试和分析 Vite 构建过程的工具插件
       isServe && inspect(),
       // 生产环境资源压缩插件（gzip压缩）

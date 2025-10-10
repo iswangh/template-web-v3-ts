@@ -81,6 +81,7 @@
     "vite-plugin-mock": "^3.0.2",
     "vite-plugin-progress": "^0.0.7",
     "vite-plugin-pwa": "^1.0.3",
+    "vite-plugin-restart": "^1.0.0",
     "vite-plugin-style-import": "^2.0.0",
     "vite-plugin-vue-devtools": "^8.0.2",
     "vitest": "^3.2.4",
