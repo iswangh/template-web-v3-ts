@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Plus } from '@element-plus/icons-vue'
 import { useQuery } from '@tanstack/vue-query'
 import { useRequest } from 'alova/client'
 import { baseTestAPI } from './apis'
@@ -64,6 +65,18 @@ const onTestTanstackQuery = async () => {
 </script>
 
 <template>
+  <div class="p-4">
+    <el-button type="primary" :icon="Plus">
+      按钮1
+    </el-button>
+
+    <el-button type="primary">
+      <template #icon>
+        <IconEpPlus />
+      </template>
+      按钮2
+    </el-button>
+  </div>
   <div>
     请求测试
     <div>

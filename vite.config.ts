@@ -7,6 +7,7 @@ import UnoCSS from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 import Icons from 'unplugin-icons/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig, loadEnv } from 'vite'
 import compression from 'vite-plugin-compression'
@@ -57,9 +58,7 @@ export default defineConfig(({ mode, command }) => {
         // 生成对应的 .d.ts 文件
         dts: './src/types/auto-imports.d.ts',
         // 解析器（如果使用 UI 组件库）
-        resolvers: [
-          // 示例：ElementPlusResolver()
-        ],
+        resolvers: [ElementPlusResolver()],
       }),
       // 自动注册组件
       Components({
@@ -69,6 +68,7 @@ export default defineConfig(({ mode, command }) => {
         dts: './src/types/components.d.ts',
         // 解析器（如果使用 UI 组件库）
         resolvers: [
+          ElementPlusResolver(),
           IconsResolver({
             prefix: 'Icon', // 图标组件前缀
             customCollections: ['user', 'setting'], // 自定义图标集名称
