@@ -1,4 +1,4 @@
-import { FileSystemIconLoader } from 'unplugin-icons/dist/loaders.js'
+import { FileSystemIconLoader } from 'unplugin-icons/loaders'
 
 /**
  * 生成方法与别名的映射数组
