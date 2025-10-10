@@ -147,19 +147,19 @@ const onTestTanstackQuery = async () => {
 
     <!-- 按钮样式 -->
     <div class="flex flex-wrap gap-2 mb-4">
-      <button class="rounded bg-blue-500 text-white transition-colors px-4 py-2 hover:bg-blue-600">
+      <button class="text-white rounded bg-blue-500 transition-colors px-4 py-2 hover:bg-blue-600">
         主要按钮
       </button>
-      <button class="rounded bg-gray-500 text-white transition-colors px-4 py-2 hover:bg-gray-600">
+      <button class="text-white rounded bg-gray-500 transition-colors px-4 py-2 hover:bg-gray-600">
         次要按钮
       </button>
-      <button class="rounded bg-red-500 text-white transition-colors px-4 py-2 hover:bg-red-600">
+      <button class="text-white rounded bg-red-500 transition-colors px-4 py-2 hover:bg-red-600">
         危险按钮
       </button>
     </div>
 
     <!-- 布局示例 -->
-    <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-3">
+    <div class="gap-4 grid grid-cols-1 mb-4 md:grid-cols-3">
       <div class="rounded bg-white shadow p-4">
         <h3 class="text-lg font-bold mb-2">
           列 1
@@ -187,14 +187,14 @@ const onTestTanstackQuery = async () => {
     </div>
 
     <!-- 响应式示例 -->
-    <div class="rounded bg-yellow-100 text-center mb-4 p-4">
-      <span class="block font-semibold sm:inline md:text-lg">
+    <div class="text-center rounded bg-yellow-100 mb-4 p-4">
+      <span class="font-semibold block md:text-lg sm:inline">
         响应式文本 - 在不同屏幕尺寸下会有不同表现
       </span>
     </div>
 
     <!-- 图标使用示例 -->
-    <div class="flex items-center gap-2 mb-4">
+    <div class="flex gap-2 items-center mb-4">
       <IconSettingSetting class="text-2xl text-purple-500" />
       <i class="i-mdi-user" />
       <i class="i-ep-user" />
@@ -203,7 +203,7 @@ const onTestTanstackQuery = async () => {
 
     <!-- 动画示例 -->
     <div
-      class="h-12 flex animate-pulse items-center justify-center rounded from-cyan-500 to-blue-500 bg-gradient-to-r text-white font-bold"
+      class="text-white font-bold rounded flex h-12 items-center justify-center animate-pulse from-cyan-500 to-blue-500 bg-gradient-to-r"
     >
       脉冲动画效果
     </div>
@@ -253,7 +253,7 @@ const onTestTanstackQuery = async () => {
         <h3 class="font-bold mb-2">
           文本截断规则测试:
         </h3>
-        <div class="w-64 bg-gray-100 p-2">
+        <div class="bg-gray-100 w-64 p-2">
           <!-- unocss 属性化语法 -->
           <div truncate-2>
             这是一段很长的文本，用来测试多行截断功能。当文本超过指定行数时，会自动显示省略号。这是UnoCSS自定义规则的示例。
