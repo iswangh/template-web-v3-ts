@@ -59,14 +59,17 @@ export function paramsSerializer(
     .map(key =>
       Array.isArray(params[key])
         ? format === 'index'
-          ? params[key].map((val, i) =>
-              `${encodeURIComponent(`${key}[${startIndex + i}]`)}=${encodeURIComponent(String(val))}`,
-            ).join('&')
+          ? params[key]
+              .map(
+                (val, i) =>
+                  `${encodeURIComponent(`${key}[${startIndex + i}]`)}=${encodeURIComponent(String(val))}`,
+              )
+              .join('&')
           : format === 'join'
             ? `${encodeURIComponent(key)}=${encodeURIComponent(params[key].join(separator))}`
-            : params[key].map(val =>
-                `${encodeURIComponent(key)}=${encodeURIComponent(String(val))}`,
-              ).join('&')
+            : params[key]
+                .map(val => `${encodeURIComponent(key)}=${encodeURIComponent(String(val))}`)
+                .join('&')
         : `${encodeURIComponent(key)}=${encodeURIComponent(String(params[key]))}`,
     )
     .join('&')
@@ -124,11 +127,9 @@ export function cleanUndefined<T = unknown>(value: T): T {
   // 递归处理纯对象：移除值为 undefined 的属性
   if (value !== null && typeof value === 'object') {
     return _omitBy(
-      Object.fromEntries(
-        Object.entries(value).map(([key, val]) => [key, cleanUndefined(val)]),
-      ),
+      Object.fromEntries(Object.entries(value).map(([key, val]) => [key, cleanUndefined(val)])),
       _isUndefined,
-    )
+    ) as T
   }
 
   // 保留其他所有类型（null、字符串、数字、布尔等）
