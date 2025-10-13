@@ -42,9 +42,9 @@ export const useUserStore = defineStore('user', () => {
    *
    * 登录成功后，设置用户信息、访问令牌和登录状态。
    */
-  const login = async () => {
+  const login = async (data: UserInfo) => {
     token.value = TOKEN
-    setUserInfo({ id: '1', name: 'admin' })
+    setUserInfo(data)
   }
 
   /**
