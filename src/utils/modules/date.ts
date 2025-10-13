@@ -719,6 +719,3 @@ export const dateUtil = {
     }
   },
 }
-
-// 导出初始化后的 dayjs 实例（供特殊场景直接使用）
-export default dayjs
