@@ -13,8 +13,6 @@ const app = createApp(App)
 
 setupElementPlus(app)
 
-app.use(pinia)
-app.use(router)
-app.use(VueQueryPlugin, { queryClient })
+app.use(pinia).use(router).use(VueQueryPlugin, { queryClient })
 
 app.mount('#app')
