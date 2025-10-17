@@ -11,7 +11,6 @@ const formItems: FormItems = [
     comp: 'input',
     compAttrs: {
       clearable: true,
-      placeholder: '请输入用户名',
     },
   },
 ]

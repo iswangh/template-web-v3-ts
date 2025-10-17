@@ -1,9 +1,13 @@
 <!-- eslint-disable ts/no-explicit-any -->
 <script setup lang='ts'>
 import type { FormItemProp } from 'element-plus'
-import type { FormItem, FormItemExcludedKeys, FormProps } from './types'
+import type { ElFormAttrs, FormItem, FormItems } from './types'
 import { checkCondition } from '../../utils'
 import { FORM_ITEM_COMP_MAP, FORM_ITEM_EXCLUDED_KEYS } from './config'
+
+interface Props extends ElFormAttrs {
+  formItems: FormItems
+}
 
 interface FormEmits {
   (e: 'validate', prop: FormItemProp, isValid: boolean, message: string): void
@@ -12,7 +16,7 @@ interface FormEmits {
 
 defineOptions({ name: 'ElementPlusKitForm' })
 
-const props = withDefaults(defineProps<FormProps>(), {
+const props = withDefaults(defineProps<Props>(), {
   model: () => ({}),
 })
 
@@ -23,7 +27,7 @@ const attrs = useAttrs()
 const mergedAttrs = computed(() => ({ ...props, ...attrs }))
 
 const filteredFormItems = computed(() => {
-  return props.formItems.filter(item => checkCondition(item.vIf))
+  return props.formItems.filter(v => checkCondition({ condition: v.vIf, data: props.model, defaultValue: true }))
 })
 
 /**
@@ -34,7 +38,7 @@ const filteredFormItems = computed(() => {
 function extractFormItemProps<T extends FormItem>(item: T) {
   const excludedKeysSet = new Set(FORM_ITEM_EXCLUDED_KEYS)
   return Object.fromEntries(
-    Object.entries(item).filter(([key]) => !excludedKeysSet.has(key as FormItemExcludedKeys)),
+    Object.entries(item).filter(([key]) => !excludedKeysSet.has(key as typeof FORM_ITEM_EXCLUDED_KEYS[number])),
   )
 }
 
@@ -51,23 +55,23 @@ function getComponentType(comp: keyof typeof FORM_ITEM_COMP_MAP) {
     @submit.prevent
   >
     <el-form-item
-      v-for="(item, index) in filteredFormItems"
-      v-show="checkCondition(item.vShow)"
-      :key="`${item.prop}-${index}`"
-      v-bind="extractFormItemProps(item)"
+      v-for="(v, index) in filteredFormItems"
+      v-show="checkCondition({ condition: v.vShow, data: props.model, defaultValue: true })"
+      :key="`${v.prop}-${index}`"
+      v-bind="extractFormItemProps(v)"
     >
       <!-- 标准组件 -->
-      <template v-if="item.comp !== 'custom'">
+      <template v-if="v.comp !== 'custom'">
         <component
-          :is="getComponentType(item.comp)"
-          v-bind="item.compAttrs"
-          v-model="model[item.prop]"
-          @change="(value: any) => emit('change', item.prop, value, item)"
+          :is="getComponentType(v.comp)"
+          v-bind="v.compAttrs"
+          v-model="model[v.prop]"
+          @change="(value: any) => emit('change', v.prop, value, v)"
         />
       </template>
       <!-- 自定义组件 -->
       <template v-else>
-        <slot :name="item.prop" :item="item" :value="model[item.prop]" :form="model" />
+        <slot :name="v.prop" :item="v" :value="model[v.prop]" :form="model" />
       </template>
     </el-form-item>
   </el-form>
