@@ -1,43 +1,72 @@
 <script setup lang='ts'>
+import type { FormRules } from 'element-plus'
+import type { FormItem, FormItems } from '@/components/element-plus-kit/form'
 import type { UserInfo } from '@/types'
+import { Form } from '@/components/element-plus-kit/form'
 
-const rules = {
+const formItems: FormItems = [
+  {
+    label: '用户名',
+    prop: 'username',
+    comp: 'input',
+    compAttrs: {
+      clearable: true,
+      placeholder: '请输入用户名',
+    },
+  },
+]
+
+const rules: FormRules = {
   username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
 }
 
-const { form, formRef, resetForm, validateForm } = useForm<UserInfo>()
+const { form } = useForm<UserInfo>({ username: '123' })
 
-const { login } = useUserStore()
+console.log('page form', form.value)
 
-const onLogin = async () => {
-  await validateForm()
-  login(form.value)
-}
+watch(
+  () => form.value,
+  (form) => {
+    console.log('watch page form', form)
+  },
+  {
+    deep: true,
+    immediate: true,
+  },
+)
+// const { form, formRef, resetForm, validateForm } = useForm<UserInfo>()
 
-const reset = () => {
-  resetForm()
+// const { login } = useUserStore()
+
+// const onLogin = async () => {
+//   await validateForm()
+//   login(form.value)
+// }
+
+// const reset = () => {
+//   resetForm()
+// }
+
+function onChange(prop: string, val: string, attr: FormItem) {
+  console.log('page onChange', prop, val, attr)
 }
 </script>
 
 <template>
-  <div class="bg-white h-screen p-20">
-    <el-form ref="formRef" :model="form" :rules="rules">
-      <el-form-item label="用户名" prop="username">
-        <el-input v-model="form.username" placeholder="请输入用户名" />
-      </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input v-model="form.password" placeholder="请输入密码" />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onLogin">
-          登录
-        </el-button>
-        <el-button @click="reset">
-          重置
-        </el-button>
-      </el-form-item>
-    </el-form>
+  <div class="p-20px bg-white h-screen">
+    <strong>model</strong>
+    <Form :model="form" :form-items="formItems" :rules @change="onChange" />
+    <strong>v-model</strong>
+    <Form v-model="form" :model="form" :form-items="formItems" :rules>
+      <template #username="{ item, value, form: _form }">
+        <div>
+          <div>item - {{ item }}</div>
+          <div>value - {{ value }}</div>
+          <div>form - {{ _form }}</div>
+        </div>
+      </template>
+    </Form>
   </div>
 </template>
 

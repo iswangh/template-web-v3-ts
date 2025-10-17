@@ -6,6 +6,8 @@ import { setupElementPlus } from './plugins'
 import router from './router'
 import pinia from './stores'
 import 'virtual:uno.css'
+// 用于动态渲染 element-plus-kit 的样式
+import 'element-plus/dist/index.css'
 
 pinia.use(piniaPluginPersistedstate)
 
