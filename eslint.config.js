@@ -28,7 +28,7 @@ export default antfu(
   {
     rules: {
       // unusedImports
-      'unused-imports/no-unused-imports': 'error',
+      'unused-imports/no-unused-imports': 'warn',
       'unused-imports/no-unused-vars': ['error', { vars: 'all', varsIgnorePattern: '^_' }],
     },
   },
