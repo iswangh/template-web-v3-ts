@@ -1,21 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { allRoutes } from './routes'
+import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: allRoutes,
+  routes: [
+    {
+      path: '/',
+      name: 'home',
+      component: HomeView,
+    },
+  ],
 })
-
-// 路由守卫
-router.beforeEach((to, from, next) => {
-  // 错误页面直接放行
-  if (['NotFound', 'ServerError', 'Forbidden'].includes(to.name as string))
-    return next()
-
-  // 未登录需重定向到登录页
-  to.meta.requiresAuth && !useUserStore().isLoggedIn ? next({ path: '/login', query: { redirect: to.fullPath } }) : next()
-})
-
-export type * from './types'
 
 export default router
