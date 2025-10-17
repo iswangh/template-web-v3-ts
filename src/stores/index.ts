@@ -1,3 +1,3 @@
 export default createPinia()
 
-export * from './modules/counter'
+export * from './modules/user'
