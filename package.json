@@ -34,7 +34,7 @@
     "alova": "^3.3.4",
     "axios": "^1.12.2",
     "dayjs": "^1.11.18",
-    "element-plus": "^2.11.4",
+    "element-plus": "^2.11.5",
     "js-cookie": "^3.0.5",
     "lodash-es": "^4.17.21",
     "pinia": "^3.0.3",
