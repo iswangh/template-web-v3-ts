@@ -1,6 +1,7 @@
+/* eslint-disable ts/no-explicit-any */
 import type { FormInstance } from 'element-plus'
 
-export const useForm = <T extends object>(defaultData?: Partial<T> | (() => Partial<T>)) => {
+export const useForm = <T extends Record<string, any>>(defaultData?: Partial<T> | (() => Partial<T>)) => {
   /**
    * 表单默认值（深拷贝避免引用问题）
    */
