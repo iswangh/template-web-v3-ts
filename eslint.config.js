@@ -46,18 +46,6 @@ export default antfu(
   {
     files: ['**/*.vue'],
     rules: {
-      'vue/multiline-html-element-content-newline': ['error', { // 启用多行元素内容换行规则
-        ignoreWhenEmpty: true,
-        ignores: ['pre', 'textarea'],
-        allowEmptyLines: false,
-      }],
-      'vue/html-self-closing': ['error', {
-        html: {
-          void: 'always', // void 元素使用自闭合 (<img/>)
-          normal: 'always', // 普通元素如果无内容也使用自闭合 (<div/>)
-          component: 'always', // 组件使用自闭合 (<my-component/>)
-        },
-      }],
       'vue/block-lang': ['error', { script: { lang: 'ts' } }], // 块语言限制
     },
   },
