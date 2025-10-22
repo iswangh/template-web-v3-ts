@@ -55,12 +55,11 @@ function onChange(prop: string, val: string, attr: FormItem) {
     <Form :model="form" :form-items="formItems" :rules @change="onChange" />
     <strong>v-model</strong>
     <Form v-model="form" :model="form" :form-items="formItems" :rules>
-      <template #username="{ item, value, form: _form }">
-        <div>
-          <div>item - {{ item }}</div>
-          <div>value - {{ value }}</div>
-          <div>form - {{ _form }}</div>
-        </div>
+      <template #form-item-label="{ value, label }">
+        {{ value }} - {{ label }}
+      </template>
+      <template #username-prepend="{ value }">
+        {{ value }}
       </template>
     </Form>
   </div>
