@@ -9,9 +9,6 @@ const formItems: FormItems = [
     label: '用户名',
     prop: 'username',
     comp: 'input',
-    compAttrs: {
-      clearable: true,
-    },
   },
 ]
 

@@ -24,7 +24,10 @@ const emit = defineEmits<FormEmits>()
 
 const attrs = useAttrs()
 
-const mergedAttrs = computed(() => ({ ...props, ...attrs }))
+const mergedAttrs = computed(() => {
+  const { formItems: _, ...rest } = props
+  return { ...rest, ...attrs }
+})
 
 const filteredFormItems = computed(() => {
   return props.formItems.filter(v => checkCondition({ condition: v.vIf, data: props.model, defaultValue: true }))
