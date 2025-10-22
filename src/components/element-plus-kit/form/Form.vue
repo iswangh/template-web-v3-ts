@@ -63,6 +63,11 @@ function getComponentType(comp: keyof typeof FORM_ITEM_COMP_MAP) {
       :key="`${v.prop}-${index}`"
       v-bind="extractFormItemProps(v)"
     >
+      <!-- FormItem slots -->
+      <template v-if="$slots['form-item-label']" #label>
+        <slot name="form-item-label" :item="v" :value="model[v.prop]" :form="model" />
+      </template>
+
       <!-- 标准组件 -->
       <template v-if="v.comp !== 'custom'">
         <component
