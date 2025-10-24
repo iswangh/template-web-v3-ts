@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import type { FormRules } from 'element-plus'
-import type { FormItem, FormItems } from '@/components/element-plus-kit/form'
+import type { FormItems } from '@/components/element-plus-kit/form'
 import type { UserInfo } from '@/types'
 import { Form } from '@/components/element-plus-kit/form'
 
@@ -46,57 +46,11 @@ const rules: FormRules = {
 }
 
 const { form } = useForm<UserInfo>({ })
-
-// const { form, formRef, resetForm, validateForm } = useForm<UserInfo>()
-
-// const { login } = useUserStore()
-
-// const onLogin = async () => {
-//   await validateForm()
-//   login(form.value)
-// }
-
-// const reset = () => {
-//   resetForm()
-// }
-
-function onChange(prop: string, val: string, attr: FormItem) {
-  console.log('page onChange', prop, val, attr)
-}
-
-const pageFormRef = ref<InstanceType<typeof Form>>()
-console.log('pageFormRef', pageFormRef.value)
-
-const onLogin = async function () {
-  console.log('onLogin')
-  try {
-    await pageFormRef.value?.validate()
-    console.log('pageFormRef.value', pageFormRef.value)
-  }
-  catch (error) {
-    console.log('error', error)
-  }
-}
-
-const onReset = function () {
-  pageFormRef.value?.resetFields()
-  console.log('onReset')
-}
 </script>
 
 <template>
   <div class="p-20px bg-white h-screen">
-    <Form ref="pageFormRef" :model="form" :form-items="formItems" :rules label-width="70" @change="onChange">
-      <template #action="{ prop }">
-        {{ prop }}
-        <el-button type="primary" @click="onLogin">
-          登录
-        </el-button>
-        <el-button @click="onReset">
-          重置
-        </el-button>
-      </template>
-    </Form>
+    <Form :model="form" :form-items="formItems" :rules label-width="70" />
   </div>
 </template>
 

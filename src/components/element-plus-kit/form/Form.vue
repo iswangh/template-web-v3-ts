@@ -1,12 +1,13 @@
 <!-- eslint-disable ts/no-explicit-any -->
 <script setup lang='ts'>
 import type { FormInstance, FormItemProp } from 'element-plus'
-import type { Arrayable, ElFormAttrs, FormItem, FormItems, FormItemSlotScope } from './types'
+import type { ActionConfig, Arrayable, ElFormAttrs, FormItem, FormItems, FormItemSlotScope } from './types'
 import { checkCondition } from '../../utils'
 import FormItemComponent from './FormItem.vue'
 
 interface Props extends ElFormAttrs {
   formItems: FormItems
+  actionConfig?: ActionConfig
   gutter?: InstanceType<typeof ElRow>['gutter']
 }
 
@@ -39,6 +40,9 @@ defineOptions({ name: 'ElementPlusKitForm' })
 
 const props = withDefaults(defineProps<Props>(), {
   model: () => ({}),
+  actionConfig: () => ({
+    vIf: false,
+  }),
 })
 
 defineEmits<Emits>()
@@ -50,7 +54,7 @@ const attrs = useAttrs()
 const slots = useSlots()
 
 const mergedAttrs = computed(() => {
-  const { formItems: _, ...rest } = props
+  const { formItems: _formItems, actionConfig: _actionConfig, ...rest } = props
   return { ...rest, showMessage: true, ...attrs }
 })
 
@@ -129,6 +133,6 @@ defineExpose({
       :form-slots="slotsCache"
       @change="(_, value) => $emit('change', v.prop, value, v)"
     />
-    <FormItemAction :action-slot="$slots.action" />
+    <FormItemAction :action-slot="$slots.action" :config="actionConfig" />
   </el-form>
 </template>P

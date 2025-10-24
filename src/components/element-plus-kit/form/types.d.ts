@@ -85,4 +85,12 @@ export interface FormItemSlotScope {
   [key: string]: any // 允许 el-form-item 的其他作用域参数
 }
 
+/** 允许数组类型 */
 export type Arrayable<T> = T | T[]
+
+/** 表单操作项配置 */
+export interface ActionConfig {
+  vIf?: boolean | ((data?: any) => boolean)
+  vShow?: boolean | ((data?: any) => boolean)
+
+}
