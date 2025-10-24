@@ -63,11 +63,40 @@ const { form } = useForm<UserInfo>({ })
 function onChange(prop: string, val: string, attr: FormItem) {
   console.log('page onChange', prop, val, attr)
 }
+
+const pageFormRef = ref<InstanceType<typeof Form>>()
+console.log('pageFormRef', pageFormRef.value)
+
+const onLogin = async function () {
+  console.log('onLogin')
+  try {
+    await pageFormRef.value?.validate()
+    console.log('pageFormRef.value', pageFormRef.value)
+  }
+  catch (error) {
+    console.log('error', error)
+  }
+}
+
+const onReset = function () {
+  pageFormRef.value?.resetFields()
+  console.log('onReset')
+}
 </script>
 
 <template>
   <div class="p-20px bg-white h-screen">
-    <Form :model="form" :form-items="formItems" :rules @change="onChange" />
+    <Form ref="pageFormRef" :model="form" :form-items="formItems" :rules label-width="70" @change="onChange">
+      <template #action="{ prop }">
+        {{ prop }}
+        <el-button type="primary" @click="onLogin">
+          登录
+        </el-button>
+        <el-button @click="onReset">
+          重置
+        </el-button>
+      </template>
+    </Form>
   </div>
 </template>
 

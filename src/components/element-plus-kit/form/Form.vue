@@ -1,7 +1,7 @@
 <!-- eslint-disable ts/no-explicit-any -->
 <script setup lang='ts'>
-import type { FormItemProp } from 'element-plus'
-import type { ElFormAttrs, FormItem, FormItems, FormItemSlotScope } from './types'
+import type { FormInstance, FormItemProp } from 'element-plus'
+import type { Arrayable, ElFormAttrs, FormItem, FormItems, FormItemSlotScope } from './types'
 import { checkCondition } from '../../utils'
 import FormItemComponent from './FormItem.vue'
 
@@ -94,24 +94,41 @@ const slotsCache = computed(() => {
 
   return { formItemSlots, dynamicComponentSlots }
 })
+
+const formRef = ref<FormInstance>()
+
+defineExpose({
+  // element-plus form exposes
+  get fields() {
+    return formRef.value?.fields
+  },
+  getField: (prop: FormItemProp) => formRef.value?.getField?.(prop),
+  validate: () => formRef.value?.validate?.(),
+  validateField: (props: Arrayable<FormItemProp>) => formRef.value?.validateField?.(props),
+  resetFields: (props?: Arrayable<FormItemProp>) => formRef.value?.resetFields?.(props),
+  clearValidate: (props?: Arrayable<FormItemProp>) => formRef.value?.clearValidate?.(props),
+  scrollToField: (prop: FormItemProp) => formRef.value?.scrollToField?.(prop),
+})
 </script>
 
 <template>
   <el-form
+    ref="formRef"
     v-bind="mergedAttrs"
     :model="model"
     @validate="(prop, isValid, message) => $emit('validate', prop, isValid, message)"
     @submit.prevent
   >
     <FormItemComponent
-      v-for="(v, index) in filteredFormItems"
+      v-for="(v, i) in filteredFormItems"
       v-show="checkCondition({ condition: v.vShow, data: props.model, defaultValue: true })"
-      :key="`${v.prop}-${index}`"
+      :key="`${v.prop}-${i}`"
       v-model="model[v.prop]"
       :form-item="v"
       :form-data="model"
       :form-slots="slotsCache"
       @change="(_, value) => $emit('change', v.prop, value, v)"
     />
+    <FormItemAction :action-slot="$slots.action" />
   </el-form>
-</template>
+</template>P

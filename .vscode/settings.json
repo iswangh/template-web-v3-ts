@@ -59,6 +59,7 @@
   // * 拼写检查
   "cSpell.words": [
     "alova",
+    "Arrayable",
     "Attributify",
     "axios",
     "bunx",

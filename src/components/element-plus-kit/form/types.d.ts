@@ -84,3 +84,5 @@ export interface FormItemSlotScope {
   formItem: FormItem
   [key: string]: any // 允许 el-form-item 的其他作用域参数
 }
+
+export type Arrayable<T> = T | T[]
