@@ -10,6 +10,34 @@ const formItems: FormItems = [
     prop: 'username',
     comp: 'input',
   },
+  {
+    label: '密码',
+    prop: 'password',
+    comp: 'input',
+  },
+  {
+    label: '性别',
+    prop: 'sex',
+    comp: 'radio',
+    compAttrs: {
+      options: [
+        { label: '男', value: '1' },
+        { label: '女', value: '2' },
+      ],
+    },
+  },
+  {
+    label: '爱好',
+    prop: 'hobby',
+    comp: 'select',
+    compAttrs: {
+      options: [
+        { label: '吃饭', value: '1' },
+        { label: '睡觉', value: '2' },
+        { label: '打游戏', value: '3' },
+      ],
+    },
+  },
 ]
 
 const rules: FormRules = {
@@ -17,20 +45,8 @@ const rules: FormRules = {
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
 }
 
-const { form } = useForm<UserInfo>({ username: '123' })
+const { form } = useForm<UserInfo>({ })
 
-console.log('page form', form.value)
-
-watch(
-  () => form.value,
-  (form) => {
-    console.log('watch page form', form)
-  },
-  {
-    deep: true,
-    immediate: true,
-  },
-)
 // const { form, formRef, resetForm, validateForm } = useForm<UserInfo>()
 
 // const { login } = useUserStore()
@@ -51,17 +67,7 @@ function onChange(prop: string, val: string, attr: FormItem) {
 
 <template>
   <div class="p-20px bg-white h-screen">
-    <strong>model</strong>
     <Form :model="form" :form-items="formItems" :rules @change="onChange" />
-    <strong>v-model</strong>
-    <Form v-model="form" :model="form" :form-items="formItems" :rules>
-      <template #form-item-label="{ value, label }">
-        {{ value }} - {{ label }}
-      </template>
-      <template #username-prepend="{ value }">
-        {{ value }}
-      </template>
-    </Form>
   </div>
 </template>
 

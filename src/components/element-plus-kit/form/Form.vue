@@ -1,27 +1,21 @@
 <!-- eslint-disable ts/no-explicit-any -->
 <script setup lang='ts'>
 import type { FormItemProp } from 'element-plus'
-import type { ElFormAttrs, FormItem, FormItems } from './types'
+import type { ElFormAttrs, FormItem, FormItems, FormItemSlotScope } from './types'
 import { checkCondition } from '../../utils'
-import { FORM_ITEM_COMP_MAP, FORM_ITEM_EXCLUDED_KEYS } from './config'
+import FormItemComponent from './FormItem.vue'
 
 interface Props extends ElFormAttrs {
   formItems: FormItems
+  gutter?: InstanceType<typeof ElRow>['gutter']
 }
 
-interface FormEmits {
+interface Emits {
   (e: 'validate', prop: FormItemProp, isValid: boolean, message: string): void
   <T extends Record<string, any>, K extends keyof T>(e: 'change', prop: K, value: T[K], attr: FormItem): void
 }
 
-export interface FormItemSlotScope {
-  value: any
-  form: Record<string, any>
-  formItem: FormItem
-  [key: string]: any // 允许 el-form-item 的其他作用域参数
-}
-
-export interface FormSlots {
+interface Slots {
   /**
    * FormItem 通用插槽
    * @example #form-item-label
@@ -47,9 +41,9 @@ const props = withDefaults(defineProps<Props>(), {
   model: () => ({}),
 })
 
-const emit = defineEmits<FormEmits>()
+defineEmits<Emits>()
 
-defineSlots<FormSlots>()
+defineSlots<Slots>()
 
 const attrs = useAttrs()
 
@@ -57,28 +51,12 @@ const slots = useSlots()
 
 const mergedAttrs = computed(() => {
   const { formItems: _, ...rest } = props
-  return { ...rest, ...attrs }
+  return { ...rest, showMessage: true, ...attrs }
 })
 
 const filteredFormItems = computed(() => {
   return props.formItems.filter(v => checkCondition({ condition: v.vIf, data: props.model, defaultValue: true }))
 })
-
-/**
- * 提取表单项的属性（排除特定的键）
- * @param item 表单项配置
- * @returns 不包含排除键的属性对象
- */
-function extractFormItemProps<T extends FormItem>(item: T) {
-  const excludedKeysSet = new Set(FORM_ITEM_EXCLUDED_KEYS)
-  return Object.fromEntries(
-    Object.entries(item).filter(([key]) => !excludedKeysSet.has(key as typeof FORM_ITEM_EXCLUDED_KEYS[number])),
-  )
-}
-
-function getComponentType(comp: keyof typeof FORM_ITEM_COMP_MAP) {
-  return FORM_ITEM_COMP_MAP[comp] || 'div'
-}
 
 /**
  * 获取动态组件对应的插槽
@@ -92,7 +70,7 @@ function getSlotsByPrefix(prefix: string) {
       result.push({
         rawSlotName: name,
         slotName: name.replace(prefix, ''),
-        slotFn: slots[name],
+        slotFn: slots[name]!,
       })
     }
   }
@@ -116,47 +94,24 @@ const slotsCache = computed(() => {
 
   return { formItemSlots, dynamicComponentSlots }
 })
-
-const formItemSlots = computed(() => slotsCache.value.formItemSlots)
-
-const dynamicComponentSlots = computed(() => (prop: string) => slotsCache.value.dynamicComponentSlots.get(prop))
 </script>
 
 <template>
   <el-form
     v-bind="mergedAttrs"
     :model="model"
-    @validate="(prop, isValid, message) => emit('validate', prop, isValid, message)"
+    @validate="(prop, isValid, message) => $emit('validate', prop, isValid, message)"
     @submit.prevent
   >
-    <el-form-item
+    <FormItemComponent
       v-for="(v, index) in filteredFormItems"
       v-show="checkCondition({ condition: v.vShow, data: props.model, defaultValue: true })"
       :key="`${v.prop}-${index}`"
-      v-bind="extractFormItemProps(v)"
-    >
-      <!-- el-form-item slots -->
-      <template v-for="(slot, slotIndex) in formItemSlots" :key="`${slot.rawSlotName}-${slotIndex}`" #[slot.slotName]="slotProps">
-        <component :is="slot.slotFn" :value="model[v.prop]" :form="model" :form-item="v" v-bind="slotProps" />
-      </template>
-      <!-- 标准组件 -->
-      <template v-if="v.comp !== 'custom'">
-        <component
-          :is="getComponentType(v.comp)"
-          v-bind="v.compAttrs"
-          v-model="model[v.prop]"
-          @change="(value: any) => emit('change', v.prop, value, v)"
-        >
-          <!-- dynamic component slots -->
-          <template v-for="(slot, slotIndex) in dynamicComponentSlots(v.prop)" :key="`${slot.rawSlotName}-${slotIndex}`" #[slot.slotName]="slotProps">
-            <component :is="slot.slotFn" :value="model[v.prop]" :form="model" :form-item="v" v-bind="slotProps" />
-          </template>
-        </component>
-      </template>
-      <!-- 自定义组件 -->
-      <template v-else>
-        <slot :name="v.prop" :value="model[v.prop]" :form="model" :form-item="v" />
-      </template>
-    </el-form-item>
+      v-model="model[v.prop]"
+      :form-item="v"
+      :form-data="model"
+      :form-slots="slotsCache"
+      @change="(_, value) => $emit('change', v.prop, value, v)"
+    />
   </el-form>
 </template>

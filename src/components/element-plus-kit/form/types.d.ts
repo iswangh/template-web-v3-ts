@@ -77,3 +77,10 @@ export interface FormItem<
 
 /** formItems 配置类型 - 推断每一项的 comp 对应的组件类型 */
 export type FormItems = { [K in FormItemComp]: FormItem<K> }[FormItemComp][]
+
+export interface FormItemSlotScope {
+  value: any
+  form: Record<string, any>
+  formItem: FormItem
+  [key: string]: any // 允许 el-form-item 的其他作用域参数
+}
