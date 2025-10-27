@@ -41,7 +41,6 @@ export const useForm = <T extends Record<string, any>>(defaultData?: Partial<T> 
 
   /**
    * 表单验证方法
-   *
    * @param {boolean} [scrollToError] - 是否滚动到第一个错误字段
    */
   const validateForm = async (scrollToError = true) => {

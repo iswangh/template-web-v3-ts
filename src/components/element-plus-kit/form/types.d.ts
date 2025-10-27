@@ -57,7 +57,6 @@ export type FormItemCompAttrs<T extends FormItemComp = FormItemComp> = InstanceT
  *
  * @template C - 组件类型
  * @extends {ElFormItemAttrs} Element Plus FormItem 组件原始属性
- *
  * @property {C} comp 使用的组件类型
  * @property {FormItemCompAttrs<C>} [compAttrs] 传递给组件的属性配置对象
  * @property {boolean | ((data?: any) => boolean)} [vIf] 条件渲染控制，支持布尔值或接收表单数据的函数
@@ -98,8 +97,7 @@ export type Arrayable<T> = T | T[]
 /**
  * 标准化的表单操作按钮配置项
  *
- * @extends {ButtonProps}
- *
+ * @extends {ButtonProps} el-button 的属性
  * @property {string} label 按钮文字
  * @property {string} eventName 事件名称
  */
