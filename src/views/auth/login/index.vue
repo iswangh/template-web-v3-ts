@@ -50,7 +50,7 @@ const { form } = useForm<UserInfo>({ })
 
 <template>
   <div class="p-20px bg-white h-screen">
-    <Form :model="form" :form-items="formItems" :rules label-width="70" />
+    <Form :model="form" :form-items="formItems" :rules label-width="70" :action-config="{ vIf: true, buttons: [{ label: '测试', eventName: 'test', type: 'primary' }] }" @action="console.log($event)" />
   </div>
 </template>
 

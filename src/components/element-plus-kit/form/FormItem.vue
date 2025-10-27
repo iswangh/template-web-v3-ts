@@ -35,13 +35,20 @@ defineEmits<Emits>()
 
 const modelValue = defineModel()
 
+/** 提取 el-form-item 的属性（排除表单组件自定义的配置） */
 const formItemProps = computed(() => extractFormItemProps())
 
+/** 获取 el-form-item 的插槽 */
 const formItemSlots = computed(() => props.formSlots.formItemSlots)
 
-const dynamicComponentSlots = computed(() => (prop: string) => props.formSlots.dynamicComponentSlots.get(prop))
-
+/** 根据组件类型配置解析出对应的 Element Plus 组件，未匹配时使用 div 作为降级 */
 const resolvedComponent = computed(() => FORM_ITEM_COMP_MAP[props.formItem.comp] || 'div')
+
+/** 处理后的组件属性（包含默认值和用户配置） */
+const processedCompAttrs = computed(() => COMPONENT_DEFAULT_CONFIG.getDefaults(props.formItem))
+
+/** 根据 prop 获取对应的动态组件插槽 */
+const dynamicComponentSlots = computed(() => (prop: string) => props.formSlots.dynamicComponentSlots.get(prop))
 
 /**
  * 提取表单项的属性（排除特定的键）
@@ -53,13 +60,6 @@ function extractFormItemProps() {
     Object.entries(props.formItem).filter(([key]) => !excludedKeysSet.has(key as typeof FORM_ITEM_EXCLUDED_KEYS[number])),
   )
 }
-
-/**
- * 处理后的组件属性 - 使用配置化方案
- */
-const processedCompAttrs = computed(() => {
-  return COMPONENT_DEFAULT_CONFIG.getDefaults(props.formItem)
-})
 </script>
 
 <template>

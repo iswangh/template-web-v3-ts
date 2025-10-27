@@ -1,5 +1,5 @@
 /* eslint-disable ts/no-explicit-any */
-import type { FormItemInstance, FormRules } from 'element-plus'
+import type { ButtonProps, FormItemInstance, FormRules } from 'element-plus'
 import type { FORM_ITEM_COMP_MAP } from './config'
 
 /**
@@ -78,6 +78,13 @@ export interface FormItem<
 /** formItems 配置类型 - 推断每一项的 comp 对应的组件类型 */
 export type FormItems = { [K in FormItemComp]: FormItem<K> }[FormItemComp][]
 
+/**
+ * 表单项插槽作用域参数
+ *
+ * @property {any} value 当前表单项组件的值
+ * @property {Record<string, any>} form 表单数据
+ * @property {FormItem} formItem 表单项配置
+ */
 export interface FormItemSlotScope {
   value: any
   form: Record<string, any>
@@ -88,9 +95,31 @@ export interface FormItemSlotScope {
 /** 允许数组类型 */
 export type Arrayable<T> = T | T[]
 
-/** 表单操作项配置 */
+/**
+ * 标准化的表单操作按钮配置项
+ *
+ * @extends {ButtonProps}
+ *
+ * @property {string} label 按钮文字
+ * @property {string} eventName 事件名称
+ */
+export interface ActionConfigButtonItem extends Partial<ButtonProps> {
+  label: string
+  eventName: string
+}
+
+/** 表单操作按钮配置项  */
+export type ActionConfigButtons = ActionConfigButtonItem | 'submit' | 'cancel' | 'search' | 'reset'
+
+/**
+ * 表单操作项配置
+ *
+ * @property {boolean | ((data?: any) => boolean)} vIf 是否显示
+ * @property {boolean | ((data?: any) => boolean)} vShow 是否显示
+ * @property {ActionConfigButtons[]} buttons 按钮列表
+ */
 export interface ActionConfig {
   vIf?: boolean | ((data?: any) => boolean)
   vShow?: boolean | ((data?: any) => boolean)
-
+  buttons?: ActionConfigButtons[]
 }

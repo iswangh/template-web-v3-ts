@@ -3,7 +3,9 @@
 import type { FormInstance, FormItemProp } from 'element-plus'
 import type { ActionConfig, Arrayable, ElFormAttrs, FormItem, FormItems, FormItemSlotScope } from './types'
 import { checkCondition } from '../../utils'
-import FormItemComponent from './FormItem.vue'
+import { DEFAULT_FORM_ATTRS } from './config'
+import FormAction from './FormAction.vue'
+import FormItemComp from './FormItem.vue'
 
 interface Props extends ElFormAttrs {
   formItems: FormItems
@@ -14,7 +16,14 @@ interface Props extends ElFormAttrs {
 interface Emits {
   (e: 'validate', prop: FormItemProp, isValid: boolean, message: string): void
   <T extends Record<string, any>, K extends keyof T>(e: 'change', prop: K, value: T[K], attr: FormItem): void
+  (e: 'action', eventName: string): void
+  (e: 'search'): void
+  (e: 'reset'): void
+  (e: 'submit'): void
+  (e: 'cancel'): void
 }
+
+type EmitEventName = Exclude<keyof Emits, 'validate' | 'change' | 'action'>
 
 interface Slots {
   /**
@@ -40,12 +49,10 @@ defineOptions({ name: 'ElementPlusKitForm' })
 
 const props = withDefaults(defineProps<Props>(), {
   model: () => ({}),
-  actionConfig: () => ({
-    vIf: false,
-  }),
+  actionConfig: () => ({}),
 })
 
-defineEmits<Emits>()
+const emit = defineEmits<Emits>()
 
 defineSlots<Slots>()
 
@@ -53,11 +60,13 @@ const attrs = useAttrs()
 
 const slots = useSlots()
 
+/** 合并 form 属性 */
 const mergedAttrs = computed(() => {
   const { formItems: _formItems, actionConfig: _actionConfig, ...rest } = props
-  return { ...rest, showMessage: true, ...attrs }
+  return { ...rest, ...DEFAULT_FORM_ATTRS, ...attrs }
 })
 
+/** 过滤出需要渲染的 formItem */
 const filteredFormItems = computed(() => {
   return props.formItems.filter(v => checkCondition({ condition: v.vIf, data: props.model, defaultValue: true }))
 })
@@ -81,9 +90,7 @@ function getSlotsByPrefix(prefix: string) {
   return result
 }
 
-/**
- * el-form-item(default插槽除外) 和 动态组件的插槽缓存
- */
+/** 缓存 el-form-item 和动态组件的插槽配置 */
 const slotsCache = computed(() => {
   const formItemSlots = getSlotsByPrefix('form-item-')
   const dynamicComponentSlots = new Map()
@@ -100,6 +107,24 @@ const slotsCache = computed(() => {
 })
 
 const formRef = ref<FormInstance>()
+
+/**
+ * 处理动作按钮事件
+ */
+async function onAction({ eventName }: { eventName: string }) {
+  // 定义需要验证的事件
+  const validateEvents = ['submit', 'search']
+  // 定义需要重置的事件
+  const resetEvents = ['cancel', 'reset']
+
+  if ([...validateEvents, ...resetEvents].includes(eventName)) {
+    validateEvents.includes(eventName) && await formRef.value?.validate?.()
+    resetEvents.includes(eventName) && formRef.value?.resetFields?.()
+    emit(eventName as EmitEventName)
+  }
+
+  emit('action', eventName)
+}
 
 defineExpose({
   // element-plus form exposes
@@ -123,7 +148,7 @@ defineExpose({
     @validate="(prop, isValid, message) => $emit('validate', prop, isValid, message)"
     @submit.prevent
   >
-    <FormItemComponent
+    <FormItemComp
       v-for="(v, i) in filteredFormItems"
       v-show="checkCondition({ condition: v.vShow, data: props.model, defaultValue: true })"
       :key="`${v.prop}-${i}`"
@@ -133,6 +158,6 @@ defineExpose({
       :form-slots="slotsCache"
       @change="(_, value) => $emit('change', v.prop, value, v)"
     />
-    <FormItemAction :action-slot="$slots.action" :config="actionConfig" />
+    <FormAction :inline="mergedAttrs.inline" :action-slot="$slots.action" :config="actionConfig" @action="onAction" />
   </el-form>
-</template>P
+</template>

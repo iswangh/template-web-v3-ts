@@ -1,5 +1,7 @@
 /* eslint-disable ts/no-explicit-any */
-import type { FormItem } from './types'
+import type { FormProps } from 'element-plus'
+import type { ActionConfig, ActionConfigButtonItem, FormItem } from './types'
+import { Refresh, Search } from '@element-plus/icons-vue'
 import { ElAutocomplete, ElCascader, ElCheckboxGroup, ElColorPicker, ElColorPickerPanel, ElDatePicker, ElDatePickerPanel, ElInput, ElInputNumber, ElInputTag, ElMention, ElRadioGroup, ElRate, ElSelect, ElSelectV2, ElSlider, ElSwitch, ElTimePicker, ElTimeSelect, ElTransfer, ElTreeSelect } from 'element-plus'
 
 /**
@@ -125,5 +127,52 @@ export const COMPONENT_DEFAULT_CONFIG = {
     }
 
     return defaults
+  },
+}
+
+/**
+ * 表单属性默认配置
+ */
+export const DEFAULT_FORM_ATTRS: Partial<FormProps> = {
+  showMessage: true,
+  scrollToError: true,
+  scrollIntoViewOptions: {
+    behavior: 'smooth', // 平滑滚动
+    block: 'center', // 垂直居中，让错误项在视窗中间
+    inline: 'nearest', // 水平方向保持最近位置
+  },
+}
+
+/**
+ * 表单动作按钮默认配置
+ */
+export const DEFAULT_FORM_ACTION_BUTTONS: Record<string, Omit<ActionConfigButtonItem, 'eventName'>> = {
+  search: { label: '搜索', icon: Search, type: 'primary' },
+  reset: { label: '重置', icon: Refresh },
+  submit: { label: '确认', type: 'primary' },
+  cancel: { label: '取消' },
+}
+
+/**
+ * 表单动作默认配置
+ */
+export const ACTION_DEFAULT_CONFIG = {
+  getDefaults(inline?: boolean, actionConfig?: ActionConfig) {
+    const actionDefaults = this.buildActionAttrs(inline)
+    return {
+      ...actionDefaults,
+      ...actionConfig,
+
+    }
+  },
+  generateActionButtons(inline?: boolean) {
+    return inline ? ['search', 'reset'] : ['submit', 'cancel']
+  },
+  buildActionAttrs(inline?: boolean) {
+    return {
+      buttons: this.generateActionButtons(inline),
+      vIf: inline,
+      vShow: true,
+    }
   },
 }
