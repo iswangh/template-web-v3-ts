@@ -2,7 +2,6 @@ import type { ExtendableObject } from '@/types'
 
 /**
  * 基础响应结构
- * @interface BaseResponse
  *
  * 定义了API响应的基本结构，包含状态码、消息和数据
  *
@@ -19,7 +18,6 @@ export interface BaseResponse<T = unknown> extends ExtendableObject {
 
 /**
  * 分页数据格式
- * @interface PaginatedData
  *
  * 分页数据格式，包含数据列表和数据总数
  *
@@ -43,7 +41,6 @@ export type PaginatedResponse<T = unknown> = BaseResponse<PaginatedData<T>>
 
 /**
  * 分页查询参数
- * @interface PaginationParams
  *
  * 定义了分页查询参数的结构
  *
@@ -57,7 +54,6 @@ export interface PaginationParams extends ExtendableObject {
 
 /**
  * 参数序列化选项
- * @interface SerializeOptions
  *
  * 用于配置参数序列化行为的选项接口
  *
