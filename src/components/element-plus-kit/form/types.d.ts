@@ -45,10 +45,11 @@ type FormCompConfig = typeof FORM_ITEM_COMP_MAP
 type FormItemComp = keyof FormCompConfig
 
 /**
- * 根据组件类型推断对应的属性类型
+ * 根据组件类型推断对应的属性类型（排除事件处理器）
  * @template T - 组件类型
  */
-export type FormItemCompAttrs<T extends FormItemComp = FormItemComp> = InstanceType<FormCompConfig[T]>['$props']
+export type FormItemCompAttrs<T extends FormItemComp = FormItemComp>
+  = Omit<InstanceType<FormCompConfig[T]>['$props'], `on${string}`>
 
 /**
  * FormItem 属性
