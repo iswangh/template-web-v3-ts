@@ -1,5 +1,5 @@
 /* eslint-disable ts/no-explicit-any */
-import type { ButtonProps, FormItemInstance, FormRules } from 'element-plus'
+import type { ButtonProps, ElCol, ElRow, FormItemInstance, FormRules } from 'element-plus'
 import type { FORM_ITEM_COMP_MAP } from './config'
 
 /**
@@ -51,6 +51,10 @@ type FormItemComp = keyof FormCompConfig
 export type FormItemCompAttrs<T extends FormItemComp = FormItemComp>
   = Omit<InstanceType<FormCompConfig[T]>['$props'], `on${string}`>
 
+export type RowAttrs = InstanceType<typeof ElRow>['$props'] & { span?: number }
+
+export type ColAttrs = InstanceType<typeof ElCol>['$props']
+
 /**
  * FormItem 属性
  *
@@ -73,6 +77,7 @@ export interface FormItem<
   compAttrs?: FormItemCompAttrs<C> // 根据具体的 C 类型推断
   vIf?: boolean | ((data?: any) => boolean)
   vShow?: boolean | ((data?: any) => boolean)
+  colAttrs?: ColAttrs
 }
 
 /** formItems 配置类型 - 推断每一项的 comp 对应的组件类型 */

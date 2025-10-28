@@ -1,7 +1,7 @@
 <!-- eslint-disable ts/no-explicit-any -->
 <script setup lang='ts'>
 import type { FormInstance, FormItemProp } from 'element-plus'
-import type { ActionConfig, Arrayable, ElFormAttrs, FormItem, FormItems, FormItemSlotScope } from './types'
+import type { ActionConfig, Arrayable, ElFormAttrs, FormItem, FormItems, FormItemSlotScope, RowAttrs } from './types'
 import { checkCondition } from '../../utils'
 import { DEFAULT_FORM_ATTRS } from './config'
 import FormAction from './FormAction.vue'
@@ -9,8 +9,8 @@ import FormItemComp from './FormItem.vue'
 
 interface Props extends ElFormAttrs {
   formItems: FormItems
+  rowAttrs?: RowAttrs
   actionConfig?: ActionConfig
-  gutter?: InstanceType<typeof ElRow>['gutter']
 }
 
 interface Emits {
@@ -49,9 +49,9 @@ defineOptions({ name: 'ElementPlusKitForm' })
 
 const props = withDefaults(defineProps<Props>(), {
   model: () => ({}),
+  rowAttrs: () => ({}),
   actionConfig: () => ({}),
 })
-
 const emit = defineEmits<Emits>()
 
 defineSlots<Slots>()
@@ -72,18 +72,34 @@ const dynamicCompEvents = computed(() => {
   ) as Record<string, (prop: string, ...args: any) => void>
 })
 
-const slots = useSlots()
-
-/** 合并 form 属性 */
+/** 提取并合并 form 属性 */
 const mergedAttrs = computed(() => {
-  const { formItems: _formItems, actionConfig: _actionConfig, ...rest } = props
-  return { ...rest, ...DEFAULT_FORM_ATTRS, ...attrs }
+  const { formItems: _f, actionConfig: _a, rowAttrs: _r, ...rest } = props
+
+  // 过滤掉所有事件（以 on 开头且为函数的属性）
+  const filteredAttrs = Object.fromEntries(
+    Object.entries(attrs).filter(([key, value]) =>
+      !(key.startsWith('on') && typeof value === 'function'),
+    ),
+  )
+
+  return { ...rest, ...DEFAULT_FORM_ATTRS, ...filteredAttrs }
 })
 
-/** 过滤出需要渲染的 formItem */
+/**
+ * 过滤出需要渲染的 formItem
+ *   - 根据 vIf 条件过滤表单项
+ *   - 处理每一项的 colAttrs.span 的默认值,默认为 rowAttrs.span
+ */
 const filteredFormItems = computed(() => {
-  return props.formItems.filter(v => checkCondition({ condition: v.vIf, data: props.model, defaultValue: true }))
+  const { span: defaultSpan } = props?.rowAttrs ?? {}
+  return props.formItems.filter(v => checkCondition({ condition: v.vIf, data: props.model, defaultValue: true })).map((v) => {
+    const { colAttrs = {} } = v ?? {}
+    return { ...v, colAttrs: { ...colAttrs, span: colAttrs.span ?? defaultSpan } }
+  })
 })
+
+const slots = useSlots()
 
 /**
  * 获取动态组件对应的插槽
@@ -119,6 +135,15 @@ const slotsCache = computed(() => {
 
   return { formItemSlots, dynamicComponentSlots }
 })
+
+/** 判断是否渲染 el-row */
+const shouldRenderRow = computed(() => props.rowAttrs && Object.keys(props.rowAttrs).length > 0)
+
+/** 布局组件 */
+const layoutComponents = computed(() => ({
+  row: shouldRenderRow.value ? ElRow : 'div',
+  col: shouldRenderRow.value ? ElCol : 'div',
+}))
 
 const formRef = ref<FormInstance>()
 
@@ -162,17 +187,27 @@ defineExpose({
     @validate="(prop, isValid, message) => $emit('validate', prop, isValid, message)"
     @submit.prevent
   >
-    <FormItemComp
-      v-for="(v, i) in filteredFormItems"
-      v-show="checkCondition({ condition: v.vShow, data: props.model, defaultValue: true })"
-      :key="`${v.prop}-${i}`"
-      v-model="model[v.prop]"
-      :form-item="v"
-      :form-data="model"
-      :dynamic-comp-events="dynamicCompEvents"
-      :form-slots="slotsCache"
-      @change="(extendedParams, value) => $emit('change', extendedParams, value)"
-    />
-    <FormAction :inline="mergedAttrs.inline" :action-slot="$slots.action" :config="actionConfig" @action="onAction" />
+    <component
+      :is="layoutComponents.row"
+      v-bind="rowAttrs"
+    >
+      <component
+        :is="layoutComponents.col"
+        v-for="(v, i) in filteredFormItems"
+        v-show="checkCondition({ condition: v.vShow, data: props.model, defaultValue: true })"
+        :key="`${v.prop}-${i}`"
+        v-bind="v.colAttrs"
+      >
+        <FormItemComp
+          v-model="model[v.prop]"
+          :form-item="v"
+          :form-data="model"
+          :dynamic-comp-events="dynamicCompEvents"
+          :form-slots="slotsCache"
+          @change="(extendedParams, value) => $emit('change', extendedParams, value)"
+        />
+      </component>
+      <FormAction :inline="mergedAttrs.inline" :action-slot="$slots.action" :config="actionConfig" @action="onAction" />
+    </component>
   </el-form>
 </template>

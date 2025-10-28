@@ -9,6 +9,7 @@ const formItems: FormItems = [
     label: '用户名',
     prop: 'username',
     comp: 'input',
+    colAttrs: { span: 12 },
   },
   {
     label: '密码',
@@ -45,12 +46,12 @@ const rules: FormRules = {
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
 }
 
-const { form } = useForm<UserInfo>({ })
+const { form } = useForm<UserInfo>({})
 </script>
 
 <template>
   <div class="p-20px bg-white h-screen">
-    <Form :model="form" :form-items="formItems" :rules label-width="70" :action-config="{ vIf: true, buttons: [{ label: '测试', eventName: 'test', type: 'primary' }] }" @action="console.log($event)" @change="(...args) => console.log('change', ...args)" @focus="console.log('focus', $event)" />
+    <Form :model="form" :form-items="formItems" :rules label-width="70" :row-attrs="{ span: 8 }" :action-config="{ vIf: true, buttons: [{ label: '测试', eventName: 'test', type: 'primary' }] }" @action="console.log($event)" @change="(...args) => console.log('change', ...args)" @focus="console.log('focus', $event)" @blur="console.log('blur', $event)" />
   </div>
 </template>
 
