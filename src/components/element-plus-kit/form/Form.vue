@@ -15,7 +15,7 @@ interface Props extends ElFormAttrs {
 
 interface Emits {
   (e: 'validate', prop: FormItemProp, isValid: boolean, message: string): void
-  <T extends Record<string, any>, K extends keyof T>(e: 'change', prop: K, value: T[K], attr: FormItem): void
+  <T extends Record<string, any>, K extends keyof T>(e: 'change', extendedParams: { prop: K, formItem: FormItem }, value: T[K]): void
   (e: 'action', eventName: string): void
   (e: 'search'): void
   (e: 'reset'): void
@@ -57,6 +57,20 @@ const emit = defineEmits<Emits>()
 defineSlots<Slots>()
 
 const attrs = useAttrs()
+
+/**
+ * 提取动态组件的事件
+ *
+ * 这里不需要显式排除 defineEmits 中定义的事件，因为 useAttrs 会自动过滤掉
+ *
+ */
+const dynamicCompEvents = computed(() => {
+  return Object.fromEntries(
+    Object.entries(attrs).filter(([key, value]) =>
+      key.startsWith('on') && typeof value === 'function',
+    ),
+  ) as Record<string, (prop: string, ...args: any) => void>
+})
 
 const slots = useSlots()
 
@@ -155,8 +169,9 @@ defineExpose({
       v-model="model[v.prop]"
       :form-item="v"
       :form-data="model"
+      :dynamic-comp-events="dynamicCompEvents"
       :form-slots="slotsCache"
-      @change="(_, value) => $emit('change', v.prop, value, v)"
+      @change="(extendedParams, value) => $emit('change', extendedParams, value)"
     />
     <FormAction :inline="mergedAttrs.inline" :action-slot="$slots.action" :config="actionConfig" @action="onAction" />
   </el-form>

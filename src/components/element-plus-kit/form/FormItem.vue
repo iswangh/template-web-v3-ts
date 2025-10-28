@@ -17,11 +17,12 @@ interface FormSlots {
 interface Props {
   formItem: FormItem
   formData?: Record<string, any>
+  dynamicCompEvents: Record<string, (...args: any[]) => any>
   formSlots?: FormSlots
 }
 
 interface Emits {
-  <T extends Record<string, any>, K extends keyof T>(e: 'change', prop: K, value: T[K], attr: FormItem): void
+  <T extends Record<string, any>, K extends keyof T>(e: 'change', extendedParams: { prop: K, formItem: FormItem }, value: T[K]): void
 }
 
 defineOptions({ name: 'ElementPlusKitFormItem' })
@@ -35,21 +36,6 @@ defineEmits<Emits>()
 
 const modelValue = defineModel()
 
-/** 提取 el-form-item 的属性（排除表单组件自定义的配置） */
-const formItemProps = computed(() => extractFormItemProps())
-
-/** 获取 el-form-item 的插槽 */
-const formItemSlots = computed(() => props.formSlots.formItemSlots)
-
-/** 根据组件类型配置解析出对应的 Element Plus 组件，未匹配时使用 div 作为降级 */
-const resolvedComponent = computed(() => FORM_ITEM_COMP_MAP[props.formItem.comp] || 'div')
-
-/** 处理后的组件属性（包含默认值和用户配置） */
-const processedCompAttrs = computed(() => COMPONENT_DEFAULT_CONFIG.getDefaults(props.formItem))
-
-/** 根据 prop 获取对应的动态组件插槽 */
-const dynamicComponentSlots = computed(() => (prop: string) => props.formSlots.dynamicComponentSlots.get(prop))
-
 /**
  * 提取表单项的属性（排除特定的键）
  * @returns 不包含排除键的属性对象
@@ -60,6 +46,49 @@ function extractFormItemProps() {
     Object.entries(props.formItem).filter(([key]) => !excludedKeysSet.has(key as typeof FORM_ITEM_EXCLUDED_KEYS[number])),
   )
 }
+
+/** 提取 el-form-item 的属性（排除表单组件自定义的配置） */
+const formItemProps = computed(() => extractFormItemProps())
+
+/** 获取 el-form-item 的插槽 */
+const formItemSlots = computed(() => props.formSlots.formItemSlots)
+
+/** 根据组件类型配置解析出对应的 Element Plus 组件，未匹配时使用 div 作为降级 */
+const resolvedComponent = computed(() => FORM_ITEM_COMP_MAP[props.formItem.comp] || 'div')
+
+/**
+ * 创建动态事件处理器
+ *
+ * 扩展参数 {prop, formItem} 作为第一个参数传递给事件处理器
+ *
+ * ⚠️ 事件处理限制：
+ * - change 事件不能在这里动态处理，否则会与原生 change 事件冲突导致重复触发
+ * - 原生 change 事件会冒泡到父组件，这里只处理非 change 的自定义事件
+ *
+ * @returns 处理后的动态事件处理器
+ */
+function createDynamicEventHandlers(): Record<string, (...args: any[]) => any> {
+  const { formItem } = props
+
+  const handlers: Record<string, (...args: any[]) => any> = {}
+
+  for (const [eventName, handler] of Object.entries(props.dynamicCompEvents)) {
+    // 拓展参数
+    const extendedParams = { prop: formItem.prop, formItem }
+    // 确保第一的参数为 拓展参数
+    handlers[eventName] = (...args: any[]) => handler(extendedParams, ...args)
+  }
+
+  return handlers
+}
+
+const dynamicEventHandlers = computed(() => createDynamicEventHandlers())
+
+/** 处理后的组件属性（包含默认值和用户配置） */
+const processedCompAttrs = computed(() => ({ ...COMPONENT_DEFAULT_CONFIG.getDefaults(props.formItem), ...dynamicEventHandlers.value }))
+
+/** 根据 prop 获取对应的动态组件插槽 */
+const dynamicComponentSlots = computed(() => (prop: string) => props.formSlots.dynamicComponentSlots.get(prop))
 </script>
 
 <template>
@@ -74,7 +103,7 @@ function extractFormItemProps() {
         :is="resolvedComponent"
         v-bind="processedCompAttrs"
         v-model="modelValue"
-        @change="$emit('change', formItem.prop, $event, formItem)"
+        @change="$emit('change', { prop: formItem.prop, formItem }, $event)"
       >
         <!-- dynamic component slots -->
         <template v-for="(slot, slotIndex) in dynamicComponentSlots(formItem.prop)" :key="`${slot.rawSlotName}-${slotIndex}`" #[slot.slotName]="slotProps">
