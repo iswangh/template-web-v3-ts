@@ -1,7 +1,7 @@
 <!-- eslint-disable ts/no-explicit-any -->
 <script setup lang='ts'>
 import type { FormInstance, FormItemProp } from 'element-plus'
-import type { ActionConfig, Arrayable, ElFormAttrs, FormItem, FormItems, FormItemSlotScope, RowAttrs } from './types'
+import type { ActionConfig, Arrayable, ElFormAttrs, EventExtendedParams, FormItems, FormItemSlotScope, RowAttrs } from './types'
 import { checkCondition } from '../../utils'
 import { DEFAULT_FORM_ATTRS } from './config'
 import FormAction from './FormAction.vue'
@@ -15,7 +15,7 @@ interface Props extends ElFormAttrs {
 
 interface Emits {
   (e: 'validate', prop: FormItemProp, isValid: boolean, message: string): void
-  <T extends Record<string, any>, K extends keyof T>(e: 'change', extendedParams: { prop: K, formItem: FormItem }, value: T[K]): void
+  <T extends Record<string, any>, K extends keyof T>(e: 'change', extendedParams: EventExtendedParams, value: T[K]): void
   (e: 'action', eventName: string): void
   (e: 'search'): void
   (e: 'reset'): void
@@ -86,6 +86,8 @@ const mergedAttrs = computed(() => {
   return { ...rest, ...DEFAULT_FORM_ATTRS, ...filteredAttrs }
 })
 
+console.log('mergedAttrs', mergedAttrs.value)
+
 /**
  * 过滤出需要渲染的 formItem
  *   - 根据 vIf 条件过滤表单项
@@ -137,11 +139,11 @@ const slotsCache = computed(() => {
 })
 
 /** 判断是否渲染 el-row */
-const shouldRenderRow = computed(() => props.rowAttrs && Object.keys(props.rowAttrs).length > 0)
+const shouldRenderRow = computed(() => ((props.rowAttrs && Object.keys(props.rowAttrs).length > 0)))
 
 /** 布局组件 */
 const layoutComponents = computed(() => ({
-  row: shouldRenderRow.value ? ElRow : 'div',
+  row: mergedAttrs.value.inline || shouldRenderRow.value ? ElRow : 'div',
   col: shouldRenderRow.value ? ElCol : 'div',
 }))
 
@@ -204,6 +206,7 @@ defineExpose({
           :form-data="model"
           :dynamic-comp-events="dynamicCompEvents"
           :form-slots="slotsCache"
+          :index="i"
           @change="(extendedParams, value) => $emit('change', extendedParams, value)"
         />
       </component>

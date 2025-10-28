@@ -1,6 +1,6 @@
 <!-- eslint-disable ts/no-explicit-any -->
 <script setup lang='ts'>
-import type { FormItem } from './types'
+import type { EventExtendedParams, FormItem } from './types'
 import { COMPONENT_DEFAULT_CONFIG, FORM_ITEM_COMP_MAP, FORM_ITEM_EXCLUDED_KEYS } from './config'
 
 interface ProcessedSlot {
@@ -16,13 +16,14 @@ interface FormSlots {
 
 interface Props {
   formItem: FormItem
+  index: number
   formData?: Record<string, any>
   dynamicCompEvents: Record<string, (...args: any[]) => any>
   formSlots?: FormSlots
 }
 
 interface Emits {
-  <T extends Record<string, any>, K extends keyof T>(e: 'change', extendedParams: { prop: K, formItem: FormItem }, value: T[K]): void
+  <T extends Record<string, any>, K extends keyof T>(e: 'change', extendedParams: Omit<EventExtendedParams, 'index'>, value: T[K]): void
 }
 
 defineOptions({ name: 'ElementPlusKitFormItem' })
@@ -56,6 +57,12 @@ const formItemSlots = computed(() => props.formSlots.formItemSlots)
 /** 根据组件类型配置解析出对应的 Element Plus 组件，未匹配时使用 div 作为降级 */
 const resolvedComponent = computed(() => FORM_ITEM_COMP_MAP[props.formItem.comp] || 'div')
 
+/** 事件拓展参数 */
+const eventExtendedParams = computed(() => {
+  const { formItem, index } = props
+  return { prop: formItem.prop, formItem, index }
+})
+
 /**
  * 创建动态事件处理器
  *
@@ -68,15 +75,11 @@ const resolvedComponent = computed(() => FORM_ITEM_COMP_MAP[props.formItem.comp]
  * @returns 处理后的动态事件处理器
  */
 function createDynamicEventHandlers(): Record<string, (...args: any[]) => any> {
-  const { formItem } = props
-
   const handlers: Record<string, (...args: any[]) => any> = {}
 
   for (const [eventName, handler] of Object.entries(props.dynamicCompEvents)) {
-    // 拓展参数
-    const extendedParams = { prop: formItem.prop, formItem }
     // 确保第一的参数为 拓展参数
-    handlers[eventName] = (...args: any[]) => handler(extendedParams, ...args)
+    handlers[eventName] = (...args: any[]) => handler(eventExtendedParams.value, ...args)
   }
 
   return handlers
@@ -103,7 +106,7 @@ const dynamicComponentSlots = computed(() => (prop: string) => props.formSlots.d
         :is="resolvedComponent"
         v-bind="processedCompAttrs"
         v-model="modelValue"
-        @change="$emit('change', { prop: formItem.prop, formItem }, $event)"
+        @change="$emit('change', eventExtendedParams, $event)"
       >
         <!-- dynamic component slots -->
         <template v-for="(slot, slotIndex) in dynamicComponentSlots(formItem.prop)" :key="`${slot.rawSlotName}-${slotIndex}`" #[slot.slotName]="slotProps">

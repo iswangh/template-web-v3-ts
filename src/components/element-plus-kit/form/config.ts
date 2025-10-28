@@ -102,12 +102,16 @@ export const COMPONENT_DEFAULT_CONFIG = {
    * 动态生成 placeholder
    */
   generatePlaceholder(formItem: FormItem, type: string) {
-    const { label } = formItem
+    const { label, comp } = formItem
 
     const _label = label ? `${label}` : ''
 
-    if (type === 'input')
+    if (type === 'input') {
+      if (comp === 'input-number')
+        return '请输入'
+
       return `请输入${_label}`
+    }
 
     if (['select', 'picker'].includes(type))
       return `请选择${_label}`

@@ -127,3 +127,13 @@ export interface ActionConfig {
   vShow?: boolean | ((data?: any) => boolean)
   buttons?: ActionConfigButtons[]
 }
+
+/**
+ * 事件拓展参数
+ * @template K 属性名类型
+ */
+export interface EventExtendedParams<K = string> {
+  prop: K
+  index: number
+  formItem: FormItem
+}
