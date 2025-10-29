@@ -54,7 +54,7 @@ const btnAttrs = computed(() => {
   <el-form-item v-if="processedActionAttrs.config.vIf" v-show="processedActionAttrs.config.vShow " prop="action">
     <template v-if="!actionSlot">
       <el-button v-for="(btn, i) in normalizedButtons " :key="`${btn.label}-${i}`" v-bind="btnAttrs(btn)" @click="$emit('action', { eventName: btn.eventName })">
-        {{ btn.label }}
+        {{ btn.label ?? '' }}
       </el-button>
     </template>
     <component :is="actionSlot" v-else prop="action" />

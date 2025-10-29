@@ -50,7 +50,7 @@ const { form } = useForm<UserInfo>({})
 
 <template>
   <div class="p-20px bg-white h-screen">
-    <Form :model="form" :form-items="formItems" :rules label-width="70" inline :row-attrs="{ span: 6 }" :action-config="{ vIf: true, buttons: [{ label: '测试', eventName: 'test', type: 'primary' }] }" @action="console.log($event)" @change="(...args) => console.log('change', ...args)" @focus="console.log('focus', $event)" @blur="console.log('blur', $event)" />
+    <Form :model="form" :form-items="formItems" :rules label-width="70" :action-config="{ vIf: true, buttons: ['submit', 'cancel'] }" @action="console.log($event)" @change="(...args) => console.log('change', ...args)" @focus="console.log('focus', $event)" @blur="console.log('blur', $event)" />
   </div>
 </template>
 

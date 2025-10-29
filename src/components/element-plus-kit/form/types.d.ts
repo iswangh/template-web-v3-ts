@@ -108,7 +108,7 @@ export type Arrayable<T> = T | T[]
  * @property {string} eventName 事件名称
  */
 export interface ActionConfigButtonItem extends Partial<ButtonProps> {
-  label: string
+  label?: string
   eventName: string
 }
 

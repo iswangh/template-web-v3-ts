@@ -86,8 +86,6 @@ const mergedAttrs = computed(() => {
   return { ...rest, ...DEFAULT_FORM_ATTRS, ...filteredAttrs }
 })
 
-console.log('mergedAttrs', mergedAttrs.value)
-
 /**
  * 过滤出需要渲染的 formItem
  *   - 根据 vIf 条件过滤表单项
@@ -189,17 +187,8 @@ defineExpose({
     @validate="(prop, isValid, message) => $emit('validate', prop, isValid, message)"
     @submit.prevent
   >
-    <component
-      :is="layoutComponents.row"
-      v-bind="rowAttrs"
-    >
-      <component
-        :is="layoutComponents.col"
-        v-for="(v, i) in filteredFormItems"
-        v-show="checkCondition({ condition: v.vShow, data: props.model, defaultValue: true })"
-        :key="`${v.prop}-${i}`"
-        v-bind="v.colAttrs"
-      >
+    <component :is="layoutComponents.row" v-bind="rowAttrs">
+      <component :is="layoutComponents.col" v-for="(v, i) in filteredFormItems" v-show="checkCondition({ condition: v.vShow, data: props.model, defaultValue: true })" :key="`${v.prop}-${i}`" v-bind="v.colAttrs">
         <FormItemComp
           v-model="model[v.prop]"
           :form-item="v"
