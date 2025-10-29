@@ -58,7 +58,7 @@ export default antfu(
         'error',
         {
           selector: 'variable',
-          format: ['camelCase', 'UPPER_CASE'], // 普通变量用 camelCase，常量用 UPPER_CASE
+          format: ['camelCase', 'PascalCase', 'UPPER_CASE'], // 普通变量用 camelCase，常量用 UPPER_CASE
           leadingUnderscore: 'allow', // 允许 _private 形式的私有变量
         },
         { selector: 'function', format: ['camelCase'] },
