@@ -5,7 +5,7 @@
     "source.organizeImports": "never", // 禁止保存时自动整理导入语句
   },
   "eslint.useFlatConfig": true, // 使用扁平配置文件
-    // 禁用您集成开发环境中的语法规则，但仍能自动进行修正
+    // 集成开发环境中的语法规则，但仍能自动进行修正（增加开发调试体验）
   "eslint.rules.customizations": [
     { "rule": "style/*", "severity": "off" },
     { "rule": "format/*", "severity": "off" },
@@ -26,7 +26,6 @@
     "typescriptreact",
     "vue",
     "html",
-    "markdown",
     "json",
     "jsonc",
     "yaml",
