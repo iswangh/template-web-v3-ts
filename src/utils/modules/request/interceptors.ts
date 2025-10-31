@@ -3,6 +3,14 @@ import type { BaseResponse } from './types'
 import { PARAMS_SERIALIZE_OPTIONS, TOKEN } from '@/configs'
 import { cleanUndefined, paramsSerializer } from './utils'
 
+/**
+ * 请求拦截器
+ *
+ * 在请求发送前统一处理 token、参数序列化、undefined 值过滤等
+ *
+ * @param {InternalAxiosRequestConfig} config - Axios 请求配置对象
+ * @returns {InternalAxiosRequestConfig} 处理后的请求配置
+ */
 export const requestInterceptor = (config: InternalAxiosRequestConfig) => {
   // * token
   config.headers.Auth = `${TOKEN}`
@@ -19,6 +27,14 @@ export const requestInterceptor = (config: InternalAxiosRequestConfig) => {
   return config
 }
 
+/**
+ * 响应拦截器
+ *
+ * 统一处理响应数据，包括业务错误码处理和成功响应数据提取
+ *
+ * @param {AxiosResponse<BaseResponse>} response - Axios 响应对象
+ * @returns {BaseResponse} 业务响应数据
+ */
 export const responseInterceptor = (response: AxiosResponse) => {
   const { data }: { data: BaseResponse } = response
   const { code, message } = data ?? {}
