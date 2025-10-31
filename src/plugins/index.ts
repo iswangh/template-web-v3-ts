@@ -1,1 +1,1 @@
-export * from './modules/element-plus'
+export * from './element-plus'

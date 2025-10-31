@@ -1,3 +1,3 @@
-export * from './modules/cookies'
-export * from './modules/date'
+export * from './cookies'
+export * from './date'
 export * from './modules/request'
