@@ -28,6 +28,8 @@
         "@eslint/config-inspector": "^1.2.0",
         "@iconify-json/ep": "^1.2.3",
         "@iconify-json/mdi": "^1.2.3",
+        "@iswangh/commitlint-config": "^0.1.2",
+        "@iswangh/eslint-config": "^0.1.6",
         "@playwright/test": "^1.55.0",
         "@tsconfig/node22": "^22.0.2",
         "@types/js-cookie": "^3.0.6",
@@ -443,6 +445,10 @@
     "@iconify/utils": ["@iconify/utils@3.0.2", "", { "dependencies": { "@antfu/install-pkg": "^1.1.0", "@antfu/utils": "^9.2.0", "@iconify/types": "^2.0.0", "debug": "^4.4.1", "globals": "^15.15.0", "kolorist": "^1.8.0", "local-pkg": "^1.1.1", "mlly": "^1.7.4" } }, "sha512-EfJS0rLfVuRuJRn4psJHtK2A9TqVnkxPpHY6lYHiB9+8eSuudsxbwMiavocG45ujOo6FJ+CIRlRnlOGinzkaGQ=="],
 
     "@isaacs/cliui": ["@isaacs/cliui@8.0.2", "", { "dependencies": { "string-width": "^5.1.2", "string-width-cjs": "npm:string-width@^4.2.0", "strip-ansi": "^7.0.1", "strip-ansi-cjs": "npm:strip-ansi@^6.0.1", "wrap-ansi": "^8.1.0", "wrap-ansi-cjs": "npm:wrap-ansi@^7.0.0" } }, "sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA=="],
+
+    "@iswangh/commitlint-config": ["@iswangh/commitlint-config@0.1.2", "", { "dependencies": { "jiti": "^2.6.1" }, "peerDependencies": { "@commitlint/config-conventional": "^20.0.0" } }, "sha512-XlrtFyppkseybR0ZxdHdajoCTr0eLAHNUoEbmthTsAQbjNNhi9ecrUQC+EYAncTzeN4v2ehnjFge76fglBD26w=="],
+
+    "@iswangh/eslint-config": ["@iswangh/eslint-config@0.1.6", "", { "dependencies": { "jiti": "^2.6.1" }, "peerDependencies": { "@antfu/eslint-config": "^6.2.0", "eslint": "^9.0.0", "eslint-plugin-format": "^1.0.0", "eslint-plugin-unused-imports": "^4.3.0" } }, "sha512-bw+zBrHZqnt4a08whkzEI/mRProCryY3lT4E6BOfB3ujsfB5aS3PlV+HWOq7GOnZop+kJOLO3K+CQHQli8lKmQ=="],
 
     "@jridgewell/gen-mapping": ["@jridgewell/gen-mapping@0.3.13", "", { "dependencies": { "@jridgewell/sourcemap-codec": "^1.5.0", "@jridgewell/trace-mapping": "^0.3.24" } }, "sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA=="],
 

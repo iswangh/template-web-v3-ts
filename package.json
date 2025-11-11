@@ -51,6 +51,8 @@
     "@eslint/config-inspector": "^1.2.0",
     "@iconify-json/ep": "^1.2.3",
     "@iconify-json/mdi": "^1.2.3",
+    "@iswangh/commitlint-config": "^0.1.2",
+    "@iswangh/eslint-config": "^0.1.6",
     "@playwright/test": "^1.55.0",
     "@tsconfig/node22": "^22.0.2",
     "@types/js-cookie": "^3.0.6",
