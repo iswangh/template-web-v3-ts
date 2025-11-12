@@ -1,5 +1,6 @@
 import process from 'node:process'
 import { fileURLToPath, URL } from 'node:url'
+import { ElementPlusKitResolver } from '@iswangh/element-plus-kit/resolver'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { visualizer } from 'rollup-plugin-visualizer'
@@ -59,7 +60,7 @@ export default defineConfig(({ mode, command }) => {
         // 生成对应的 .d.ts 文件
         dts: './src/types/auto-imports.d.ts',
         // 解析器（如果使用 UI 组件库）
-        resolvers: [ElementPlusResolver()],
+        resolvers: [ElementPlusResolver(), ElementPlusKitResolver()],
       }),
       // 自动注册组件
       Components({
@@ -70,6 +71,7 @@ export default defineConfig(({ mode, command }) => {
         // 解析器（如果使用 UI 组件库）
         resolvers: [
           ElementPlusResolver(),
+          ElementPlusKitResolver(),
           IconsResolver({
             prefix: 'Icon', // 图标组件前缀
             customCollections: ['user', 'setting'], // 自定义图标集名称

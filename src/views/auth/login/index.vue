@@ -1,10 +1,9 @@
 <script setup lang='ts'>
+import type { FormItem } from '@iswangh/element-plus-kit'
 import type { FormRules } from 'element-plus'
-import type { FormItems } from '@/components/element-plus-kit/form'
 import type { UserInfo } from '@/types'
-import { Form } from '@/components/element-plus-kit/form'
 
-const formItems: FormItems = [
+const formItems: FormItem[] = [
   {
     label: '用户名',
     prop: 'username',
@@ -50,7 +49,7 @@ const { form } = useForm<UserInfo>({})
 
 <template>
   <div class="p-20px bg-white h-screen">
-    <Form :model="form" :form-items="formItems" :rules label-width="70" :action-config="{ vIf: true, buttons: ['submit', 'cancel'] }" @action="console.log($event)" @change="(...args) => console.log('change', ...args)" @focus="console.log('focus', $event)" @blur="console.log('blur', $event)" />
+    <WForm :model="form" :form-items="formItems" :rules label-width="70" :action-config="{ vIf: true, buttons: ['submit', 'cancel'] }" @action="console.log($event)" @focus="console.log('focus', $event)" @blur="console.log('blur', $event)" />
   </div>
 </template>
 

@@ -29,6 +29,7 @@
   "dependencies": {
     "@alova/adapter-axios": "^2.0.16",
     "@element-plus/icons-vue": "^2.3.2",
+    "@iswangh/element-plus-kit": "^0.1.2",
     "@tanstack/vue-query": "^5.90.2",
     "@vueuse/core": "^13.9.0",
     "alova": "^3.3.4",
@@ -45,7 +46,6 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^6.0.0",
     "@commitlint/cli": "^20.0.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@eslint/config-inspector": "^1.2.0",
@@ -65,9 +65,7 @@
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.8.1",
     "eslint": "^9.35.0",
-    "eslint-plugin-format": "^1.0.2",
     "eslint-plugin-playwright": "^2.2.2",
-    "eslint-plugin-unused-imports": "^4.2.0",
     "husky": "^9.1.7",
     "jiti": "^2.5.1",
     "jsdom": "^27.0.0",
@@ -87,7 +85,6 @@
     "vite-plugin-progress": "^0.0.7",
     "vite-plugin-pwa": "^1.0.3",
     "vite-plugin-restart": "^1.0.0",
-    "vite-plugin-style-import": "^2.0.0",
     "vite-plugin-vue-devtools": "^8.0.2",
     "vitest": "^3.2.4",
     "vue-tsc": "^3.0.7"
