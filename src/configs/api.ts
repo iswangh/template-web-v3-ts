@@ -11,4 +11,5 @@ export const PARAMS_SERIALIZE_OPTIONS: ParamsSerializerOptions = {
   format: 'repeat',
 }
 
+/** 认证令牌（用于测试，生产环境应从后端获取） */
 export const TOKEN = '0bd43e74-c5c0-4649-8939-9e91ad05cb91'

@@ -1,3 +1,10 @@
+/**
+ * @file 应用入口文件
+ *
+ * 应用程序的主入口文件，负责初始化 Vue 应用、注册插件、配置路由和状态管理等核心功能。
+ * 集成了 Pinia、Vue Router、Vue Query、Element Plus 等核心依赖，提供完整的应用基础架构。
+ */
+
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import { queryClient } from '@/utils'

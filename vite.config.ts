@@ -1,3 +1,13 @@
+/**
+ * @file Vite 构建配置文件
+ *
+ * 基于 Vite 的前端项目构建配置，集成了 Vue 3、TypeScript、UnoCSS、Element Plus 等核心功能，
+ * 支持自动导入、组件自动注册、代码分割、资源压缩等优化策略，提供完整的开发和生产环境配置。
+ *
+ * @see {@link https://vite.dev/ Vite 官方网站}
+ * @see {@link https://cn.vitejs.dev/ Vite 中文文档}
+ */
+
 import process from 'node:process'
 import { fileURLToPath, URL } from 'node:url'
 import { ElementPlusKitResolver } from '@iswangh/element-plus-kit/resolver'
@@ -21,7 +31,6 @@ import ViteRestart from 'vite-plugin-restart'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { createSvgLoader, lodashImports } from './build'
 
-// https://vite.dev/config/
 export default defineConfig(({ mode, command }) => {
   const isServe = command === 'serve'
   const isBuild = command === 'build'
@@ -173,7 +182,7 @@ export default defineConfig(({ mode, command }) => {
             'vue-vendor': ['vue', 'vue-router', 'pinia', 'pinia-plugin-persistedstate'],
             'request-vendor': ['axios', 'alova', '@alova/adapter-axios', '@tanstack/vue-query'],
             'utils-vendor': ['lodash-es', 'dayjs', '@vueuse/core'],
-            'ui-vendor': ['unplugin-icons', 'unocss', 'element-plus', '@element-plus/icons-vue'],
+            'ui-vendor': ['unplugin-icons', 'unocss', 'element-plus', '@element-plus/icons-vue', '@iswangh/element-plus-kit'],
           },
         },
       },

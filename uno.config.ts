@@ -1,3 +1,13 @@
+/**
+ * @file UnoCSS 样式引擎配置文件
+ *
+ * 基于 UnoCSS 的原子化 CSS 引擎配置，集成了 Wind4 预设、属性化模式、图标支持等核心功能，
+ * 支持自定义规则、快捷方式、指令转换等扩展能力，提供高效的样式开发体验。
+ *
+ * @see {@link https://unocss.dev/ UnoCSS 官方网站}
+ * @see {@link https://unocss.dev/interactive/ UnoCSS 交互式文档}
+ */
+
 import { resolve } from 'node:path'
 import process from 'node:process'
 import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders'

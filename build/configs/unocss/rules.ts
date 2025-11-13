@@ -1,3 +1,12 @@
+/**
+ * @file UnoCSS 自定义规则配置
+ *
+ * 定义了 UnoCSS 的自定义规则，包括 margin、padding、文本截断等常用样式规则。
+ * 这些规则扩展了 UnoCSS 的默认功能，提供更灵活的样式定制能力。
+ *
+ * @see {@link https://unocss.dev/config/rules UnoCSS 规则配置文档}
+ */
+
 import type { Rule } from 'unocss'
 
 export const marginRules: Rule[] = [

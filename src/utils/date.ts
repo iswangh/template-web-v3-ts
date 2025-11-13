@@ -109,12 +109,14 @@ export interface DateDiffResult {
 }
 
 /**
- * 日期工具类（封装高频日期操作，处理无效日期边界）
- * @namespace dateUtil
+ * 日期工具类
+ *
+ * 封装高频日期操作，处理无效日期边界，提供完整的日期处理功能
  */
 export const dateUtil = {
   /**
    * 私有辅助函数：统一获取有效 Dayjs 实例（内部使用，不对外暴露）
+   *
    * @param {DateInput} date - 待处理的日期输入
    * @returns {Dayjs} 有效则返回 Dayjs 实例，无效则返回 dayjs(null)
    */

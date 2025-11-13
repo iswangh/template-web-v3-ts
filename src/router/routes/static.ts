@@ -2,7 +2,9 @@ import type { RouteRecordRaw } from 'vue-router'
 import { HOME_REDIRECT } from '@/configs'
 
 /**
- * 静态路由（无需登录即可访问）
+ * 静态路由
+ *
+ * 应用的基础路由配置，包含首页等核心路由
  */
 export const staticRoutes: RouteRecordRaw[] = [
   {

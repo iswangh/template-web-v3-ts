@@ -1,15 +1,16 @@
+/**
+ * @file Playwright E2E 测试配置文件
+ *
+ * 基于 Playwright 的端到端测试配置，支持多浏览器测试、并行执行、重试机制等核心功能。
+ * 配置了测试目录、超时时间、报告生成等选项，提供完整的 E2E 测试环境支持。
+ *
+ * @see {@link https://playwright.dev/ Playwright 官方网站}
+ * @see {@link https://playwright.dev/docs/test-configuration Playwright 配置文档}
+ */
+
 import process from 'node:process'
 import { defineConfig, devices } from '@playwright/test'
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// require('dotenv').config();
-
-/**
- * See https://playwright.dev/docs/test-configuration.
- */
 export default defineConfig({
   testDir: './e2e',
   /* Maximum time one test can run for. */

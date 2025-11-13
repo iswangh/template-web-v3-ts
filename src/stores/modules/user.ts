@@ -4,14 +4,10 @@ import { TOKEN } from '@/configs'
 import { removeCookie, setAuthToken } from '@/utils'
 
 export const useUserStore = defineStore('user', () => {
-  /**
-   * 用户访问令牌
-   */
+  /** 用户访问令牌 */
   const token = ref<string>('')
 
-  /**
-   * 用户信息
-   */
+  /** 用户信息 */
   const userInfo = ref<UserInfo | null>(null)
 
   /**

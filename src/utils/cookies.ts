@@ -93,9 +93,7 @@ export function getAuthToken(): string | null {
   return getCookie('token')
 }
 
-/**
- * 删除认证 token（封装了通用 removeCookie，键固定为 'token'）
- */
+/** 删除认证 token（封装了通用 removeCookie，键固定为 'token'） */
 export function removeAuthToken() {
   removeCookie('token')
 }

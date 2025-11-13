@@ -51,6 +51,14 @@ export const responseInterceptor = (response: AxiosResponse) => {
   return response.data
 }
 
+/**
+ * 错误处理函数
+ *
+ * 统一处理请求和响应过程中的错误，记录错误信息并返回拒绝的 Promise
+ *
+ * @param {AxiosError} error - Axios 错误对象
+ * @returns {Promise<never>} 拒绝的 Promise，包含错误消息
+ */
 export const errorHandler = (error: AxiosError) => {
   console.error('错误拦截:', error.message)
   return Promise.reject(error.message)

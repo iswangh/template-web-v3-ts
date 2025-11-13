@@ -4,7 +4,7 @@ import * as ElementPlusIcons from '@element-plus/icons-vue'
 /**
  * 注册 Element Plus 图标组件
  *
- *  @param app - Vue 应用实例
+ * @param {App} app - Vue 应用实例
  */
 function setupElementPlusIcons(app: App) {
   for (const [key, component] of Object.entries(ElementPlusIcons)) {
@@ -15,7 +15,7 @@ function setupElementPlusIcons(app: App) {
 /**
  * 完整的 Element Plus 插件配置
  *
- *  @param app - Vue 应用实例
+ * @param {App} app - Vue 应用实例
  */
 export function setupElementPlus(app: App) {
   setupElementPlusIcons(app)

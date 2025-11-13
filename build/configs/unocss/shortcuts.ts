@@ -1,3 +1,12 @@
+/**
+ * @file UnoCSS 自定义快捷方式配置
+ *
+ * 定义了 UnoCSS 的自定义快捷方式，包括常用布局、Flex 布局等组合类名。
+ * 这些快捷方式可以简化常用的 CSS 类名组合，提高开发效率。
+ *
+ * @see {@link https://unocss.dev/config/shortcuts UnoCSS 快捷方式配置文档}
+ */
+
 import type { UserShortcuts } from 'unocss'
 
 export const flexShortcuts: UserShortcuts = [
