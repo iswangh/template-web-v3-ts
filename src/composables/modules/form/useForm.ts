@@ -1,3 +1,4 @@
+/* eslint-disable ts/no-explicit-any */
 import type { FormInstance } from 'element-plus'
 
 type SubmitHandler<T> = (formData: T) => Promise<void> | void
@@ -22,7 +23,7 @@ type SubmitHandler<T> = (formData: T) => Promise<void> | void
  * const { form, formRef, loading, submit, reset } = useForm<LoginForm>({ username: 'admin' })
  * ```
  */
-export const useForm = <T extends Record<string, unknown>>(
+export const useForm = <T extends Record<string, any>>(
   defaultData?: Partial<T> | (() => Partial<T>),
 ) => {
   const defaultValues = _cloneDeep(_isFunction(defaultData) ? defaultData() : defaultData ?? {}) as Partial<T>
