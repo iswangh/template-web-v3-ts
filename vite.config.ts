@@ -167,6 +167,7 @@ export default defineConfig(({ mode, command }) => {
     server: {
       open: serverOpen,
       port: serverPort,
+      host: true,
     },
     build: {
       sourcemap,

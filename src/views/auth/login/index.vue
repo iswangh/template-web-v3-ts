@@ -1,24 +1,24 @@
 <script setup lang='ts'>
-import type { FormItem } from '@iswangh/element-plus-kit'
+import type { FormItems } from '@iswangh/element-plus-kit'
 import type { FormRules } from 'element-plus'
 import type { UserInfo } from '@/types'
 
-const formItems: FormItem[] = [
+const formItems: FormItems = [
   {
     label: '用户名',
     prop: 'username',
-    comp: 'input',
+    compType: 'input',
   },
   {
     label: '密码',
     prop: 'password',
-    comp: 'input',
+    compType: 'input',
   },
   {
     label: '性别',
     prop: 'sex',
-    comp: 'radio',
-    compAttrs: {
+    compType: 'radio-group',
+    compProps: {
       options: [
         { label: '男', value: '1' },
         { label: '女', value: '2' },
@@ -28,12 +28,24 @@ const formItems: FormItem[] = [
   {
     label: '爱好',
     prop: 'hobby',
-    comp: 'select',
-    compAttrs: {
+    compType: 'select',
+    compProps: {
       options: [
         { label: '吃饭', value: '1' },
         { label: '睡觉', value: '2' },
         { label: '打游戏', value: '3' },
+      ],
+    },
+  },
+  {
+    label: '城市',
+    prop: 'city',
+    compType: 'w-check-tag',
+    compProps: {
+      options: [
+        { label: '北京', value: '1' },
+        { label: '上海', value: '2' },
+        { label: '广州', value: '3' },
       ],
     },
   },
