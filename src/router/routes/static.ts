@@ -1,5 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router'
-import { HOME_REDIRECT } from '@/configs'
+import { HOME_REDIRECT } from '@/config'
 
 /**
  * 静态路由

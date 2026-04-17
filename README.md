@@ -158,11 +158,11 @@ Font Awesome (fa)：
 ```
 
 src/
-├── apis/           # API接口调用
+├── api/            # API 接口层
 ├── assets/         # 静态资源
 ├── components/     # 公共组件
 ├── composables/    # 组合式函数
-├── configs/        # 配置文件
+├── config/         # 应用配置
 ├── constants/      # 常量定义
 ├── mock/           # 模拟数据
 ├── router/         # 路由配置

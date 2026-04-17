@@ -1,6 +1,6 @@
 import type { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import type { BaseResponse } from './types'
-import { PARAMS_SERIALIZE_OPTIONS, TOKEN } from '@/configs'
+import { PARAMS_SERIALIZE_OPTIONS, TOKEN } from '@/config'
 import { cleanUndefined, paramsSerializer } from './utils'
 
 /**

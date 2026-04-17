@@ -10,7 +10,6 @@
 
 import process from 'node:process'
 import { fileURLToPath, URL } from 'node:url'
-import { ElementPlusKitResolver } from '@iswangh/element-plus-kit/resolver'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { visualizer } from 'rollup-plugin-visualizer'
@@ -80,13 +79,13 @@ export default defineConfig(({ mode, command }) => {
       // 自动导入插件
       AutoImport({
         // 预设自动导入
-        imports: ['vue', 'vue-router', 'pinia', '@vueuse/core', { 'lodash-es': lodashImports }],
+        imports: ['vue', 'vue-router', 'pinia', 'vue-i18n', '@vueuse/core', { 'lodash-es': lodashImports }],
         // 自定义自动导入
-        dirs: ['./src/apis', './src/composables', './src/stores'],
+        dirs: ['./src/api', './src/composables', './src/stores'],
         // 生成对应的 .d.ts 文件
         dts: './src/types/auto-imports.d.ts',
         // 解析器（如果使用 UI 组件库）
-        resolvers: [ElementPlusResolver(), ElementPlusKitResolver()],
+        resolvers: [ElementPlusResolver()],
       }),
       // 自动注册组件
       Components({
@@ -97,7 +96,6 @@ export default defineConfig(({ mode, command }) => {
         // 解析器（如果使用 UI 组件库）
         resolvers: [
           ElementPlusResolver(),
-          ElementPlusKitResolver(),
           IconsResolver({
             prefix: 'Icon', // 图标组件前缀
             customCollections: ['user', 'setting'], // 自定义图标集名称

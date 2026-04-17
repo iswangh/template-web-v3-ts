@@ -1,4 +1,4 @@
-import { BASE_URL, TIMEOUT } from '@/configs'
+import { BASE_URL, TIMEOUT } from '@/config'
 
 /**
  * HTTP 请求基础配置

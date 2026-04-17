@@ -1,6 +1,6 @@
 import type { UserInfo } from '@/types'
 import { defineStore } from 'pinia'
-import { TOKEN } from '@/configs'
+import { TOKEN } from '@/config'
 import { removeCookie, setAuthToken } from '@/utils'
 
 export const useUserStore = defineStore('user', () => {
