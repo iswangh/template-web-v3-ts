@@ -6,4 +6,4 @@
   <div> 403 </div>
 </template>
 
-<style scoped lang='scss'></style>
+<style lang="scss" scoped></style>

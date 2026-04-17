@@ -65,4 +65,4 @@ const { form } = useForm<UserInfo>({})
   </div>
 </template>
 
-<style scoped lang='scss'></style>
+<style lang="scss" scoped></style>

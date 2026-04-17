@@ -6,7 +6,7 @@
 
 ### 环境要求
 
-- **Node.js**: `^20.19.0` 或 `>=22.12.0`（推荐用 Volta 管理版本，项目已配置 `volta.node: 24.8.0`）
+- **Node.js**：`^20.19.0` 或 `>=22.12.0`（以 `package.json` → `engines` 为准）；推荐用 Volta 固定版本，项目已配置 **`volta.node: 24.15.0`**
 - **包管理器**：支持 pnpm（项目预安装脚本限制），推荐搭配 @antfu/ni 使用（需先全局安装：`npm i -g @antfu/ni`）
 
 ### 安装依赖
@@ -93,9 +93,12 @@ nr test:e2e
 - 🚀 Alova - 轻量级请求策略库
 - 🔄 TanStack Vue Query - 服务端状态管理
 
-### 样式与UI
+### 样式与 UI
 
-- 🎨 UnoCSS - 原子化 CSS 引擎
+样式栈：**UnoCSS 为主，Sass/SCSS 为辅。**
+
+- 🎨 **UnoCSS** — 原子化 CSS，主样式方案
+- 💅 **Sass/SCSS** — 组件内使用 `<style lang="scss" scoped>`；`src/assets/styles/variables.scss` 在构建时经 Vite `additionalData` 注入，各组件无需再写 `@import`
 
 ### 开发工具
 
