@@ -23,10 +23,14 @@ type SubmitHandler<T> = (formData: T) => Promise<void> | void
  * const { form, formRef, loading, submit, reset } = useForm<LoginForm>({ username: 'admin' })
  * ```
  */
-export const useForm = <T extends Record<string, any>>(
+export function useForm<T extends Record<string, any>>(
   defaultData?: Partial<T> | (() => Partial<T>),
-) => {
-  const defaultValues = _cloneDeep(_isFunction(defaultData) ? defaultData() : defaultData ?? {}) as Partial<T>
+) {
+  const defaultValues = _cloneDeep(
+    typeof defaultData === 'function'
+      ? defaultData()
+      : (defaultData ?? {}),
+  ) as Partial<T>
 
   const form = ref(_cloneDeep(defaultValues) as T)
 

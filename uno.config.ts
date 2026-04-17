@@ -11,9 +11,15 @@
 import { resolve } from 'node:path'
 import process from 'node:process'
 import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders'
-import presetWind4 from '@unocss/preset-wind4'
-import transformerCompileClass from '@unocss/transformer-compile-class'
-import { defineConfig, presetAttributify, presetIcons, transformerDirectives, transformerVariantGroup } from 'unocss'
+import {
+  defineConfig,
+  presetAttributify,
+  presetIcons,
+  presetWind4,
+  transformerCompileClass,
+  transformerDirectives,
+  transformerVariantGroup,
+} from 'unocss'
 import { unoRules, unoShortcuts } from './build'
 
 // 路径解析（集中管理路径，便于维护）
@@ -40,7 +46,8 @@ export default defineConfig({
       },
       collections: {
         // 本地自定义图标集
-        local: FileSystemIconLoader(resolvePath('src/assets/svgs'), svg => svg.replace(/^<svg /, '<svg fill="currentColor" ')),
+        local: FileSystemIconLoader(resolvePath('src/assets/svgs'), (svg: string) =>
+          svg.replace(/^<svg /, '<svg fill="currentColor" ')),
       },
     }),
   ],

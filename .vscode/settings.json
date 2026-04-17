@@ -2,10 +2,10 @@
   "editor.formatOnSave": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit", // 保存时自动修复ESLint错误
-    "source.organizeImports": "never", // 禁止保存时自动整理导入语句
+    "source.organizeImports": "never" // 禁止保存时自动整理导入语句
   },
   "eslint.useFlatConfig": true, // 使用扁平配置文件
-    // 集成开发环境中的语法规则，但仍能自动进行修正（增加开发调试体验）
+  // 集成开发环境中的语法规则，但仍能自动进行修正（增加开发调试体验）
   "eslint.rules.customizations": [
     { "rule": "style/*", "severity": "off" },
     { "rule": "format/*", "severity": "off" },
@@ -42,7 +42,7 @@
   ],
   "prettier.enable": false,
   "markdownlint": false,
-    // * 语言工具配置
+  // * 语言工具配置
   "javascript.updateImportsOnFileMove.enabled": "always", // 自动更新JS导入
   "typescript.updateImportsOnFileMove.enabled": "always", // 自动更新TS导入
   // * 文件嵌套配置
@@ -52,7 +52,7 @@
     "eslint.config.*": ".eslint*,.editorconfig, lint-staged.config.*, commitlint.config.*",
     "tsconfig.json": "tsconfig.*.json, env.d.ts",
     "vite.config.*": "jsconfig*, vitest.config.*, cypress.config.*, playwright.config.*",
-    "package.json": "bun.lock,.gitattributes,.gitignore,.node-version",
+    "package.json": "npm-lock.yaml,pnpm-lock.yaml,bun.lock,yarn.lock,.gitattributes,.gitignore,.node-version",
     ".env": ".env.*"
   },
   // * 拼写检查
@@ -97,5 +97,5 @@
     "titleBar.inactiveBackground": "#83256199",
     "titleBar.inactiveForeground": "#e7e7e799"
   },
-  "peacock.color": "#832561",
+  "peacock.color": "#832561"
 }

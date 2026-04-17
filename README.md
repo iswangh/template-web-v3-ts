@@ -1,13 +1,13 @@
 # Template Web V3 TS
 
-基于 Bun + Vite + TypeScript 的现代化前端项目模板。
+基于 pnpm + Vite + TypeScript 的现代化前端项目模板。
 
 ## 🚀 快速开始
 
 ### 环境要求
 
 - **Node.js**: `^20.19.0` 或 `>=22.12.0`（推荐用 Volta 管理版本，项目已配置 `volta.node: 24.8.0`）
-- **包管理器**：支持 Bun（项目预安装脚本限制），推荐搭配 @antfu/ni 使用（需先全局安装：`npm i -g @antfu/ni`）
+- **包管理器**：支持 pnpm（项目预安装脚本限制），推荐搭配 @antfu/ni 使用（需先全局安装：`npm i -g @antfu/ni`）
 
 ### 安装依赖
 
@@ -15,8 +15,8 @@
 # 使用 ni 自动适配包管理器（推荐）
 ni
 
-# 若未安装 ni，直接用 bun 安装
-bun install
+# 若未安装 ni，直接用 pnpm 安装
+pnpm install
 ```
 
 ### 开发调试
@@ -84,7 +84,7 @@ nr test:e2e
 
 ### 构建工具
 
-- 🐿️ Bun - 快速的 JavaScript 运行时和包管理器
+- 📦 pnpm - 高效的 Node.js 包管理器
 - ⚡️ Vite - 下一代前端构建工具
 
 ### 数据请求
@@ -176,8 +176,8 @@ src/
 
 ### 包管理器
 
-- 项目预安装脚本强制使用 Bun
-- 如需切换包管理器，需删除 `scripts.preinstall` 中的 `only-allow bun`
+- 项目预安装脚本强制使用 pnpm
+- 如需切换包管理器，需修改 `scripts.preinstall` 中的 `only-allow pnpm`
 
 ### 开发工具
 

@@ -31,6 +31,23 @@ import ViteRestart from 'vite-plugin-restart'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { createSvgLoader, lodashImports } from './build'
 
+function escapeRegExp(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+/** 模块 id 是否落在 `node_modules/<packageName>/` 下（兼容 Windows 路径） */
+function inNodeModulesPackage(id: string, packageName: string): boolean {
+  return new RegExp(`[/\\\\]node_modules[/\\\\]${escapeRegExp(packageName)}[/\\\\]`).test(id)
+}
+
+function idIncludesAny(id: string, substrings: readonly string[]): boolean {
+  return substrings.some(s => id.includes(s))
+}
+
+function nodeModulesVendorTest(match: (id: string) => boolean): (id: string) => boolean {
+  return id => id.includes('node_modules') && match(id)
+}
+
 export default defineConfig(({ mode, command }) => {
   const isServe = command === 'serve'
   const isBuild = command === 'build'
@@ -171,27 +188,64 @@ export default defineConfig(({ mode, command }) => {
     },
     build: {
       sourcemap,
-      minify: isBuild ? 'esbuild' : false,
-      rollupOptions: {
+      minify: isBuild ? 'oxc' : false,
+      rolldownOptions: {
         output: {
-          // js 打包位置
           chunkFileNames: 'assets/js/[name]-[hash].js',
           entryFileNames: 'assets/js/[name]-[hash].js',
-          // 其他资源保持原有目录结构
           assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
-          manualChunks: {
-            'vue-vendor': ['vue', 'vue-router', 'pinia', 'pinia-plugin-persistedstate'],
-            'request-vendor': ['axios', 'alova', '@alova/adapter-axios', '@tanstack/vue-query'],
-            'utils-vendor': ['lodash-es', 'dayjs', '@vueuse/core'],
-            'ui-vendor': ['unplugin-icons', 'unocss', 'element-plus', '@element-plus/icons-vue', '@iswangh/element-plus-kit'],
+          ...(isBuild && (dropConsole || !dropDebugger)
+            ? {
+                minify: {
+                  compress: {
+                    ...(dropConsole ? { dropConsole: true } : {}),
+                    ...(!dropDebugger ? { dropDebugger: false } : {}),
+                  },
+                },
+              }
+            : {}),
+          codeSplitting: {
+            groups: [
+              {
+                name: 'vue-vendor',
+                priority: 50,
+                test: nodeModulesVendorTest(id =>
+                  idIncludesAny(id, ['vue-router', 'pinia-plugin-persistedstate'])
+                  || inNodeModulesPackage(id, 'vue')
+                  || inNodeModulesPackage(id, 'pinia'),
+                ),
+              },
+              {
+                name: 'ui-vendor',
+                priority: 40,
+                test: nodeModulesVendorTest(id =>
+                  idIncludesAny(id, ['unplugin-icons', '@element-plus/icons-vue'])
+                  || inNodeModulesPackage(id, 'unocss')
+                  || inNodeModulesPackage(id, 'element-plus'),
+                ),
+              },
+              {
+                name: 'request-vendor',
+                priority: 30,
+                test: nodeModulesVendorTest(id =>
+                  idIncludesAny(id, ['@alova/adapter-axios', '@tanstack/vue-query'])
+                  || inNodeModulesPackage(id, 'axios')
+                  || inNodeModulesPackage(id, 'alova'),
+                ),
+              },
+              {
+                name: 'utils-vendor',
+                priority: 20,
+                test: nodeModulesVendorTest(id =>
+                  idIncludesAny(id, ['@vueuse/core'])
+                  || inNodeModulesPackage(id, 'lodash-es')
+                  || inNodeModulesPackage(id, 'dayjs'),
+                ),
+              },
+            ],
           },
         },
       },
-    },
-    esbuild: {
-      drop: isBuild
-        ? [...(dropConsole ? ['console'] : []), ...(dropDebugger ? ['debugger'] : [])] as ('console' | 'debugger')[]
-        : [],
     },
   }
 })

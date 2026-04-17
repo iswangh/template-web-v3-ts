@@ -11,7 +11,7 @@ import { cleanUndefined, paramsSerializer } from './utils'
  * @param {InternalAxiosRequestConfig} config - Axios 请求配置对象
  * @returns {InternalAxiosRequestConfig} 处理后的请求配置
  */
-export const requestInterceptor = (config: InternalAxiosRequestConfig) => {
+export function requestInterceptor(config: InternalAxiosRequestConfig) {
   // * token
   config.headers.Auth = `${TOKEN}`
 
@@ -35,7 +35,7 @@ export const requestInterceptor = (config: InternalAxiosRequestConfig) => {
  * @param {AxiosResponse<BaseResponse>} response - Axios 响应对象
  * @returns {BaseResponse} 业务响应数据
  */
-export const responseInterceptor = (response: AxiosResponse) => {
+export function responseInterceptor(response: AxiosResponse) {
   const { data }: { data: BaseResponse } = response
   const { code, message } = data ?? {}
 
@@ -59,7 +59,7 @@ export const responseInterceptor = (response: AxiosResponse) => {
  * @param {AxiosError} error - Axios 错误对象
  * @returns {Promise<never>} 拒绝的 Promise，包含错误消息
  */
-export const errorHandler = (error: AxiosError) => {
+export function errorHandler(error: AxiosError) {
   console.error('错误拦截:', error.message)
   return Promise.reject(error.message)
 }

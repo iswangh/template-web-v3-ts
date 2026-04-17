@@ -2,9 +2,8 @@
 echo "📋 正在验证提交信息..."
 echo "────────────────────────────────────────"
 
-# 执行 commitlint 命令
-# 直接使用 pnpm exec 执行 commitlint 命令，无需通过 package.json 脚本
-bunx commitlint --edit "$1" || {
+# 执行 commitlint 命令（优先使用 pnpm，失败时降级到 npx）
+pnpm exec commitlint --edit "$1" || npx --no commitlint --edit "$1" || {
   echo ""
   echo "❌ 提交信息格式验证失败!"
   echo ""
