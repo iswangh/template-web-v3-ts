@@ -1,2 +1,2 @@
-export * from './modules/base'
-export * from './modules/user'
+export * from './base'
+export * from './user'

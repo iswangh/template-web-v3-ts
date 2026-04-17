@@ -1,1 +1,1 @@
-export * from './modules/form'
+export * from './form'

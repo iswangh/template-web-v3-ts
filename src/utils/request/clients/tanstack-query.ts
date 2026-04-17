@@ -15,7 +15,7 @@ import { QueryClient } from '@tanstack/vue-query'
  *
  * @example
  * // 基本用法
- * import { queryClient } from '@/utils/modules/request/tanstack'
+ * import { queryClient } from '@/utils/request/tanstack'
  *
  * // 覆盖默认配置
  * const { data } = useQuery({
