@@ -19,6 +19,102 @@ const { form, formRef, submit, loading } = useForm<LoginForm>({
   password: '',
 })
 
+const cardRef = ref<HTMLElement>()
+let prefersReducedMotion = false
+let animationId: number | null = null
+
+const current = {
+  rotateX: 0,
+  rotateY: 0,
+  lift: 0,
+}
+
+const target = {
+  rotateX: 0,
+  rotateY: 0,
+  lift: 0,
+}
+
+function isSettled() {
+  return Math.abs(current.rotateX - target.rotateX) < 0.01
+    && Math.abs(current.rotateY - target.rotateY) < 0.01
+    && Math.abs(current.lift - target.lift) < 0.01
+}
+
+function setCardTransform(transform: string) {
+  if (!cardRef.value)
+    return
+  cardRef.value.style.transform = transform
+}
+
+function updateCardTransform() {
+  setCardTransform(
+    `perspective(1100px) translateY(${current.lift.toFixed(2)}px) rotateX(${current.rotateX.toFixed(2)}deg) rotateY(${current.rotateY.toFixed(2)}deg)`,
+  )
+}
+
+function startAnimation() {
+  if (animationId !== null || prefersReducedMotion)
+    return
+
+  const tick = () => {
+    current.rotateX += (target.rotateX - current.rotateX) * 0.16
+    current.rotateY += (target.rotateY - current.rotateY) * 0.16
+    current.lift += (target.lift - current.lift) * 0.16
+    updateCardTransform()
+
+    if (isSettled()) {
+      current.rotateX = target.rotateX
+      current.rotateY = target.rotateY
+      current.lift = target.lift
+      updateCardTransform()
+      animationId = null
+      return
+    }
+
+    animationId = requestAnimationFrame(tick)
+  }
+
+  animationId = requestAnimationFrame(tick)
+}
+
+function onCardPointerEnter() {
+  if (prefersReducedMotion)
+    return
+  target.lift = -4
+  startAnimation()
+}
+
+function onCardPointerMove(event: PointerEvent) {
+  if (prefersReducedMotion || !cardRef.value)
+    return
+
+  const rect = cardRef.value.getBoundingClientRect()
+  const px = (event.clientX - rect.left) / rect.width
+  const py = (event.clientY - rect.top) / rect.height
+
+  target.rotateY = (px - 0.5) * 6
+  target.rotateX = (0.5 - py) * 5
+  target.lift = -4
+  startAnimation()
+}
+
+function onCardPointerLeave() {
+  target.rotateX = 0
+  target.rotateY = 0
+  target.lift = 0
+  startAnimation()
+}
+
+onMounted(() => {
+  prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+})
+
+onUnmounted(() => {
+  if (animationId !== null)
+    cancelAnimationFrame(animationId)
+})
+
 function onSubmit() {
   submit(async () => {
     // TODO: 接入登录接口
@@ -32,7 +128,14 @@ function onSubmit() {
     <div aria-hidden="true" class="login-page__mesh" />
 
     <main class="login-page__main">
-      <section aria-labelledby="login-title" class="login-page__card">
+      <section
+        ref="cardRef"
+        aria-labelledby="login-title"
+        class="login-page__card login-page__card--interactive"
+        @pointerenter="onCardPointerEnter"
+        @pointermove="onCardPointerMove"
+        @pointerleave="onCardPointerLeave"
+      >
         <header class="mb-2 text-center">
           <h1 id="login-title" class="m-0 text-7 fw-600 tracking--0.03em text-[#1d1d1feb]">
             {{ APP_NAME }}
@@ -144,6 +247,19 @@ function onSubmit() {
     box-shadow:
       0 24px 80px rgb(0 0 0 / 12%),
       0 0 1px rgb(0 0 0 / 6%);
+    transform: perspective(1100px) translateY(0) rotateX(0deg) rotateY(0deg);
+    transform-origin: center;
+  }
+
+  &__card--interactive {
+    transition: box-shadow 220ms ease;
+    will-change: transform;
+
+    &:hover {
+      box-shadow:
+        0 30px 90px rgb(15 23 42 / 16%),
+        0 0 1px rgb(0 0 0 / 8%);
+    }
   }
 }
 
@@ -187,6 +303,12 @@ function onSubmit() {
     &:focus-visible {
       --at-apply: outline-none ring-2 ring-[#0a84ff66] ring-offset-2;
     }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-page__card--interactive {
+    transition: none;
   }
 }
 </style>
