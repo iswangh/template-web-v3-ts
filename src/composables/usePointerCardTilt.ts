@@ -1,3 +1,4 @@
+import { useMediaQuery } from '@vueuse/core'
 import { gsap } from 'gsap'
 
 function clamp01(value: number) {
@@ -32,15 +33,18 @@ export interface UsePointerCardTiltOptions {
  */
 export function usePointerCardTilt(options: UsePointerCardTiltOptions = {}) {
   const {
-    rotateYFactor = 6,
-    rotateXFactor = 5,
+    rotateYFactor = 20,
+    rotateXFactor = 14,
     hoverLift = -4,
     duration = 0.45,
     ease = 'power3.out',
     perspective = 1100,
     maxAbsRotation,
-    coarsePointerTiltScale = 0.62,
+    coarsePointerTiltScale = 0.75,
   } = options
+  const normalizedMaxAbsRotation = maxAbsRotation == null
+    ? undefined
+    : Math.max(0, Math.abs(maxAbsRotation))
 
   const cardRef = ref<HTMLElement>()
   let prefersReducedMotion = false
@@ -53,11 +57,16 @@ export function usePointerCardTilt(options: UsePointerCardTiltOptions = {}) {
   let moveRafId: number | null = null
   let lastClientX = 0
   let lastClientY = 0
+  let stopEnvironmentWatch: (() => void) | null = null
+  // 避免媒体查询频繁触发时重复创建 quickTo，确保初始化与销毁成对出现。
+  let isTiltRuntimeReady = false
+  const prefersReducedMotionQuery = useMediaQuery('(prefers-reduced-motion: reduce)')
+  const isCoarsePointerQuery = useMediaQuery('(pointer: coarse)')
 
   function clampRotation(value: number) {
-    if (maxAbsRotation === undefined)
+    if (normalizedMaxAbsRotation == null || normalizedMaxAbsRotation === 0)
       return value
-    return Math.min(maxAbsRotation, Math.max(-maxAbsRotation, value))
+    return Math.min(normalizedMaxAbsRotation, Math.max(-normalizedMaxAbsRotation, value))
   }
 
   function flushPointerTilt() {
@@ -77,7 +86,6 @@ export function usePointerCardTilt(options: UsePointerCardTiltOptions = {}) {
 
     rotateYTo(clampRotation(rawY))
     rotateXTo(clampRotation(rawX))
-    yTo(hoverLiftScaled)
   }
 
   function schedulePointerTilt(event: PointerEvent) {
@@ -85,6 +93,7 @@ export function usePointerCardTilt(options: UsePointerCardTiltOptions = {}) {
     lastClientY = event.clientY
     if (moveRafId != null)
       return
+    // 将高频 pointermove 合并到下一帧，降低事件抖动与主线程压力。
     moveRafId = requestAnimationFrame(flushPointerTilt)
   }
 
@@ -93,6 +102,37 @@ export function usePointerCardTilt(options: UsePointerCardTiltOptions = {}) {
       cancelAnimationFrame(moveRafId)
       moveRafId = null
     }
+  }
+
+  function setupTiltRuntime() {
+    if (!cardRef.value || isTiltRuntimeReady)
+      return
+
+    // 统一在运行时入口设置 3D 上下文，避免调用方样式差异导致的表现不一致。
+    gsap.set(cardRef.value, {
+      transformPerspective: perspective,
+      transformOrigin: 'center',
+      force3D: true,
+    })
+
+    rotateXTo = gsap.quickTo(cardRef.value, 'rotationX', { duration, ease })
+    rotateYTo = gsap.quickTo(cardRef.value, 'rotationY', { duration, ease })
+    yTo = gsap.quickTo(cardRef.value, 'y', { duration, ease })
+    isTiltRuntimeReady = true
+  }
+
+  function teardownTiltRuntime() {
+    cancelScheduledTilt()
+    if (cardRef.value) {
+      // 用户切换为 reduced-motion 时立即归零，避免保留中间倾斜状态影响可读性。
+      gsap.killTweensOf(cardRef.value)
+      gsap.set(cardRef.value, { rotationX: 0, rotationY: 0, y: 0 })
+    }
+
+    rotateXTo = null
+    rotateYTo = null
+    yTo = null
+    isTiltRuntimeReady = false
   }
 
   function onCardPointerEnter() {
@@ -119,35 +159,35 @@ export function usePointerCardTilt(options: UsePointerCardTiltOptions = {}) {
     yTo(0)
   }
 
-  onMounted(() => {
-    prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const isCoarse = window.matchMedia('(pointer: coarse)').matches
+  function updateEnvironmentPreferences() {
+    prefersReducedMotion = prefersReducedMotionQuery.value
+    const isCoarse = isCoarsePointerQuery.value
     tiltIntensity = isCoarse ? coarsePointerTiltScale : 1
     hoverLiftScaled = hoverLift * tiltIntensity
 
-    if (!cardRef.value || prefersReducedMotion)
-      return
+    if (prefersReducedMotion)
+      teardownTiltRuntime()
+    else
+      // 动态开关系统设置后无需重进页面即可恢复交互。
+      setupTiltRuntime()
+  }
 
-    gsap.set(cardRef.value, {
-      transformPerspective: perspective,
-      transformOrigin: 'center',
-      force3D: true,
-    })
+  // 由 VueUse 管理媒体查询监听与释放，watch 只关心业务状态联动。
+  stopEnvironmentWatch = watch(
+    [prefersReducedMotionQuery, isCoarsePointerQuery],
+    updateEnvironmentPreferences,
+    { immediate: true },
+  )
 
-    rotateXTo = gsap.quickTo(cardRef.value, 'rotationX', { duration, ease })
-    rotateYTo = gsap.quickTo(cardRef.value, 'rotationY', { duration, ease })
-    yTo = gsap.quickTo(cardRef.value, 'y', { duration, ease })
+  onMounted(() => {
+    // watch 的 immediate 可能早于元素 ref 挂载，这里在挂载后再同步一次，确保可初始化倾斜运行时。
+    updateEnvironmentPreferences()
   })
 
   onUnmounted(() => {
-    cancelScheduledTilt()
-
-    if (cardRef.value)
-      gsap.killTweensOf(cardRef.value)
-
-    rotateXTo = null
-    rotateYTo = null
-    yTo = null
+    stopEnvironmentWatch?.()
+    stopEnvironmentWatch = null
+    teardownTiltRuntime()
   })
 
   return {
