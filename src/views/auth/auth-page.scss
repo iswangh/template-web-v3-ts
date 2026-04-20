@@ -1,0 +1,48 @@
+.auth-page {
+  --at-apply: relative min-h-100dvh flex items-center justify-center overflow-hidden px-5 py-10;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+
+  &__aurora {
+    --at-apply: pointer-events-none absolute inset--16%;
+    background:
+      radial-gradient(62% 56% at 18% 22%, rgb(134 140 255 / 19%) 0%, rgb(134 140 255 / 7%) 38%, transparent 78%),
+      radial-gradient(50% 46% at 84% 16%, rgb(96 205 255 / 15%) 0%, rgb(96 205 255 / 5%) 34%, transparent 76%),
+      radial-gradient(56% 50% at 74% 86%, rgb(194 157 255 / 13%) 0%, rgb(194 157 255 / 4%) 36%, transparent 78%),
+      linear-gradient(168deg, rgb(244 246 250) 0%, rgb(233 238 245) 52%, rgb(223 232 243) 100%);
+    filter: blur(10px) saturate(1.03);
+    opacity: 0.95;
+  }
+
+  &__mesh {
+    --at-apply: 'pointer-events-none absolute inset-0 opacity-32 mix-blend-multiply bg-[radial-gradient(circle_at_1px_1px,_rgb(15_23_42/7%)_1px,_transparent_1px)] [background-size:16px_16px]';
+  }
+
+  &__main {
+    --at-apply: relative z-1 w-full max-w-102 flex flex-col gap-5;
+  }
+
+  &__card {
+    --at-apply: rounded-6 border border-white/40 bg-white/58 p-8 backdrop-blur-8 backdrop-saturate-165;
+    box-shadow:
+      0 24px 80px rgb(0 0 0 / 12%),
+      0 0 1px rgb(0 0 0 / 6%);
+    transform-origin: center;
+  }
+
+  &__card--interactive {
+    transition: box-shadow 220ms ease;
+    will-change: transform;
+
+    &:hover {
+      box-shadow:
+        0 30px 90px rgb(15 23 42 / 16%),
+        0 0 1px rgb(0 0 0 / 8%);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-page__card--interactive {
+    transition: none;
+  }
+}

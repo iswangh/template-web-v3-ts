@@ -30,6 +30,18 @@ export const whitelistRoutes: RouteRecordRaw[] = [
     },
   },
   {
+    path: '/forgot-password',
+    name: 'ForgotPassword',
+    component: () => import('@/views/auth/forgot-password/index.vue'),
+    meta: {
+      title: '忘记密码',
+      requiresAuth: false,
+      app: 'shared',
+      hidden: true,
+      module: 'auth',
+    },
+  },
+  {
     path: '/404',
     name: 'NotFound',
     component: () => import('@/views/error/404.vue'),

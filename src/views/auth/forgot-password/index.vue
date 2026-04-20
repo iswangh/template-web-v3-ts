@@ -18,29 +18,28 @@ const {
     <main class="auth-page__main">
       <section
         ref="cardRef"
-        aria-labelledby="register-title"
+        aria-labelledby="forgot-password-title"
         class="auth-page__card auth-page__card--interactive"
         @pointerenter="onCardPointerEnter"
         @pointermove="onCardPointerMove"
         @pointerleave="onCardPointerLeave"
       >
         <header class="mb-2 text-center">
-          <h1 id="register-title" class="m-0 text-7 fw-600 tracking--0.03em text-[#1d1d1feb]">
+          <h1 id="forgot-password-title" class="m-0 text-7 fw-600 tracking--0.03em text-[#1d1d1feb]">
             {{ APP_NAME }}
           </h1>
           <p class="mt-2 text-3.75 leading-1.45 tracking--0.01em text-[#3c3c43bf]">
-            创建新账户
+            找回密码
           </p>
         </header>
 
         <p class="m-0 mt-7 text-center text-3.75 leading-1.5 tracking--0.01em text-[#3c3c4399]">
-          注册表单待接入
+          流程待接入；也可联系管理员处理。
         </p>
 
         <footer class="mt-6.5 border-t border-[#3c3c431a] pt-5.5 text-center text-3.5 tracking--0.01em text-[#3c3c438c]">
-          <span class="mr-1.5">已有账户？</span>
           <RouterLink to="/login" class="fw-600 text-[#0a84ff] no-underline hover:underline">
-            登录
+            返回登录
           </RouterLink>
         </footer>
       </section>
