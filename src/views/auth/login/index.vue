@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import type { FormRules } from 'element-plus'
+import type { FormItem } from '@/components/SchemaFormItem/types'
+// eslint-disable-next-line unused-imports/no-unused-imports -- 仅用于下方注释块内的登录模板
 import { Lock, User } from '@element-plus/icons-vue'
+// eslint-disable-next-line unused-imports/no-unused-imports -- 仅用于下方注释块内的登录模板
 import { RouterLink } from 'vue-router'
+import { SchemaFormItem } from '@/components/SchemaFormItem'
 import { APP_NAME } from '@/config'
 
 interface LoginForm {
@@ -9,6 +13,7 @@ interface LoginForm {
   password: string
 }
 
+/* eslint-disable unused-imports/no-unused-vars -- 登录卡片注释期间暂存；恢复模板后删除 */
 const rules: FormRules = {
   username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
@@ -18,6 +23,14 @@ const { form, formRef, submit, loading } = useForm<LoginForm>({
   username: '',
   password: '',
 })
+
+function onSubmit() {
+  submit(async () => {
+    // TODO: 接入登录接口
+  })
+}
+
+/* eslint-enable unused-imports/no-unused-vars */
 
 const {
   cardRef: tiltCardRef,
@@ -36,11 +49,21 @@ const { isDragging: isCardDragging } = useDragPosition({
   targetRef: dragCardRef,
 })
 
-function onSubmit() {
-  submit(async () => {
-    // TODO: 接入登录接口
-  })
-}
+const schemaDemoForm = reactive({
+  demoNote: '',
+})
+
+const schemaDemoFormItem = computed<FormItem>(() => ({
+  prop: 'demoNote',
+  label: 'SchemaFormItem 调试',
+  compType: 'input',
+  compProps: {
+    placeholder: '输入内容验证 v-model',
+  },
+}))
+
+const schemaFormSlots = { formItemSlots: new Map(), dynamicCompSlots: new Map() }
+const schemaDynamicCompEvents: Record<string, (...args: unknown[]) => unknown> = {}
 </script>
 
 <template>
@@ -49,6 +72,8 @@ function onSubmit() {
     <div aria-hidden="true" class="auth-page__mesh" />
 
     <main class="auth-page__main">
+      <!-- 登录卡片（暂时注释，联调 SchemaFormItem 时使用下方 demo 卡片） -->
+      <!--
       <section
         ref="dragCardRef"
         class="auth-page__card-drag-shell auth-page__card--draggable" :class="[
@@ -142,6 +167,51 @@ function onSubmit() {
 
           <p class="m-0 mt-5 text-center text-3 tracking--0.01em text-[#3c3c436b]">
             继续即表示你同意服务条款与隐私说明
+          </p>
+        </div>
+      </section>
+      -->
+
+      <section
+        ref="dragCardRef"
+        class="auth-page__card-drag-shell auth-page__card--draggable"
+        :class="[{ 'auth-page__card--dragging': isCardDragging }]"
+      >
+        <div
+          ref="tiltCardRef"
+          aria-labelledby="schema-demo-title"
+          class="auth-page__card auth-page__card--interactive"
+          @pointerenter="onCardTiltPointerEnter"
+          @pointermove="onCardTiltPointerMove"
+          @pointerleave="onCardTiltPointerLeave"
+        >
+          <header class="mb-2 text-center">
+            <h1 id="schema-demo-title" class="m-0 text-7 fw-600 tracking--0.03em text-[#1d1d1feb]">
+              SchemaFormItem Demo
+            </h1>
+            <p class="text-3.5 tracking--0.01em text-[#3c3c43bf]">
+              {{ APP_NAME }} · 登录卡片已注释，用于本地联调
+            </p>
+          </header>
+
+          <el-form
+            class="login-form"
+            :model="schemaDemoForm"
+            label-position="top"
+            :hide-required-asterisk="true"
+          >
+            <SchemaFormItem
+              v-model="schemaDemoForm.demoNote"
+              :form-item="schemaDemoFormItem"
+              :index="0"
+              :form-data="schemaDemoForm"
+              :dynamic-comp-events="schemaDynamicCompEvents"
+              :form-slots="schemaFormSlots"
+            />
+          </el-form>
+
+          <p class="m-0 mt-5 text-center text-3 tracking--0.01em text-[#3c3c436b]">
+            恢复登录：取消模板中登录卡片的注释，并注释或移除本 demo 区块
           </p>
         </div>
       </section>

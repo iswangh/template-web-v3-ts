@@ -78,21 +78,11 @@ export function useForm<T extends Record<string, any>>(
   /**
    * 验证整个表单
    *
-   * @returns {Promise<boolean>} 验证是否通过
+   * @returns {Promise<void>} 验证是否通过
    */
-  const validate = async (): Promise<boolean> => {
-    if (!formRef.value)
-      return Promise.reject(new Error('Form instance is not available'))
-
-    try {
-      await formRef.value.validate()
-      return true
-    }
-    catch {
-      return false
-    }
+  const validate = async (): Promise<void> => {
+    await formRef.value?.validate()
   }
-
   /**
    * 提交表单
    *
@@ -102,22 +92,8 @@ export function useForm<T extends Record<string, any>>(
    * @returns {Promise<void>}
    */
   const submit = async (handler: SubmitHandler<T>): Promise<void> => {
-    // 验证表单
-    const isValid = await validate()
-    if (!isValid)
-      return
-
-    // 设置加载状态
-    loading.value = true
-
-    try {
-      // 执行提交处理函数
-      await handler(form.value)
-    }
-    finally {
-      // 清除加载状态
-      loading.value = false
-    }
+    await validate()
+    await handler(form.value)
   }
 
   return { form, formRef, loading: readonly(loading), isDirty, set, reset, validate, submit }

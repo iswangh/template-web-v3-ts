@@ -74,4 +74,16 @@ export const whitelistRoutes: RouteRecordRaw[] = [
       hidden: true,
     },
   },
+  {
+    path: '/dev/schema-form-item',
+    name: 'DevSchemaFormItem',
+    component: () => import('@/views/dev/schema-form-item/index.vue'),
+    meta: {
+      title: 'SchemaFormItem 测试',
+      requiresAuth: false,
+      app: 'shared',
+      hidden: true,
+      module: 'dev',
+    },
+  },
 ]

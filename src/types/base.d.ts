@@ -13,3 +13,6 @@ export type Identifier = string | number
  * @template T - 对象值的类型，默认为 unknown
  */
 export type ExtendableObject<T = unknown> = Record<string, T>
+
+/** 允许数组类型 */
+export type Arrayable<T> = T | T[]
