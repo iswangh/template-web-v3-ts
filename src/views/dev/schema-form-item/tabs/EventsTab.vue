@@ -23,13 +23,6 @@ const formItems: FormItem[] = [
   { prop: 'enableNotice', label: '启用通知', compType: 'switch' },
 ]
 
-const dynamicCompEvents = {
-  onFocus: (extended: { prop: string }) => pushEventLog(`统一事件: ${extended.prop} onFocus`),
-  onBlur: (extended: { prop: string }) => pushEventLog(`统一事件: ${extended.prop} onBlur`),
-  onChange: (extended: { prop: string }, value: unknown) =>
-    pushEventLog(`统一事件: ${extended.prop} onChange -> ${String(value ?? '')}`),
-}
-
 const rules: FormRules = {}
 
 function pushEventLog(message: string) {
@@ -38,6 +31,10 @@ function pushEventLog(message: string) {
     eventLogs.value = eventLogs.value.slice(0, 20)
   // eslint-disable-next-line no-console
   console.log('[events-tab]', message)
+}
+
+function onSchemaItemChange(extended: { prop: string }, value: unknown) {
+  pushEventLog(`统一事件: ${extended.prop} onChange -> ${String(value ?? '')}`)
 }
 
 async function onSubmit() {
@@ -70,7 +67,8 @@ function onReset() {
       :form-item="item"
       :index="index"
       :form-data="formData"
-      :dynamic-comp-events="dynamicCompEvents"
+      @change="onSchemaItemChange"
+      @focus="console.log('focus', $event)"
     />
     <ElFormItem>
       <ElButton type="primary" :loading="loading" @click="onSubmit">

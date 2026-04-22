@@ -3,7 +3,7 @@
 import type { Slot } from 'vue'
 import type { FormItem, FormItemEventExtendedParams } from '../types'
 import { ElFormItem } from 'element-plus'
-import { computed, nextTick, useSlots, watch } from 'vue'
+import { computed, nextTick, useAttrs, useSlots, watch } from 'vue'
 import { useChangeEventState } from '../composables'
 import { COMP_DEFAULT_CONFIG, FORM_ITEM_COMP_MAP, FORM_ITEM_EXCLUDED_KEYS } from '../config'
 
@@ -22,7 +22,6 @@ interface Props {
   formItem: FormItem
   index: number
   formData?: Record<string, any>
-  dynamicCompEvents: Record<string, (...args: any[]) => any>
   formSlots?: FormSlots
 }
 
@@ -30,7 +29,11 @@ interface Emits {
   <T extends Record<string, any>, K extends keyof T>(e: 'change', extendedParams: Omit<FormItemEventExtendedParams, 'index'>, value: T[K]): void
 }
 
-defineOptions({ name: 'SchemaFormItem' })
+defineOptions({
+  name: 'SchemaFormItem',
+  // 监听器会在组件内分发：表单项属性给 ElFormItem，事件监听器给动态组件。
+  inheritAttrs: false,
+})
 
 const props = withDefaults(defineProps<Props>(), {
   formData: () => ({}),
@@ -38,7 +41,9 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<Emits>()
+const attrs = useAttrs()
 const vueSlots = useSlots()
+// ElFormItem 自身支持的插槽名；其余插槽视为动态组件插槽（如 prefix/suffix）
 const FORM_ITEM_SLOT_NAMES = ['label', 'error', 'default'] as const
 
 const modelValue = defineModel()
@@ -51,14 +56,47 @@ const formItemProps = computed(() => {
   )
 })
 
+const nonEventAttrs = computed(() => {
+  return Object.fromEntries(
+    Object.entries(attrs).filter(([key]) => !key.startsWith('on')),
+  )
+})
+
+const listenerAttrs = computed(() => {
+  return Object.fromEntries(
+    Object.entries(attrs).filter(([key, value]) => key.startsWith('on') && typeof value === 'function'),
+  )
+})
+
+function normalizeSlots(
+  slots: Record<string, unknown> | undefined,
+  rawSlotNamePrefix: string,
+): ProcessedSlot[] {
+  if (!slots)
+    return []
+
+  const isSlotFn = (slotFn: unknown): slotFn is Slot => typeof slotFn === 'function'
+
+  return Object.entries(slots)
+    .filter(([, slotFn]) => isSlotFn(slotFn))
+    .map(([slotName, slotFn]) => ({
+      rawSlotName: `${rawSlotNamePrefix}-${slotName}`,
+      slotName,
+      slotFn: slotFn as Slot,
+    }))
+}
+
 const formItemSlots = computed(() => {
-  const all = props.formSlots.formItemSlots.get(props.formItem.prop) ?? []
+  const fromProp = props.formSlots.formItemSlots.get(props.formItem.prop) ?? []
+  const fromFormItem = normalizeSlots(props.formItem.slots, `form-item-${props.formItem.prop}`)
+  const all = fromProp.length > 0 ? fromProp : fromFormItem
   return {
     named: all.filter(slot => slot.slotName !== 'default'),
     default: all.find(slot => slot.slotName === 'default'),
   }
 })
 
+// 模板提供的 FormItem 命名插槽（label/error），用于与配置化插槽做冲突裁剪。
 const nativeFormItemSlotNames = computed(() => {
   return Object.entries(vueSlots)
     .filter(([slotName, slotFn]) => FORM_ITEM_SLOT_NAMES.includes(slotName as typeof FORM_ITEM_SLOT_NAMES[number]) && slotName !== 'default' && typeof slotFn === 'function')
@@ -66,6 +104,7 @@ const nativeFormItemSlotNames = computed(() => {
 })
 
 const effectiveConfigFormItemNamedSlots = computed(() => {
+  // 冲突策略：模板插槽优先；同名配置化插槽自动失效，避免重复渲染
   return formItemSlots.value.named.filter(slot => !nativeFormItemSlotNames.value.includes(slot.slotName))
 })
 
@@ -76,15 +115,6 @@ const eventExtendedParams = computed(() => ({
   formItem: props.formItem,
   index: props.index,
 }))
-
-const dynamicEventHandlers = computed(() => {
-  return Object.fromEntries(
-    Object.entries(props.dynamicCompEvents).map(([eventName, handler]) => [
-      eventName,
-      (...args: any[]) => handler(eventExtendedParams.value, ...args),
-    ]),
-  )
-})
 
 const changeEventState = useChangeEventState()
 
@@ -112,16 +142,24 @@ const processedCompProps = computed(() => {
   return {
     ...excludedDefaults,
     ...excludedRestCompProps,
-    ...dynamicEventHandlers.value,
+    // 模板上声明的事件监听器（@focus/@blur/...）透传到动态组件
+    ...listenerAttrs.value,
+    // 配置化事件直接透传到动态组件
     ...compEventHandlers,
   }
 })
 
 function getDynamicCompSlots(prop: string) {
-  const all = props.formSlots.dynamicCompSlots.get(prop) ?? []
+  const fromProp = props.formSlots.dynamicCompSlots.get(prop) ?? []
+  const fromCompProps = normalizeSlots(
+    (props.formItem.compProps as { slots?: Record<string, unknown> } | undefined)?.slots,
+    prop,
+  )
+  const all = fromProp.length > 0 ? fromProp : fromCompProps
   return all.length > 0 ? all : undefined
 }
 
+// 模板提供的动态组件插槽（prefix/suffix 等），用于与配置化动态插槽做冲突裁剪。
 const nativeDynamicSlotNames = computed(() => {
   return Object.entries(vueSlots)
     .filter(([slotName, slotFn]) => !FORM_ITEM_SLOT_NAMES.includes(slotName as typeof FORM_ITEM_SLOT_NAMES[number]) && typeof slotFn === 'function')
@@ -130,6 +168,7 @@ const nativeDynamicSlotNames = computed(() => {
 
 const effectiveConfigDynamicSlots = computed(() => {
   const all = getDynamicCompSlots(props.formItem.prop) ?? []
+  // 冲突策略：模板插槽优先；同名配置化动态插槽自动失效
   return all.filter(slot => !nativeDynamicSlotNames.value.includes(slot.slotName))
 })
 
@@ -145,16 +184,21 @@ watch(
 </script>
 
 <template>
-  <ElFormItem v-bind="formItemProps">
+  <ElFormItem v-bind="{ ...formItemProps, ...nonEventAttrs }">
+    <!-- 1) 配置化 FormItem 命名插槽（已做同名去重：模板同名插槽优先） -->
     <template v-for="(slot, slotIndex) in effectiveConfigFormItemNamedSlots" :key="`${slot.rawSlotName}-${slotIndex}`" #[slot.slotName]="slotProps">
       <span v-if="slot.slotName === 'error'">
         <component :is="slot.slotFn" v-bind="{ value: modelValue, form: formData, formItem, ...slotProps }" />
       </span>
       <component :is="slot.slotFn" v-else v-bind="{ value: modelValue, form: formData, formItem, ...slotProps }" />
     </template>
-    <template v-for="slotName in nativeFormItemSlotNames" :key="`native-form-item-${slotName}`" #[slotName]="slotProps">
+    <!-- 2) 模板传入的 FormItem 命名插槽（label/error），优先级高于配置化同名插槽 -->
+    <template v-for="(slotName, slotIndex) in nativeFormItemSlotNames" :key="`${slotName}-${slotIndex}`" #[slotName]="slotProps">
       <slot :name="slotName" v-bind="{ value: modelValue, form: formData, formItem, ...slotProps }" />
     </template>
+
+    <!-- 3) 组件主体渲染 -->
+    <!-- 3.1 非 custom：渲染动态组件本体，并处理其动态插槽 -->
     <template v-if="formItem.compType !== 'custom'">
       <component
         :is="resolvedComp"
@@ -162,16 +206,22 @@ watch(
         v-model="modelValue"
         @change="onChange"
       >
+        <!-- 3.1.1 配置化动态插槽（已做同名去重：模板同名插槽优先） -->
         <template v-for="(slot, slotIndex) in effectiveConfigDynamicSlots" :key="`${slot.rawSlotName}-${slotIndex}`" #[slot.slotName]="slotProps">
           <component :is="slot.slotFn" v-bind="{ value: modelValue, form: formData, formItem, ...slotProps }" />
         </template>
-        <template v-for="slotName in nativeDynamicSlotNames" :key="`native-dynamic-${slotName}`" #[slotName]="slotProps">
+        <!-- 3.1.2 模板传入的动态插槽（prefix/suffix 等），优先级高于配置化同名插槽 -->
+        <template v-for="(slotName, slotIndex) in nativeDynamicSlotNames" :key="`${slotName}-${slotIndex}`" #[slotName]="slotProps">
           <slot :name="slotName" v-bind="{ value: modelValue, form: formData, formItem, ...slotProps }" />
         </template>
       </component>
     </template>
+
+    <!-- 3.2 custom：主体内容仅由 default 槽位提供 -->
     <template v-else-if="formItem.compType === 'custom'">
+      <!-- 3.2.1 模板 default 槽位优先 -->
       <slot v-if="vueSlots.default" v-bind="{ value: modelValue, form: formData, formItem }" />
+      <!-- 3.2.2 回退到配置化 default 槽位 -->
       <component
         :is="formItemSlots.default?.slotFn"
         v-else-if="formItemSlots.default"

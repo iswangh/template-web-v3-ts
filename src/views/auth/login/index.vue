@@ -63,7 +63,6 @@ const schemaDemoFormItem = computed<FormItem>(() => ({
 }))
 
 const schemaFormSlots = { formItemSlots: new Map(), dynamicCompSlots: new Map() }
-const schemaDynamicCompEvents: Record<string, (...args: unknown[]) => unknown> = {}
 </script>
 
 <template>
@@ -205,7 +204,6 @@ const schemaDynamicCompEvents: Record<string, (...args: unknown[]) => unknown> =
               :form-item="schemaDemoFormItem"
               :index="0"
               :form-data="schemaDemoForm"
-              :dynamic-comp-events="schemaDynamicCompEvents"
               :form-slots="schemaFormSlots"
             />
           </el-form>

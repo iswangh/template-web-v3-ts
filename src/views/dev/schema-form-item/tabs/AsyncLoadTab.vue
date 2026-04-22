@@ -100,7 +100,6 @@ function onReset() {
       :form-item="item"
       :index="index"
       :form-data="formData"
-      :dynamic-comp-events="{}"
     />
     <ElFormItem>
       <ElButton :loading="optionsLoading" @click="loadOptions(['dept', 'post'])">

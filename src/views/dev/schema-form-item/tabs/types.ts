@@ -24,5 +24,4 @@ export interface TabCommonProps {
 export interface TabSchemaProps extends TabCommonProps {
   formItems: FormItem[]
   formSlots?: FormSlots
-  dynamicCompEvents?: Record<string, (...args: unknown[]) => unknown>
 }

@@ -22,9 +22,9 @@ const formItems = ref<FormItem[]>([
     label: '输入框（配置化事件）',
     compType: 'input',
     compProps: {
-      onFocus: () => pushEventLog('配置化事件: input onFocus'),
-      onBlur: () => pushEventLog('配置化事件: input onBlur'),
-      onInput: (value: unknown) => pushEventLog(`配置化事件: input onInput -> ${String(value ?? '')}`),
+      onFocus: (...args: unknown[]) => pushEventLog('input', 'onFocus', args),
+      onBlur: (...args: unknown[]) => pushEventLog('input', 'onBlur', args),
+      onInput: (...args: unknown[]) => pushEventLog('input', 'onInput', args),
     },
   },
   {
@@ -32,19 +32,40 @@ const formItems = ref<FormItem[]>([
     label: '开关（配置化事件）',
     compType: 'switch',
     compProps: {
-      onChange: (value: unknown) => pushEventLog(`配置化事件: switch onChange -> ${String(value ?? '')}`),
+      onChange: (...args: unknown[]) => pushEventLog('switch', 'onChange', args),
     },
   },
 ])
 
 const rules: FormRules = {}
 
-function pushEventLog(message: string) {
-  eventLogs.value.unshift(`${new Date().toLocaleTimeString()} - ${message}`)
+function formatParam(param: unknown): string {
+  if (param instanceof Event)
+    return `${param.constructor.name}(type=${param.type})`
+  if (typeof param === 'string')
+    return `"${param}"`
+  if (typeof param === 'number' || typeof param === 'boolean' || param == null)
+    return String(param)
+  try {
+    return JSON.stringify(param)
+  }
+  catch {
+    return Object.prototype.toString.call(param)
+  }
+}
+
+function pushEventLog(field: string, eventName: string, args: unknown[] = []) {
+  const paramsText = args.length > 0
+    ? args.map((arg, index) => `arg${index}: ${formatParam(arg)}`).join(', ')
+    : '无参数'
+
+  eventLogs.value.unshift(
+    `${new Date().toLocaleTimeString()} - ${field} ${eventName}(${paramsText})`,
+  )
   if (eventLogs.value.length > 20)
     eventLogs.value = eventLogs.value.slice(0, 20)
   // eslint-disable-next-line no-console
-  console.log('[config-events-tab]', message)
+  console.log('[config-events-tab]', { field, eventName, args })
 }
 
 async function onSubmit() {
@@ -77,7 +98,6 @@ function onReset() {
       :form-item="item"
       :index="index"
       :form-data="formData"
-      :dynamic-comp-events="{}"
     />
     <ElFormItem>
       <ElButton type="primary" :loading="loading" @click="onSubmit">

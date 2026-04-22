@@ -61,7 +61,6 @@ function onReset() {
       :form-item="item"
       :index="index"
       :form-data="formData"
-      :dynamic-comp-events="{}"
     />
     <ElFormItem>
       <ElButton type="primary" :loading="loading" @click="onSubmit">

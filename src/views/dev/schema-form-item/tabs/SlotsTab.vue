@@ -58,7 +58,6 @@ function onReset() {
       :form-item="item"
       :index="index"
       :form-data="formData"
-      :dynamic-comp-events="{}"
     >
       <template #label>
         {{ item.compType === 'custom' ? '操作(插槽)' : item.label }}
