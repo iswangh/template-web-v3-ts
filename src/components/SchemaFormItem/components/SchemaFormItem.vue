@@ -1,9 +1,9 @@
 <!-- eslint-disable ts/no-explicit-any -->
 <script setup lang="ts">
 import type { Slot } from 'vue'
-import type { FormItem } from '../types'
+import type { Condition, FormItem } from '../types'
 import { ElFormItem } from 'element-plus'
-import { computed, useAttrs, useSlots } from 'vue'
+import { computed, unref, useAttrs, useSlots } from 'vue'
 import { COMP_DEFAULT_CONFIG, FORM_ITEM_COMP_MAP, FORM_ITEM_EXCLUDED_KEYS } from '../config'
 
 interface ProcessedSlot {
@@ -14,6 +14,7 @@ interface ProcessedSlot {
 
 interface Props {
   formItem: FormItem
+  formData: Record<string, any>
 }
 
 defineOptions({
@@ -136,51 +137,76 @@ const effectiveConfigDynamicSlots = computed(() => {
   // 冲突策略：模板插槽优先；同名配置化动态插槽自动失效
   return all.filter(slot => !nativeDynamicSlotNames.value.includes(slot.slotName))
 })
+
+const conditionContext = computed(() => props.formData)
+
+function evalCondition(rule: Condition | undefined, data: Record<string, unknown>): boolean {
+  const r = unref(rule) as Condition | undefined
+  if (r == null)
+    return true
+  if (typeof r === 'boolean')
+    return r
+  if (typeof r === 'function')
+    return r(data)
+  return true
+}
+
+/** condition → 根级 v-if（为假时不挂载，与表单项卸载语义一致）；支持布尔、函数，以及 ref/computed 包裹的布尔 */
+const shouldMount = computed(() =>
+  evalCondition(props.formItem.condition as Condition | undefined, conditionContext.value),
+)
+
+/** visible → 根级 v-show（为假时仍挂载，仅隐藏）；支持布尔、函数，以及 ref/computed 包裹的布尔 */
+const shouldShow = computed(() =>
+  evalCondition(props.formItem.visible as Condition | undefined, conditionContext.value),
+)
 </script>
 
 <template>
-  <ElFormItem v-bind="{ ...formItemProps, ...nonEventAttrs }">
-    <!-- 1) 配置化 FormItem 命名插槽（已做同名去重：模板同名插槽优先） -->
-    <template v-for="(slot, slotIndex) in effectiveConfigFormItemNamedSlots" :key="`${slot.rawSlotName}-${slotIndex}`" #[slot.slotName]="slotProps">
-      <span v-if="slot.slotName === 'error'">
-        <component :is="slot.slotFn" v-bind="{ value: modelValue, formItem, ...slotProps }" />
-      </span>
-      <component :is="slot.slotFn" v-else v-bind="{ value: modelValue, formItem, ...slotProps }" />
-    </template>
-    <!-- 2) 模板传入的 FormItem 命名插槽（label/error），优先级高于配置化同名插槽 -->
-    <template v-for="(slotName, slotIndex) in nativeFormItemSlotNames" :key="`${slotName}-${slotIndex}`" #[slotName]="slotProps">
-      <slot :name="slotName" v-bind="{ value: modelValue, formItem, ...slotProps }" />
-    </template>
-
-    <!-- 3) 组件主体渲染 -->
-    <!-- 3.1 非 custom：渲染动态组件本体，并处理其动态插槽 -->
-    <template v-if="formItem.compType !== 'custom'">
-      <component
-        :is="resolvedComp"
-        v-bind="processedCompProps"
-        v-model="modelValue"
-      >
-        <!-- 3.1.1 配置化动态插槽（已做同名去重：模板同名插槽优先） -->
-        <template v-for="(slot, slotIndex) in effectiveConfigDynamicSlots" :key="`${slot.rawSlotName}-${slotIndex}`" #[slot.slotName]="slotProps">
+  <template v-if="shouldMount">
+    <ElFormItem v-show="shouldShow" v-bind="{ ...formItemProps, ...nonEventAttrs }">
+      <!-- 1) 配置化 FormItem 命名插槽（已做同名去重：模板同名插槽优先） -->
+      <template v-for="(slot, slotIndex) in effectiveConfigFormItemNamedSlots" :key="`${slot.rawSlotName}-${slotIndex}`" #[slot.slotName]="slotProps">
+        <span v-if="slot.slotName === 'error'">
           <component :is="slot.slotFn" v-bind="{ value: modelValue, formItem, ...slotProps }" />
-        </template>
-        <!-- 3.1.2 模板传入的动态插槽（prefix/suffix 等），优先级高于配置化同名插槽 -->
-        <template v-for="(slotName, slotIndex) in nativeDynamicSlotNames" :key="`${slotName}-${slotIndex}`" #[slotName]="slotProps">
-          <slot :name="slotName" v-bind="{ value: modelValue, formItem, ...slotProps }" />
-        </template>
-      </component>
-    </template>
+        </span>
+        <component :is="slot.slotFn" v-else v-bind="{ value: modelValue, formItem, ...slotProps }" />
+      </template>
+      <!-- 2) 模板传入的 FormItem 命名插槽（label/error），优先级高于配置化同名插槽 -->
+      <template v-for="(slotName, slotIndex) in nativeFormItemSlotNames" :key="`${slotName}-${slotIndex}`" #[slotName]="slotProps">
+        <slot :name="slotName" v-bind="{ value: modelValue, formItem, ...slotProps }" />
+      </template>
 
-    <!-- 3.2 custom：主体内容仅由 default 槽位提供 -->
-    <template v-else-if="formItem.compType === 'custom'">
-      <!-- 3.2.1 模板 default 槽位优先 -->
-      <slot v-if="vueSlots.default" v-bind="{ value: modelValue, formItem }" />
-      <!-- 3.2.2 回退到配置化 default 槽位 -->
-      <component
-        :is="formItemSlots.default?.slotFn"
-        v-else-if="formItemSlots.default"
-        v-bind="{ value: modelValue, formItem }"
-      />
-    </template>
-  </ElFormItem>
+      <!-- 3) 组件主体渲染 -->
+      <!-- 3.1 非 custom：渲染动态组件本体，并处理其动态插槽 -->
+      <template v-if="formItem.compType !== 'custom'">
+        <component
+          :is="resolvedComp"
+          v-bind="processedCompProps"
+          v-model="modelValue"
+        >
+          <!-- 3.1.1 配置化动态插槽（已做同名去重：模板同名插槽优先） -->
+          <template v-for="(slot, slotIndex) in effectiveConfigDynamicSlots" :key="`${slot.rawSlotName}-${slotIndex}`" #[slot.slotName]="slotProps">
+            <component :is="slot.slotFn" v-bind="{ value: modelValue, formItem, ...slotProps }" />
+          </template>
+          <!-- 3.1.2 模板传入的动态插槽（prefix/suffix 等），优先级高于配置化同名插槽 -->
+          <template v-for="(slotName, slotIndex) in nativeDynamicSlotNames" :key="`${slotName}-${slotIndex}`" #[slotName]="slotProps">
+            <slot :name="slotName" v-bind="{ value: modelValue, formItem, ...slotProps }" />
+          </template>
+        </component>
+      </template>
+
+      <!-- 3.2 custom：主体内容仅由 default 槽位提供 -->
+      <template v-else-if="formItem.compType === 'custom'">
+        <!-- 3.2.1 模板 default 槽位优先 -->
+        <slot v-if="vueSlots.default" v-bind="{ value: modelValue, formItem }" />
+        <!-- 3.2.2 回退到配置化 default 槽位 -->
+        <component
+          :is="formItemSlots.default?.slotFn"
+          v-else-if="formItemSlots.default"
+          v-bind="{ value: modelValue, formItem }"
+        />
+      </template>
+    </ElFormItem>
+  </template>
 </template>

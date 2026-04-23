@@ -8,7 +8,6 @@ interface DemoFormData {
 
 const DEFAULT_FORM_DATA: DemoFormData = {
   input: '',
-  actions: '',
 }
 
 const { form: formData, formRef, loading, isDirty, validate, reset } = useForm<DemoFormData>(DEFAULT_FORM_DATA)
@@ -22,11 +21,7 @@ async function onSubmit() {
   console.log('config-slots-submit', { ...formData.value })
 }
 
-function onReset() {
-  reset()
-}
-
-const formItems = ref<FormItem[]>([
+const formItems: FormItem[] = [
   {
     prop: 'input',
     label: '输入框（配置化插槽）',
@@ -50,12 +45,12 @@ const formItems = ref<FormItem[]>([
         const Btn = resolveComponent('ElButton')
         return h('div', { class: 'flex flex-wrap gap-2' }, [
           h(Btn, { type: 'primary', loading: loading.value, onClick: onSubmit }, () => '提交'),
-          h(Btn, { disabled: !isDirty.value, onClick: onReset }, () => '重置'),
+          h(Btn, { disabled: !isDirty.value, onClick: reset }, () => '重置'),
         ])
       },
     },
   },
-])
+]
 </script>
 
 <template>
@@ -65,6 +60,8 @@ const formItems = ref<FormItem[]>([
     :model="formData"
     :rules="rules"
     label-width="96px"
+    scroll-to-error
+    :scroll-into-view-options="{ behavior: 'smooth', block: 'center', inline: 'nearest' }"
     @submit.prevent
   >
     <SchemaFormItem
@@ -72,6 +69,7 @@ const formItems = ref<FormItem[]>([
       :key="item.prop"
       v-model="formData[item.prop]"
       :form-item="item"
+      :form-data="formData"
     />
   </ElForm>
   <pre

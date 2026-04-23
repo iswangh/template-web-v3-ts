@@ -9,7 +9,6 @@ interface DemoFormData {
 const DEFAULT_FORM_DATA: DemoFormData = {
   name: '',
   dept: '',
-  actions: '',
 }
 
 const { form: formData, formRef, loading, isDirty, validate, reset } = useForm<DemoFormData>(DEFAULT_FORM_DATA)
@@ -23,10 +22,6 @@ async function onSubmit() {
   console.log('slots-submit', { ...formData.value })
 }
 
-function onReset() {
-  reset()
-}
-
 const formItems: FormItem[] = [
   { prop: 'name', label: '姓名', compType: 'input' },
   { prop: 'dept', label: '部门', compType: 'select' },
@@ -35,15 +30,6 @@ const formItems: FormItem[] = [
     label: '',
     compType: 'custom',
     class: 'actions-row',
-    slots: {
-      default: () => {
-        const Btn = resolveComponent('ElButton')
-        return h('div', { class: 'flex flex-wrap gap-2' }, [
-          h(Btn, { type: 'primary', loading: loading.value, onClick: onSubmit }, () => '提交'),
-          h(Btn, { disabled: !isDirty.value, onClick: onReset }, () => '重置'),
-        ])
-      },
-    },
   },
 ]
 </script>
@@ -55,6 +41,8 @@ const formItems: FormItem[] = [
     :model="formData"
     :rules="rules"
     label-width="96px"
+    scroll-to-error
+    :scroll-into-view-options="{ behavior: 'smooth', block: 'center', inline: 'nearest' }"
     @submit.prevent
   >
     <SchemaFormItem
@@ -62,9 +50,20 @@ const formItems: FormItem[] = [
       :key="item.prop"
       v-model="formData[item.prop]"
       :form-item="item"
+      :form-data="formData"
     >
       <template #label>
-        {{ item.compType === 'custom' ? '操作(插槽)' : item.label }}
+        {{ item.compType === 'custom' ? '操作(插槽)' : `${item.label}（插槽）` }}
+      </template>
+      <template v-if="item.prop === 'actions'">
+        <div class="flex flex-wrap gap-2">
+          <ElButton type="primary" :loading="loading" @click="onSubmit">
+            提交
+          </ElButton>
+          <ElButton :disabled="!isDirty" @click="() => reset()">
+            重置
+          </ElButton>
+        </div>
       </template>
     </SchemaFormItem>
   </ElForm>

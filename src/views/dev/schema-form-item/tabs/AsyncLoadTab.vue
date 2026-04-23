@@ -10,12 +10,11 @@ interface DemoFormData {
 const DEFAULT_FORM_DATA: DemoFormData = {
   dept: '',
   post: '',
-  actions: '',
 }
 
 const { form: formData, formRef, loading, isDirty, validate, reset } = useForm<DemoFormData>(DEFAULT_FORM_DATA)
 
-const formItems = ref<FormItem[]>([
+const formItems: FormItem[] = [
   {
     prop: 'dept',
     label: '部门',
@@ -48,13 +47,14 @@ const formItems = ref<FormItem[]>([
       },
     },
   },
-])
-const { loading: optionsLoading, loadOptions } = useLoadOptions(formItems.value, formData.value as Record<string, unknown>)
+  { prop: 'actions', label: '', compType: 'custom', class: 'actions-row' },
+]
+const { loading: optionsLoading, loadOptions } = useLoadOptions(formItems, formData.value as Record<string, unknown>)
 
 const rules: FormRules = {}
 
 function clearSelectV2Options() {
-  const selectV2Item = formItems.value.find(item => item.prop === 'post')
+  const selectV2Item = formItems.find(item => item.prop === 'post')
   selectV2Item?.compProps && (selectV2Item.compProps.options = [])
 }
 
@@ -67,9 +67,7 @@ watch(() => formData.value.dept, async (value) => {
   clearSelectV2Options()
 }, { immediate: true })
 
-onMounted(() => {
-  void loadOptions('dept')
-})
+onMounted(() => loadOptions('dept'))
 
 async function onSubmit() {
   await validate()
@@ -77,27 +75,6 @@ async function onSubmit() {
   // eslint-disable-next-line no-console
   console.log('async-submit', { ...formData.value })
 }
-
-function onReset() {
-  reset()
-}
-
-formItems.value.push({
-  prop: 'actions',
-  label: '',
-  compType: 'custom',
-  class: 'actions-row',
-  slots: {
-    default: () => {
-      const Btn = resolveComponent('ElButton')
-      return h('div', { class: 'flex flex-wrap gap-2' }, [
-        h(Btn, { loading: optionsLoading.value, onClick: () => void loadOptions(['dept', 'post']) }, () => '重新加载下拉选项'),
-        h(Btn, { type: 'primary', loading: loading.value, onClick: onSubmit }, () => '提交'),
-        h(Btn, { disabled: !isDirty.value, onClick: onReset }, () => '重置'),
-      ])
-    },
-  },
-})
 </script>
 
 <template>
@@ -107,6 +84,8 @@ formItems.value.push({
     :model="formData"
     :rules="rules"
     label-width="96px"
+    scroll-to-error
+    :scroll-into-view-options="{ behavior: 'smooth', block: 'center', inline: 'nearest' }"
     @submit.prevent
   >
     <SchemaFormItem
@@ -114,7 +93,22 @@ formItems.value.push({
       :key="item.prop"
       v-model="formData[item.prop]"
       :form-item="item"
-    />
+      :form-data="formData"
+    >
+      <template v-if="item.prop === 'actions'">
+        <div class="flex flex-wrap gap-2">
+          <ElButton :loading="optionsLoading" @click="() => void loadOptions(['dept', 'post'])">
+            重新加载下拉选项
+          </ElButton>
+          <ElButton type="primary" :loading="loading" @click="onSubmit">
+            提交
+          </ElButton>
+          <ElButton :disabled="!isDirty" @click="() => reset()">
+            重置
+          </ElButton>
+        </div>
+      </template>
+    </SchemaFormItem>
   </ElForm>
   <pre
     class="mx-auto mt-4 max-h-[min(40vh,280px)] w-full max-w-[820px] overflow-auto rounded-lg border border-[var(--el-border-color-lighter)] bg-[var(--el-fill-color-light)] p-3 font-mono text-xs leading-relaxed tabular-nums"

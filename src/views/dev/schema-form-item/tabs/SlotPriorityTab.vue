@@ -17,10 +17,6 @@ async function onSubmit() {
   ElMessage.success('插槽优先级示例提交')
 }
 
-function onReset() {
-  reset()
-}
-
 const formItems: FormItem[] = [
   {
     prop: 'x',
@@ -35,32 +31,19 @@ const formItems: FormItem[] = [
     label: '',
     compType: 'custom',
     class: 'actions-row',
-    slots: {
-      default: () => {
-        const Btn = resolveComponent('ElButton')
-        return h('div', { class: 'flex flex-wrap gap-2' }, [
-          h(Btn, { type: 'primary', loading: loading.value, onClick: onSubmit }, () => '提交'),
-          h(Btn, { disabled: !isDirty.value, onClick: onReset }, () => '重置'),
-        ])
-      },
-    },
   },
 ]
 </script>
 
 <template>
-  <ElAlert
-    title="同名插槽：模板 #label 优先于 formItem.slots.label"
-    type="info"
-    :closable="false"
-    class="mb-3 w-full max-w-[820px]"
-  />
   <ElForm
     ref="formRef"
     class="mx-auto w-full max-w-[820px]"
     :model="formData"
     :rules="rules"
     label-width="160px"
+    scroll-to-error
+    :scroll-into-view-options="{ behavior: 'smooth', block: 'center', inline: 'nearest' }"
     @submit.prevent
   >
     <SchemaFormItem
@@ -68,9 +51,20 @@ const formItems: FormItem[] = [
       :key="item.prop"
       v-model="formData[item.prop]"
       :form-item="item"
+      :form-data="formData"
     >
       <template v-if="item.prop === 'x'" #label="{ formItem: fi }">
         <span style="color: var(--el-color-primary); font-weight: 600">{{ fi.label }}（模板生效）</span>
+      </template>
+      <template v-if="item.prop === 'actions'">
+        <div class="flex flex-wrap gap-2">
+          <ElButton type="primary" :loading="loading" @click="onSubmit">
+            提交
+          </ElButton>
+          <ElButton :disabled="!isDirty" @click="() => reset()">
+            重置
+          </ElButton>
+        </div>
       </template>
     </SchemaFormItem>
   </ElForm>

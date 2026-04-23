@@ -9,7 +9,6 @@ interface DemoFormData {
 const DEFAULT_FORM_DATA: DemoFormData = {
   input: '',
   switch: false,
-  actions: '',
 }
 
 const { form: formData, formRef, loading, isDirty, validate, reset } = useForm<DemoFormData>(DEFAULT_FORM_DATA)
@@ -32,18 +31,13 @@ function formatParam(param: unknown): string {
   }
 }
 
-function pushEventLog(field: string, eventName: string, args: unknown[] = []) {
-  const paramsText = args.length > 0
-    ? args.map((arg, index) => `arg${index}: ${formatParam(arg)}`).join(', ')
-    : '无参数'
-
-  eventLogs.value.unshift(
-    `${new Date().toLocaleTimeString()} - ${field} ${eventName}(${paramsText})`,
-  )
+function pushEventLog(field: string, eventName: string, payload: unknown = '') {
+  const payloadText = formatParam(payload)
+  eventLogs.value.unshift(`${new Date().toLocaleTimeString()} - ${field} ${eventName} -> ${payloadText}`)
   if (eventLogs.value.length > 20)
     eventLogs.value = eventLogs.value.slice(0, 20)
   // eslint-disable-next-line no-console
-  console.log('[config-events-tab]', { field, eventName, args })
+  console.log('[config-events-tab]', { field, eventName, payload })
 }
 
 async function onSubmit() {
@@ -58,23 +52,31 @@ function onReset() {
   eventLogs.value = []
 }
 
-const formItems = ref<FormItem[]>([
+const formItems: FormItem[] = [
   {
     prop: 'input',
-    label: '输入框（配置化事件）',
+    label: '输入框',
     compType: 'input',
     compProps: {
-      onFocus: (...args: unknown[]) => pushEventLog('input', 'onFocus', args),
-      onBlur: (...args: unknown[]) => pushEventLog('input', 'onBlur', args),
-      onInput: (...args: unknown[]) => pushEventLog('input', 'onInput', args),
+      onFocus: (...args: unknown[]) => pushEventLog('input', 'onFocus', args[0] ?? ''),
+      onBlur: (...args: unknown[]) => pushEventLog('input', 'onBlur', args[0] ?? ''),
+      onChange: (...args: unknown[]) => pushEventLog('input', 'onChange', args[0] ?? ''),
+      onInput: (...args: unknown[]) => pushEventLog('input', 'onInput', args[0] ?? ''),
+      onClear: (...args: unknown[]) => pushEventLog('input', 'onClear', args[0] ?? ''),
+      onKeydown: (...args: unknown[]) => pushEventLog('input', 'onKeydown', args[0] ?? ''),
+      onMouseenter: (...args: unknown[]) => pushEventLog('input', 'onMouseenter', args[0] ?? ''),
+      onMouseleave: (...args: unknown[]) => pushEventLog('input', 'onMouseleave', args[0] ?? ''),
+      onCompositionstart: (...args: unknown[]) => pushEventLog('input', 'onCompositionstart', args[0] ?? ''),
+      onCompositionupdate: (...args: unknown[]) => pushEventLog('input', 'onCompositionupdate', args[0] ?? ''),
+      onCompositionend: (...args: unknown[]) => pushEventLog('input', 'onCompositionend', args[0] ?? ''),
     },
   },
   {
     prop: 'switch',
-    label: '开关（配置化事件）',
+    label: '开关',
     compType: 'switch',
     compProps: {
-      onChange: (...args: unknown[]) => pushEventLog('switch', 'onChange', args),
+      onChange: (...args: unknown[]) => pushEventLog('switch', 'onChange', args[0] ?? ''),
     },
   },
   {
@@ -82,17 +84,8 @@ const formItems = ref<FormItem[]>([
     label: '',
     compType: 'custom',
     class: 'actions-row',
-    slots: {
-      default: () => {
-        const Btn = resolveComponent('ElButton')
-        return h('div', { class: 'flex flex-wrap gap-2' }, [
-          h(Btn, { type: 'primary', loading: loading.value, onClick: onSubmit }, () => '提交'),
-          h(Btn, { disabled: !isDirty.value, onClick: onReset }, () => '重置'),
-        ])
-      },
-    },
   },
-])
+]
 </script>
 
 <template>
@@ -102,6 +95,8 @@ const formItems = ref<FormItem[]>([
     :model="formData"
     :rules="rules"
     label-width="96px"
+    scroll-to-error
+    :scroll-into-view-options="{ behavior: 'smooth', block: 'center', inline: 'nearest' }"
     @submit.prevent
   >
     <SchemaFormItem
@@ -109,17 +104,20 @@ const formItems = ref<FormItem[]>([
       :key="item.prop"
       v-model="formData[item.prop]"
       :form-item="item"
-    />
+      :form-data="formData"
+    >
+      <template v-if="item.prop === 'actions'">
+        <div class="flex flex-wrap gap-2">
+          <ElButton type="primary" :loading="loading" @click="onSubmit">
+            提交
+          </ElButton>
+          <ElButton :disabled="!isDirty" @click="onReset">
+            重置
+          </ElButton>
+        </div>
+      </template>
+    </SchemaFormItem>
   </ElForm>
-  <ElAlert
-    title="事件日志"
-    type="info"
-    :closable="false"
-    class="mx-auto mt-3 w-full max-w-[820px]"
-    role="status"
-    aria-live="polite"
-    aria-atomic="true"
-  />
   <pre
     class="mx-auto mt-3 max-h-[11.25rem] w-full max-w-[820px] overflow-auto rounded-lg border border-[var(--el-border-color-lighter)] bg-[var(--el-fill-color-lighter)] p-3 font-mono text-xs leading-relaxed whitespace-pre-wrap break-words tabular-nums"
   >{{ eventLogs.join('\n') || '暂无事件日志' }}</pre>

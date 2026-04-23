@@ -26,8 +26,8 @@ export type FormItemCompPropsExtended<T extends FormItemComp>
  * @property {T} compType 使用的组件类型
  * @property {FormItemCompPropsExtended<T>} [compProps] 传递给组件的 Props 配置对象（包含事件处理器和插槽，用于动态组件）
  * @property {FormItemSlotsConfig} [slots] FormItem 插槽配置（用于 el-form-item 的插槽）
- * @property {Condition} [condition] 条件渲染控制，支持布尔值或接收表单数据的函数
- * @property {Condition} [visible] 显示/隐藏控制，支持布尔值或接收表单数据的函数
+ * @property {Condition} [condition] 条件渲染控制（SchemaFormItem 内解析为根级 v-if；支持布尔或 `(formData)=>boolean`；函数需配合传入整表 `formData`）
+ * @property {Condition} [visible] 显示/隐藏控制（SchemaFormItem 内解析为根级 v-show；支持布尔或 `(formData)=>boolean`；函数需配合传入整表 `formData`）
  * @property {ElColProps} [colProps] 与 el-col 对齐的布局 props，仅用于配置 JSON 类型提示；表单项组件内部不消费，由外层自行循环渲染栅格
  * @property {Record<string, any>} [meta] 业务扩展数据，组件内部不消费
  *

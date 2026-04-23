@@ -6,6 +6,15 @@ interface DemoFormData {
   [key: string]: unknown
 }
 
+const formItems: FormItem[] = [
+  { prop: 'name', label: '姓名', compType: 'input' },
+  { prop: 'age', label: '年龄', compType: 'input-number', compProps: { min: 0, max: 120 } },
+  { prop: 'enableNotice', label: '启用通知', compType: 'switch' },
+  { prop: 'workload', label: '工作负载', compType: 'slider', compProps: { min: 0, max: 100 } },
+  { prop: 'performanceRate', label: '绩效评分', compType: 'rate' },
+  { prop: 'actions', label: '', compType: 'custom', class: 'actions-row' },
+]
+
 const DEFAULT_FORM_DATA: DemoFormData = {
   name: '',
   age: 18,
@@ -27,19 +36,6 @@ async function onSubmit() {
   // eslint-disable-next-line no-console
   console.log('basic-submit', { ...formData.value })
 }
-
-function onReset() {
-  reset()
-}
-
-const formItems: FormItem[] = [
-  { prop: 'name', label: '姓名', compType: 'input' },
-  { prop: 'age', label: '年龄', compType: 'input-number', compProps: { min: 0, max: 120 } },
-  { prop: 'enableNotice', label: '启用通知', compType: 'switch' },
-  { prop: 'workload', label: '工作负载', compType: 'slider', compProps: { min: 0, max: 100 } },
-  { prop: 'performanceRate', label: '绩效评分', compType: 'rate' },
-  { prop: 'actions', label: '', compType: 'custom', class: 'actions-row' },
-]
 </script>
 
 <template>
@@ -58,13 +54,14 @@ const formItems: FormItem[] = [
       :key="item.prop"
       v-model="formData[item.prop]"
       :form-item="item"
+      :form-data="formData"
     >
       <template v-if="item.prop === 'actions'">
         <div class="flex flex-wrap gap-2">
           <ElButton type="primary" :loading="loading" @click="onSubmit">
             提交
           </ElButton>
-          <ElButton :disabled="!isDirty" @click="onReset">
+          <ElButton :disabled="!isDirty" @click="() => reset()">
             重置
           </ElButton>
         </div>
