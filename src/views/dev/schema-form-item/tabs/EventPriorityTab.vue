@@ -6,37 +6,33 @@ interface DemoFormData {
   [key: string]: unknown
 }
 
-const DEFAULT_FORM_DATA: DemoFormData = {
-  input: '',
-  actions: '',
-}
+const DEFAULT_FORM_DATA: DemoFormData = { x: '', actions: '' }
 
 const { form: formData, formRef, loading, isDirty, validate, reset } = useForm<DemoFormData>(DEFAULT_FORM_DATA)
 
 const rules: FormRules = {}
 
+function onTemplateFocus() {
+  ElMessage.warning('模板 @focus（若未被覆盖则会弹出）')
+}
+
 async function onSubmit() {
   await validate()
-  ElMessage.success('配置化插槽测试提交成功')
-  // eslint-disable-next-line no-console
-  console.log('config-slots-submit', { ...formData.value })
+  ElMessage.success('事件优先级示例提交')
 }
 
 function onReset() {
   reset()
 }
 
-const formItems = ref<FormItem[]>([
+const formItems: FormItem[] = [
   {
-    prop: 'input',
-    label: '输入框（配置化插槽）',
+    prop: 'x',
+    label: '焦点',
     compType: 'input',
-    slots: {
-      label: () => h('span', { style: 'color: var(--el-color-warning); font-weight: 600;' }, '配置化标签'),
-    },
     compProps: {
-      slots: {
-        prefix: () => h('span', { style: 'color: var(--el-color-primary);' }, '@'),
+      onFocus: () => {
+        ElMessage.info('来自 compProps.onFocus（配置化在后，覆盖模板 @focus）')
       },
     },
   },
@@ -55,26 +51,36 @@ const formItems = ref<FormItem[]>([
       },
     },
   },
-])
+]
 </script>
 
 <template>
+  <ElAlert
+    title="同名事件：compProps.onFocus 在合并对象中位于模板监听器之后，会覆盖 @focus"
+    type="info"
+    :closable="false"
+    class="mb-3 w-full max-w-[820px]"
+  />
   <ElForm
     ref="formRef"
     class="mx-auto w-full max-w-[820px]"
     :model="formData"
     :rules="rules"
-    label-width="96px"
+    label-width="120px"
     @submit.prevent
   >
-    <SchemaFormItem
-      v-for="item in formItems"
-      :key="item.prop"
-      v-model="formData[item.prop]"
-      :form-item="item"
-    />
+    <template v-for="item in formItems" :key="item.prop">
+      <SchemaFormItem
+        v-if="item.prop === 'x'"
+        v-model="formData[item.prop]"
+        :form-item="item"
+        @focus="onTemplateFocus"
+      />
+      <SchemaFormItem
+        v-else
+        v-model="formData[item.prop]"
+        :form-item="item"
+      />
+    </template>
   </ElForm>
-  <pre
-    class="mx-auto mt-4 max-h-[min(40vh,280px)] w-full max-w-[820px] overflow-auto rounded-lg border border-[var(--el-border-color-lighter)] bg-[var(--el-fill-color-light)] p-3 font-mono text-xs leading-relaxed tabular-nums"
-  >{{ JSON.stringify(formData, null, 2) }}</pre>
 </template>

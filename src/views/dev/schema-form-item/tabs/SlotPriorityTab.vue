@@ -6,10 +6,7 @@ interface DemoFormData {
   [key: string]: unknown
 }
 
-const DEFAULT_FORM_DATA: DemoFormData = {
-  input: '',
-  actions: '',
-}
+const DEFAULT_FORM_DATA: DemoFormData = { x: '', actions: '' }
 
 const { form: formData, formRef, loading, isDirty, validate, reset } = useForm<DemoFormData>(DEFAULT_FORM_DATA)
 
@@ -17,27 +14,20 @@ const rules: FormRules = {}
 
 async function onSubmit() {
   await validate()
-  ElMessage.success('配置化插槽测试提交成功')
-  // eslint-disable-next-line no-console
-  console.log('config-slots-submit', { ...formData.value })
+  ElMessage.success('插槽优先级示例提交')
 }
 
 function onReset() {
   reset()
 }
 
-const formItems = ref<FormItem[]>([
+const formItems: FormItem[] = [
   {
-    prop: 'input',
-    label: '输入框（配置化插槽）',
+    prop: 'x',
+    label: '配置化 label 文案',
     compType: 'input',
     slots: {
-      label: () => h('span', { style: 'color: var(--el-color-warning); font-weight: 600;' }, '配置化标签'),
-    },
-    compProps: {
-      slots: {
-        prefix: () => h('span', { style: 'color: var(--el-color-primary);' }, '@'),
-      },
+      label: () => h('span', { style: 'color: var(--el-color-warning); font-weight: 600;' }, '配置化 label（应被模板覆盖）'),
     },
   },
   {
@@ -55,16 +45,22 @@ const formItems = ref<FormItem[]>([
       },
     },
   },
-])
+]
 </script>
 
 <template>
+  <ElAlert
+    title="同名插槽：模板 #label 优先于 formItem.slots.label"
+    type="info"
+    :closable="false"
+    class="mb-3 w-full max-w-[820px]"
+  />
   <ElForm
     ref="formRef"
     class="mx-auto w-full max-w-[820px]"
     :model="formData"
     :rules="rules"
-    label-width="96px"
+    label-width="160px"
     @submit.prevent
   >
     <SchemaFormItem
@@ -72,9 +68,10 @@ const formItems = ref<FormItem[]>([
       :key="item.prop"
       v-model="formData[item.prop]"
       :form-item="item"
-    />
+    >
+      <template v-if="item.prop === 'x'" #label="{ formItem: fi }">
+        <span style="color: var(--el-color-primary); font-weight: 600">{{ fi.label }}（模板生效）</span>
+      </template>
+    </SchemaFormItem>
   </ElForm>
-  <pre
-    class="mx-auto mt-4 max-h-[min(40vh,280px)] w-full max-w-[820px] overflow-auto rounded-lg border border-[var(--el-border-color-lighter)] bg-[var(--el-fill-color-light)] p-3 font-mono text-xs leading-relaxed tabular-nums"
-  >{{ JSON.stringify(formData, null, 2) }}</pre>
 </template>

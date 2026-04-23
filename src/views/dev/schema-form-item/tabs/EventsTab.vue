@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import type { FormRules } from 'element-plus'
 import type { FormItem } from '@/components/SchemaFormItem'
-import { SchemaFormItem } from '@/components/SchemaFormItem'
-import { useForm } from '@/composables/form'
 
 interface DemoFormData {
   [key: string]: unknown
@@ -12,16 +10,11 @@ const DEFAULT_FORM_DATA: DemoFormData = {
   name: '',
   age: 18,
   enableNotice: true,
+  actions: '',
 }
 
 const { form: formData, formRef, loading, isDirty, validate, reset } = useForm<DemoFormData>(DEFAULT_FORM_DATA)
 const eventLogs = ref<string[]>([])
-
-const formItems: FormItem[] = [
-  { prop: 'name', label: '姓名', compType: 'input' },
-  { prop: 'age', label: '年龄', compType: 'input-number', compProps: { min: 0, max: 120 } },
-  { prop: 'enableNotice', label: '启用通知', compType: 'switch' },
-]
 
 const rules: FormRules = {}
 
@@ -31,10 +24,6 @@ function pushEventLog(message: string) {
     eventLogs.value = eventLogs.value.slice(0, 20)
   // eslint-disable-next-line no-console
   console.log('[events-tab]', message)
-}
-
-function onSchemaItemChange(extended: { prop: string }, value: unknown) {
-  pushEventLog(`统一事件: ${extended.prop} onChange -> ${String(value ?? '')}`)
 }
 
 async function onSubmit() {
@@ -48,70 +37,66 @@ function onReset() {
   reset()
   eventLogs.value = []
 }
+
+const formItems: FormItem[] = [
+  { prop: 'name', label: '姓名', compType: 'input' },
+  { prop: 'age', label: '年龄', compType: 'input-number', compProps: { min: 0, max: 120 } },
+  { prop: 'enableNotice', label: '启用通知', compType: 'switch' },
+  {
+    prop: 'actions',
+    label: '',
+    compType: 'custom',
+    class: 'actions-row',
+    slots: {
+      default: () => {
+        const Btn = resolveComponent('ElButton')
+        return h('div', { class: 'flex flex-wrap gap-2' }, [
+          h(Btn, { type: 'primary', loading: loading.value, onClick: onSubmit }, () => '提交'),
+          h(Btn, { disabled: !isDirty.value, onClick: onReset }, () => '重置'),
+        ])
+      },
+    },
+  },
+]
 </script>
 
 <template>
   <ElForm
     ref="formRef"
-    :form-data="formData"
+    class="mx-auto w-full max-w-[820px]"
     :model="formData"
     :rules="rules"
     label-width="96px"
-    style="max-width: 820px"
     @submit.prevent
   >
-    <SchemaFormItem
-      v-for="(item, index) in formItems"
-      :key="item.prop"
-      v-model="formData[item.prop]"
-      :form-item="item"
-      :index="index"
-      :form-data="formData"
-      @change="onSchemaItemChange"
-      @focus="console.log('focus', $event)"
-    />
-    <ElFormItem>
-      <ElButton type="primary" :loading="loading" @click="onSubmit">
-        提交
-      </ElButton>
-      <ElButton :disabled="!isDirty" @click="onReset">
-        重置
-      </ElButton>
-    </ElFormItem>
+    <template v-for="item in formItems" :key="item.prop">
+      <SchemaFormItem
+        v-if="item.prop !== 'actions'"
+        v-model="formData[item.prop]"
+        :form-item="item"
+        @change="(v: unknown) => pushEventLog(`${item.prop} onChange -> ${String(v ?? '')}`)"
+        @focus="console.log('focus', $event)"
+      />
+      <SchemaFormItem
+        v-else
+        v-model="formData[item.prop]"
+        :form-item="item"
+      />
+    </template>
   </ElForm>
   <ElAlert
     title="事件日志"
     type="info"
     :closable="false"
-    class="log-alert"
+    class="mx-auto mt-3 w-full max-w-[820px]"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
   />
-  <pre class="event-log">{{ eventLogs.join('\n') || '暂无事件日志' }}</pre>
-  <pre class="preview">{{ JSON.stringify(formData, null, 2) }}</pre>
+  <pre
+    class="mx-auto mt-3 max-h-[11.25rem] w-full max-w-[820px] overflow-auto rounded-lg border border-[var(--el-border-color-lighter)] bg-[var(--el-fill-color-lighter)] p-3 font-mono text-xs leading-relaxed whitespace-pre-wrap break-words tabular-nums"
+  >{{ eventLogs.join('\n') || '暂无事件日志' }}</pre>
+  <pre
+    class="mx-auto mt-4 max-h-[min(40vh,280px)] w-full max-w-[820px] overflow-auto rounded-lg border border-[var(--el-border-color-lighter)] bg-[var(--el-fill-color-light)] p-3 font-mono text-xs leading-relaxed tabular-nums"
+  >{{ JSON.stringify(formData, null, 2) }}</pre>
 </template>
-
-<style lang="scss" scoped>
-.log-alert {
-  margin-top: 12px;
-}
-
-.event-log {
-  margin-top: 8px;
-  padding: 12px;
-  font-size: 12px;
-  line-height: 1.5;
-  max-height: 180px;
-  overflow: auto;
-  background: var(--el-fill-color-lighter);
-  border-radius: 4px;
-}
-
-.preview {
-  margin-top: 16px;
-  padding: 12px;
-  font-size: 12px;
-  line-height: 1.5;
-  background: var(--el-fill-color-light);
-  border-radius: 4px;
-  overflow: auto;
-}
-</style>

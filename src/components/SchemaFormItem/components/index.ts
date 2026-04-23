@@ -1,1 +1,1 @@
-export { default as SchemaFormItem } from './FormItem.vue'
+export { default as SchemaFormItem } from './SchemaFormItem.vue'

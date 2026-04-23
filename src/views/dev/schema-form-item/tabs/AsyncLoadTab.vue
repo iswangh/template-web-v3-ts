@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import type { FormRules } from 'element-plus'
 import type { FormItem } from '@/components/SchemaFormItem'
-import { SchemaFormItem, useLoadOptions } from '@/components/SchemaFormItem'
-import { useForm } from '@/composables/form'
+import { useLoadOptions } from '@/components/SchemaFormItem'
 
 interface DemoFormData {
   [key: string]: unknown
@@ -11,6 +10,7 @@ interface DemoFormData {
 const DEFAULT_FORM_DATA: DemoFormData = {
   dept: '',
   post: '',
+  actions: '',
 }
 
 const { form: formData, formRef, loading, isDirty, validate, reset } = useForm<DemoFormData>(DEFAULT_FORM_DATA)
@@ -81,49 +81,42 @@ async function onSubmit() {
 function onReset() {
   reset()
 }
+
+formItems.value.push({
+  prop: 'actions',
+  label: '',
+  compType: 'custom',
+  class: 'actions-row',
+  slots: {
+    default: () => {
+      const Btn = resolveComponent('ElButton')
+      return h('div', { class: 'flex flex-wrap gap-2' }, [
+        h(Btn, { loading: optionsLoading.value, onClick: () => void loadOptions(['dept', 'post']) }, () => '重新加载下拉选项'),
+        h(Btn, { type: 'primary', loading: loading.value, onClick: onSubmit }, () => '提交'),
+        h(Btn, { disabled: !isDirty.value, onClick: onReset }, () => '重置'),
+      ])
+    },
+  },
+})
 </script>
 
 <template>
   <ElForm
     ref="formRef"
-    :form-data="formData"
+    class="mx-auto w-full max-w-[820px]"
     :model="formData"
     :rules="rules"
     label-width="96px"
-    style="max-width: 820px"
     @submit.prevent
   >
     <SchemaFormItem
-      v-for="(item, index) in formItems"
+      v-for="item in formItems"
       :key="item.prop"
       v-model="formData[item.prop]"
       :form-item="item"
-      :index="index"
-      :form-data="formData"
     />
-    <ElFormItem>
-      <ElButton :loading="optionsLoading" @click="loadOptions(['dept', 'post'])">
-        重新加载下拉选项
-      </ElButton>
-      <ElButton type="primary" :loading="loading" @click="onSubmit">
-        提交
-      </ElButton>
-      <ElButton :disabled="!isDirty" @click="onReset">
-        重置
-      </ElButton>
-    </ElFormItem>
   </ElForm>
-  <pre class="preview">{{ JSON.stringify(formData, null, 2) }}</pre>
+  <pre
+    class="mx-auto mt-4 max-h-[min(40vh,280px)] w-full max-w-[820px] overflow-auto rounded-lg border border-[var(--el-border-color-lighter)] bg-[var(--el-fill-color-light)] p-3 font-mono text-xs leading-relaxed tabular-nums"
+  >{{ JSON.stringify(formData, null, 2) }}</pre>
 </template>
-
-<style lang="scss" scoped>
-.preview {
-  margin-top: 16px;
-  padding: 12px;
-  font-size: 12px;
-  line-height: 1.5;
-  background: var(--el-fill-color-light);
-  border-radius: 4px;
-  overflow: auto;
-}
-</style>

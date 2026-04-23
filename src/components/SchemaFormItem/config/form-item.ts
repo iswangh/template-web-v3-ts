@@ -5,8 +5,8 @@ export const FORM_ITEM_EXCLUDED_KEYS = [
   'compType',
   'compProps',
   'slots',
-  'vIf',
-  'vShow',
+  'condition',
+  'visible',
   'colProps',
   'meta',
 ] as const

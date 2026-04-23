@@ -1,16 +1,5 @@
 import type { FormItem } from '@/components/SchemaFormItem'
 
-export interface ProcessedSlot {
-  rawSlotName: string
-  slotName: string
-  slotFn: (...args: unknown[]) => unknown
-}
-
-export interface FormSlots {
-  formItemSlots: Map<string, ProcessedSlot[]>
-  dynamicCompSlots: Map<string, ProcessedSlot[]>
-}
-
 export interface TabCommonProps {
   formData: Record<string, unknown>
   formRef?: unknown
@@ -23,5 +12,4 @@ export interface TabCommonProps {
 
 export interface TabSchemaProps extends TabCommonProps {
   formItems: FormItem[]
-  formSlots?: FormSlots
 }

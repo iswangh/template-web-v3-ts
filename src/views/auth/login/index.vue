@@ -5,7 +5,6 @@ import type { FormItem } from '@/components/SchemaFormItem/types'
 import { Lock, User } from '@element-plus/icons-vue'
 // eslint-disable-next-line unused-imports/no-unused-imports -- 仅用于下方注释块内的登录模板
 import { RouterLink } from 'vue-router'
-import { SchemaFormItem } from '@/components/SchemaFormItem'
 import { APP_NAME } from '@/config'
 
 interface LoginForm {
@@ -61,8 +60,6 @@ const schemaDemoFormItem = computed<FormItem>(() => ({
     placeholder: '输入内容验证 v-model',
   },
 }))
-
-const schemaFormSlots = { formItemSlots: new Map(), dynamicCompSlots: new Map() }
 </script>
 
 <template>
@@ -202,9 +199,6 @@ const schemaFormSlots = { formItemSlots: new Map(), dynamicCompSlots: new Map() 
             <SchemaFormItem
               v-model="schemaDemoForm.demoNote"
               :form-item="schemaDemoFormItem"
-              :index="0"
-              :form-data="schemaDemoForm"
-              :form-slots="schemaFormSlots"
             />
           </el-form>
 
