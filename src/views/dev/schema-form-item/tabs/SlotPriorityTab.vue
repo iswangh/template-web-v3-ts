@@ -20,7 +20,7 @@ async function onSubmit() {
 const formItems: FormItem[] = [
   {
     prop: 'x',
-    label: '配置化 label 文案',
+    label: '输入框',
     compType: 'input',
     slots: {
       label: () => h('span', { style: 'color: var(--el-color-warning); font-weight: 600;' }, '配置化 label（应被模板覆盖）'),
@@ -53,8 +53,8 @@ const formItems: FormItem[] = [
       :form-item="item"
       :form-data="formData"
     >
-      <template v-if="item.prop === 'x'" #label="{ formItem: fi }">
-        <span style="color: var(--el-color-primary); font-weight: 600">{{ fi.label }}（模板生效）</span>
+      <template v-if="item.prop === 'x'" #label="{ formItem: { label } }">
+        <span style="color: var(--el-color-primary); font-weight: 600">{{ label }}（模板生效）</span>
       </template>
       <template v-if="item.prop === 'actions'">
         <div class="flex flex-wrap gap-2">

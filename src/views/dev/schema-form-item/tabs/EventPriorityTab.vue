@@ -18,7 +18,7 @@ function pushEventLog(message: string) {
   if (eventLogs.value.length > 20)
     eventLogs.value = eventLogs.value.slice(0, 20)
   // eslint-disable-next-line no-console
-  console.log('[event-priority-tab]', message)
+  console.log(message)
 }
 
 function logFieldEvent(field: string, eventName: string, payload?: unknown) {

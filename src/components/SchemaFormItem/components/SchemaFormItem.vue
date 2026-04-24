@@ -110,10 +110,9 @@ const processedCompProps = computed(() => {
   return {
     ...excludedDefaults,
     ...excludedRestCompProps,
-    // 模板上声明的事件监听器（@focus/@blur/...）透传到动态组件
-    ...listenerAttrs.value,
-    // 配置化事件直接透传到动态组件
+    // 配置化 compProps.onXxx 先铺底；模板上 @xxx 后合并，同名时模板事件优先
     ...compEventHandlers,
+    ...listenerAttrs.value,
   }
 })
 
