@@ -40,7 +40,7 @@ const formItems: FormItem[] = [
     class="mx-auto w-full max-w-[820px]"
     :model="formData"
     :rules="rules"
-    label-width="96px"
+    label-width="150px"
     scroll-to-error
     :scroll-into-view-options="{ behavior: 'smooth', block: 'center', inline: 'nearest' }"
     @submit.prevent
@@ -53,7 +53,7 @@ const formItems: FormItem[] = [
       :form-data="formData"
     >
       <template #label>
-        {{ item.compType === 'custom' ? '操作(插槽)' : `${item.label}（插槽）` }}
+        {{ item.compType === 'custom' ? '操作(模板插槽)' : `${item.label}（模板插槽）` }}
       </template>
       <template v-if="item.prop === 'actions'">
         <div class="flex flex-wrap gap-2">

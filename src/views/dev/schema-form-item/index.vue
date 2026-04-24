@@ -14,10 +14,10 @@ const tabItems = [
   { name: 'basic', label: '基础', component: BasicTab },
   { name: 'visibility', label: '显隐', component: ShowHideTab },
   { name: 'async', label: 'useLoadOptions', component: AsyncLoadTab },
-  { name: 'slots', label: '插槽', component: SlotsTab },
+  { name: 'slots', label: '模板插槽', component: SlotsTab },
   { name: 'config-slots', label: '配置化插槽', component: ConfigSlotsTab },
   { name: 'slot-priority', label: '插槽优先级', component: SlotPriorityTab },
-  { name: 'events', label: '事件', component: EventsTab },
+  { name: 'events', label: '模板事件', component: EventsTab },
   { name: 'config-events', label: '配置化事件', component: ConfigEventsTab },
   { name: 'event-priority', label: '事件优先级', component: EventPriorityTab },
 ] as const satisfies readonly { name: string, label: string, component: Component }[]

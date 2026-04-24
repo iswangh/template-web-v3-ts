@@ -27,7 +27,7 @@ const formItems: FormItem[] = [
     label: '输入框（配置化插槽）',
     compType: 'input',
     slots: {
-      label: () => h('span', { style: 'color: var(--el-color-warning); font-weight: 600;' }, '配置化标签'),
+      label: () => h('span', { style: 'color: var(--el-color-warning); font-weight: 600;' }, '配置化插槽'),
     },
     compProps: {
       slots: {
