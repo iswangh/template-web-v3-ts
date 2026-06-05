@@ -8,11 +8,11 @@
 
 ```vue
 <script setup lang="ts">
-import type { FormItem } from '@/components/SchemaFormItem'
+import type { FormItems } from '@/components/SchemaFormItem'
 
 const formData = ref({ username: '', role: '' })
 
-const schema: FormItem[] = [
+const schema: FormItems = [
   {
     prop: 'username',
     label: '用户名',
@@ -41,6 +41,8 @@ const schema: FormItem[] = [
 ```
 
 `SchemaFormItem` 位于 `src/components/`，由 unplugin-vue-components 自动注册。
+
+配置数组请使用 `FormItems`（判别联合），以便按 `compType` 收窄后 `compProps` 有对应 Element Plus 组件的属性提示；勿用 `FormItem[]`。也可写 `] satisfies FormItems` 保留字面量推断。
 
 ## 核心 Props
 

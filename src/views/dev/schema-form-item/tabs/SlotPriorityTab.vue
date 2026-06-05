@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormRules } from 'element-plus'
-import type { FormItem } from '@/components/SchemaFormItem'
+import type { FormItems } from '@/components/SchemaFormItem'
 
 interface DemoFormData {
   [key: string]: unknown
@@ -17,7 +17,7 @@ async function onSubmit() {
   ElMessage.success('插槽优先级示例提交')
 }
 
-const formItems: FormItem[] = [
+const formItems: FormItems = [
   {
     prop: 'x',
     label: '输入框',

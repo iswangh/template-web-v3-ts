@@ -244,8 +244,10 @@ interface FormItemSlotScope {
 
 ```vue
 <script setup lang="ts">
+import type { FormItems } from '@/components/SchemaFormItem'
+
 const { form, formRef, validate, reset } = useForm({ ... })
-const formItems: FormItem[] = [ ... ]
+const formItems: FormItems = [ ... ]
 </script>
 
 <template>

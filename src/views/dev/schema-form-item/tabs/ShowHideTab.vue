@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { FormRules } from 'element-plus'
-import type { FormItem } from '@/components/SchemaFormItem'
+import type { FormItems } from '@/components/SchemaFormItem'
 
 interface DemoFormData {
   [key: string]: unknown
 }
 
 /** mountA / showB 与 A/B 均由同一套 formItems + SchemaFormItem 遍历渲染 */
-const formItems: FormItem[] = [
+const formItems: FormItems = [
   {
     prop: 'mountA',
     label: '挂载字段 A',

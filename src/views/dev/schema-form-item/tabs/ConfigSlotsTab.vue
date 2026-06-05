@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormRules } from 'element-plus'
-import type { FormItem } from '@/components/SchemaFormItem'
+import type { FormItems } from '@/components/SchemaFormItem'
 
 interface DemoFormData {
   [key: string]: unknown
@@ -21,7 +21,7 @@ async function onSubmit() {
   console.log('config-slots-submit', { ...formData.value })
 }
 
-const formItems: FormItem[] = [
+const formItems: FormItems = [
   {
     prop: 'input',
     label: '输入框（配置化插槽）',

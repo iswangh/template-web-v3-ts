@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormRules } from 'element-plus'
-import type { FormItem } from '@/components/SchemaFormItem'
+import type { FormItems } from '@/components/SchemaFormItem'
 import { useLoadOptions } from '@/components/SchemaFormItem'
 
 interface DemoFormData {
@@ -48,7 +48,7 @@ const formItems = reactive([
     },
   },
   { prop: 'actions', label: '', compType: 'custom', class: 'actions-row' },
-]) as FormItem[]
+]) as FormItems
 const { loading: optionsLoading, loadOptions } = useLoadOptions(formItems, formData.value as Record<string, unknown>)
 
 const rules: FormRules = {}

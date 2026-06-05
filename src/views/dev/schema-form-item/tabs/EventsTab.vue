@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormRules } from 'element-plus'
-import type { FormItem } from '@/components/SchemaFormItem'
+import type { FormItems } from '@/components/SchemaFormItem'
 
 interface DemoFormData {
   [key: string]: unknown
@@ -46,7 +46,7 @@ function onReset() {
   eventLogs.value = []
 }
 
-const formItems: FormItem[] = [
+const formItems: FormItems = [
   { prop: 'name', label: '姓名', compType: 'input' },
   { prop: 'age', label: '年龄', compType: 'input-number', compProps: { min: 0, max: 120 } },
   { prop: 'enableNotice', label: '启用通知', compType: 'switch' },

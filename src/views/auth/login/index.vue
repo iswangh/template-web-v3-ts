@@ -153,6 +153,11 @@ const { isDragging: isCardDragging } = useDragPosition({
         </div>
       </section>
     </main>
+    <footer class="auth-page__footer">
+      <RouterLink to="/dev/schema-form-item" class="text-[#0a84ff] no-underline hover:underline">
+        SchemaFormItem
+      </RouterLink>
+    </footer>
   </div>
 </template>
 
