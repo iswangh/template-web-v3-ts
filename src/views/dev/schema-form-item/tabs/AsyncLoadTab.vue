@@ -14,7 +14,7 @@ const DEFAULT_FORM_DATA: DemoFormData = {
 
 const { form: formData, formRef, loading, isDirty, validate, reset } = useForm<DemoFormData>(DEFAULT_FORM_DATA)
 
-const formItems: FormItem[] = [
+const formItems = reactive([
   {
     prop: 'dept',
     label: '部门',
@@ -48,7 +48,7 @@ const formItems: FormItem[] = [
     },
   },
   { prop: 'actions', label: '', compType: 'custom', class: 'actions-row' },
-]
+]) as FormItem[]
 const { loading: optionsLoading, loadOptions } = useLoadOptions(formItems, formData.value as Record<string, unknown>)
 
 const rules: FormRules = {}

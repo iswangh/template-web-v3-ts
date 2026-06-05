@@ -63,4 +63,42 @@ describe('useForm', () => {
     expect(validate).toHaveBeenCalledOnce()
     expect(handler).toHaveBeenCalledWith({ username: 'admin', password: 'secret' })
   })
+
+  it('submit skips handler when validation fails', async () => {
+    const { formRef, submit } = useForm<SampleForm>({ username: '', password: '' })
+
+    const validate = vi.fn().mockRejectedValue(new Error('validation failed'))
+    formRef.value = { validate } as unknown as FormInstance
+
+    const handler = vi.fn()
+    await expect(submit(handler)).rejects.toThrow('validation failed')
+    expect(handler).not.toHaveBeenCalled()
+  })
+
+  it('accepts function defaultData', () => {
+    const { form } = useForm<SampleForm>(() => ({ username: 'dynamic', password: 'pwd' }))
+
+    expect(form.value).toEqual({ username: 'dynamic', password: 'pwd' })
+  })
+
+  it('isDirty becomes false after reset restores defaults', () => {
+    const { set, reset, isDirty } = useForm<SampleForm>({ username: 'admin', password: '' })
+
+    set({ username: 'changed' })
+    expect(isDirty.value).toBe(true)
+
+    reset()
+    expect(isDirty.value).toBe(false)
+  })
+
+  it('validate calls formRef.validate directly', async () => {
+    const { formRef, validate } = useForm<SampleForm>({ username: 'admin', password: '' })
+
+    const validateFn = vi.fn().mockResolvedValue(undefined)
+    formRef.value = { validate: validateFn } as unknown as FormInstance
+
+    await validate()
+
+    expect(validateFn).toHaveBeenCalledOnce()
+  })
 })
