@@ -26,7 +26,14 @@ Vitest 与 TypeScript 配置会同时匹配 `*.test.ts` 与 `*.spec.ts`，以便
 
 - **目录**：`e2e/`
 - **命名**：按业务域划分，`e2e/<domain>.spec.ts`
-- **示例**：`e2e/auth.spec.ts`、`e2e/schema-form-item.spec.ts`
+- **配置**：`playwright.config.ts`
+
+### 现有用例
+
+| 文件 | 覆盖域 |
+|------|--------|
+| `e2e/auth.spec.ts` | 登录、注册等认证流程 |
+| `e2e/schema-form-item.spec.ts` | SchemaFormItem 开发页交互 |
 
 E2E 由 Playwright 独立运行，不在 Vitest 的 `include` 范围内。
 

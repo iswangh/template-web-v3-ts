@@ -11,6 +11,11 @@
 
 ### 文档列表
 
+- [多环境配置](./guides/environment.md)
+- [国际化（vue-i18n）](./guides/i18n.md)
+- [HTTP 请求层](./guides/request.md)
+- [路由与鉴权](./guides/routing.md)
+- [Mock 数据](./guides/mock.md)
 - [测试约定](./guides/testing.md)
 
 ## Architecture（架构）
@@ -22,7 +27,10 @@
 
 ### 文档列表
 
-- [表单项 compType / 运行映射 / 手写类型维护说明](./architecture/schema-form-item-comp-type.md)
+- [SchemaFormItem 架构设计](./architecture/schema-form-item.md)
+- [useForm 架构设计](./architecture/use-form.md) — `src/composables/form/`
+- [useDragPosition 架构设计](./architecture/use-drag-position.md) — `src/composables/interactions/`
+- [usePointerCardTilt 架构设计](./architecture/use-pointer-card-tilt.md) — `src/composables/interactions/`
 
 ## Components（组件）
 
@@ -33,7 +41,7 @@
 
 ### 文档列表
 
-> 待补充
+- [SchemaFormItem](./components/schema-form-item.md)
 
 ## Reference（参考）
 
@@ -44,7 +52,7 @@
 
 ### 文档列表
 
-> 待补充
+- [环境变量速查](./reference/env-variables.md)
 
 ## Features（功能）
 
