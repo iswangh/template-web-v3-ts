@@ -80,8 +80,6 @@ nr test:e2e
 nr test:run
 ```
 
-命名约定与脚本说明详见 [docs/testing.md](./docs/testing.md)。
-
 ## ✨ 技术特性
 
 ### 核心框架

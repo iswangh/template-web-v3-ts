@@ -1,2 +1,2 @@
-export * from './configs'
+export * from './config'
 export * from './utils'

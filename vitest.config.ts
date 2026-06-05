@@ -2,7 +2,7 @@
  * @file Vitest 单元测试配置文件
  *
  * 继承 vite.config.ts（别名、插件、自动导入等与开发/构建一致），仅追加 test 段。
- * 用例约定见 docs/testing.md；E2E 由 Playwright 负责，不在此运行。
+ * 用例约定见 docs/guides/testing.md；E2E 由 Playwright 负责，不在此运行。
  *
  * @see {@link https://vitest.dev/ Vitest 官方网站}
  * @see {@link https://cn.vitest.dev/ Vitest 中文文档}
