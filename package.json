@@ -24,7 +24,9 @@
     "lint:fix": "eslint . --fix",
     "eslint:inspect": "eslint-config-inspector --config ./eslint.config.js",
     "test:unit": "vitest",
-    "test:e2e": "playwright test"
+    "test:unit:run": "vitest run",
+    "test:e2e": "playwright test",
+    "test:run": "pnpm run test:unit:run && pnpm run test:e2e"
   },
   "dependencies": {
     "@alova/adapter-axios": "^2.0.18",

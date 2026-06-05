@@ -1,4 +1,5 @@
 /// <reference types="vite/client" />
+/// <reference types="pinia-plugin-persistedstate" />
 
 interface ImportMetaEnv {
   // 应用环境配置

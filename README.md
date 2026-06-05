@@ -67,12 +67,20 @@ nr eslint:inspect
 ### 测试
 
 ```bash
-# 单元测试（基于 Vitest）
+# 单元测试（Vitest，watch 模式 — 改代码自动重跑）
 nr test:unit
 
-# E2E 端到端测试（基于 Playwright）
+# 单元测试（跑一遍 — CI / 提交前快速自检）
+nr test:unit:run
+
+# E2E（Playwright，跑一遍）
 nr test:e2e
+
+# 单元 + E2E 全量跑一遍（发版 / CI 门禁）
+nr test:run
 ```
+
+命名约定与脚本说明详见 [docs/testing.md](./docs/testing.md)。
 
 ## ✨ 技术特性
 
@@ -167,12 +175,13 @@ src/
 ├── mock/           # 模拟数据
 ├── router/         # 路由配置
 ├── stores/         # 状态管理
-├── tests/          # 测试相关
 ├── types/          # 类型定义
 ├── utils/          # 工具函数
 ├── views/          # 页面组件
 ├── App.vue         # 根组件
 └── main.ts         # 入口文件
+
+e2e/                # Playwright E2E（按业务域命名 *.spec.ts）
 ```
 
 ## ⚠️ 注意事项

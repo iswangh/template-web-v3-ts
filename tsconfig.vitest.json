@@ -5,6 +5,10 @@
     "lib": [],
     "types": ["node", "jsdom"]
   },
-  "include": ["src/**/__tests__/*", "src/types/env.d.ts"],
+  "include": [
+    "src/**/*.{test,spec}.{ts,tsx}",
+    "src/types/env.d.ts",
+    "src/types/auto-imports.d.ts"
+  ],
   "exclude": []
 }
