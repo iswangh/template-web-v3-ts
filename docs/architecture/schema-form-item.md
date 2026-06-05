@@ -298,7 +298,6 @@ SchemaFormItem **不会** 监听 `optionsLoader` 或自动请求。
 | 模板 attrs 非事件不透传至内层控件 | 仅 `on*` 进入 `processedCompProps` |
 | `useAutoExpandOnHover` | 与 SchemaFormItem 渲染无关，仅为同包导出 |
 | `date-picker-panel` / `color-picker-panel` | 已在映射表与类型中注册，开发页未单独示例 |
-| `scope.d.ts` 路径 | 类型文件中 `@/FormItem` 为历史路径别名，运行时以 `SchemaFormItem/types` 为准 |
 
 ## 相关文档与代码
 

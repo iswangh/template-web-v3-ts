@@ -1,8 +1,8 @@
 /* eslint-disable ts/no-explicit-any */
 import type { VNode } from 'vue'
-import type { FormItemComp, FormItemCompSlots } from '../../FormItem/types/comp'
-import type { ElFormItemSlots } from '../../FormItem/types/el'
-import type { FormItem } from '../../FormItem/types/form-item'
+import type { FormItemComp, FormItemCompSlots } from './comp'
+import type { ElFormItemSlots } from './el'
+import type { FormItem } from './form-item'
 
 /**
  * 表单项插槽作用域参数
