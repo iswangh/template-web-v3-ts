@@ -2,7 +2,7 @@
 
 本文说明 `src/components/SchemaFormItem/` 的整体设计：模块边界、数据模型、渲染流程、属性/事件/插槽优先级，以及与 Element Plus、`useForm` 的协作方式。
 
-用法与 API 示例见 [components/schema-form-item.md](../components/schema-form-item.md)；`compType` 运行映射与手写类型的维护策略见 [schema-form-item-comp-type.md](./schema-form-item-comp-type.md)。
+用法与 API 示例见 [components/schema-form-item.md](../components/schema-form-item.md)。`compType` 运行映射、手写类型与扩展步骤见本文 [compType 映射与类型体系](#comptype-映射与类型体系) 一节。
 
 ## 设计目标与职责边界
 
@@ -24,6 +24,7 @@
 | 事件透传 | 配置化 `on*` 与模板 `@*` 合并到内层控件 |
 | 类型导出 | `FormItem`、`FormItems`、`FormItemComp` 等 |
 | 异步选项辅助 | 导出 `useLoadOptions`（由调用方显式触发加载） |
+| 配套 composable | 与 schema 表单场景配套的辅助能力（如 `useAutoExpandOnHover`），统一从本目录 `index.ts` 导出 |
 
 ### 不负责
 
@@ -46,7 +47,7 @@ SchemaFormItem/
 │   └── form-item.ts          # FORM_ITEM_EXCLUDED_KEYS（不透传给 el-form-item 的 schema 字段）
 ├── composables/
 │   ├── useLoadOptions.ts     # 按 prop 批量执行 optionsLoader，写回 compProps.options
-│   └── useAutoExpandOnHover.ts  # 通用交互 composable，与表单项渲染无耦合（同目录导出）
+│   └── useAutoExpandOnHover.ts  # 表单场景配套交互（如行内筛选区悬停展开），与 SchemaFormItem 同包导出
 ├── styles/
 │   └── el.ts                 # 按需引入 el-form-item 与各 compType 对应 EP 样式
 └── types/
@@ -61,10 +62,12 @@ SchemaFormItem/
 ### 分工原则
 
 - **`config/`** — 运行时真相源：`compType` 字符串 → Vue 组件；默认 props 生成规则。
-- **`types/`** — 编译期真相源：与 `config/comp.ts` **手动同步**（避免 TS 序列化超限，详见 comp-type 文档）。
-- **`composables/`** — 横切能力：`useLoadOptions` 与 schema 配置配合；`useAutoExpandOnHover` 为独立工具，未在 `SchemaFormItem.vue` 中使用。
+- **`types/`** — 编译期真相源：与 `config/comp.ts` **手动同步**（原因见下文 [为何手写类型](#为何手写类型)）。
+- **`composables/`** — schema 表单配套能力；**不拆到其他目录**，统一经 `index.ts` 与组件一并对外。
 - **`components/`** — 只做渲染编排，不包含业务 API 请求。
 - **`styles/`** — 因动态组件无法被 unplugin-vue-components 静态分析，在此集中引入 EP 子组件样式。
+
+`src/components/SchemaFormItem/` 视为**一个配套模块**：组件、类型、config、styles、composables 同属该能力域，调用方从 `@/components/SchemaFormItem` 按需引入即可。
 
 ## 核心数据模型
 
@@ -222,21 +225,47 @@ interface FormItemSlotScope {
 
 ## compType 映射与类型体系
 
-- **运行映射**：`config/comp.ts` → `EL_COMP_MAP` + `EXPAND_COMP_MAP`（含 `custom`）→ `FORM_ITEM_COMP_MAP`。
-- **类型映射**：`types/comp.d.ts` → `FormItemComp` 联合类型、`FormItemCompProps<T>` 等，与运行映射 **手动同步**。
+### 双轨真源
 
-未注册 `compType` 时：`resolvedComp` 回退为 `'div'`，页面不崩溃但无输入能力。
+| 轨道 | 文件 | 内容 |
+|------|------|------|
+| 运行期 | `config/comp.ts` | `EL_COMP_MAP`、`EXPAND_COMP_MAP` → `FORM_ITEM_COMP_MAP` |
+| 编译期 | `types/comp.d.ts` | `ElCompMap`、`FormItemComp` 联合类型、`FormItemCompProps<T>` 等 |
 
-详细维护原因、同步清单与编译器限制见 [schema-form-item-comp-type.md](./schema-form-item-comp-type.md)。
+未注册 `compType` 时：`resolvedComp` 回退为 `'div'`，页面不崩溃但无输入能力（开发期应在映射表补全）。
 
-## 扩展新 compType
+### 为何手写类型
+
+`FORM_ITEM_COMP_MAP` 在运行期使用 `Record<string, any>` 注解，避免从巨大对象字面量做 `typeof` 推断时触发 **TypeScript 类型实例化过深 / 序列化超限**。因此：
+
+- **不能**从 `typeof FORM_ITEM_COMP_MAP` 自动提取 `FormItemComp` 或 props 类型；
+- **需要**在 `types/comp.d.ts` 手工维护与 `comp.ts` **同名、同键** 的类型映射；
+- props / 插槽提示通过 `InstanceType<FormCompConfig[T]>['$props' | '$slots']` 从 Element Plus 组件类型推导。
+
+配置数组应使用 **`FormItems`**（判别联合），以便 `compType` 收窄后 `compProps` / `compProps.slots` 有对应组件的属性与插槽键名提示；勿用 `FormItem[]`。
+
+### 类型推导链（简要）
+
+```
+compType: 'input'
+  → FormItem<'input'>
+  → compProps: FormItemCompPropsExtended<'input'>
+  → FormItemCompProps<'input'> = InstanceType<typeof ElInput>['$props']
+  → compProps.slots: CompSlotsConfig<'input'> = keyof ElInput 插槽
+```
+
+根级 `formItem.slots` 固定为 `FormItemSlotsConfig`（`el-form-item` 层，不随 `compType` 变化）。
+
+### 扩展新 compType
 
 1. 在 `config/comp.ts` 的 `EL_COMP_MAP`（或 `EXPAND_COMP_MAP`）增加 `compType → 组件`。
-2. 在 `types/comp.d.ts` 的 `ElCompMap` / `FormItemComp` 联合类型中增加同名键。
-3. 若属于 input/select/picker 分类，在 `COMP_DEFAULT_CONFIG.getCompType` 中归类以继承 placeholder 规则；否则归入 `other`。
+2. 在 `types/comp.d.ts` 的 `ElCompMap` / `ExpandCompMap` / `FormItemComp` 联合类型中增加**同名键**。
+3. 若属于 input / select / picker 分类，在 `COMP_DEFAULT_CONFIG.getCompType` 中归类以继承 `placeholder` 等规则；否则归入 `other`。
 4. 在 `styles/el.ts` 增加对应 EP 组件样式 import（保证按需样式完整）。
 5. 在 `/dev/schema-form-item` 增加或可覆盖的示例 Tab 中验证 props / 插槽 / 事件。
-6. 若组件 props 含 `options`，`HasOptionsProp` 会自动允许 `optionsLoader` 类型扩展。
+6. 若组件 props 含 `options`，`HasOptionsProp` 会自动允许 `compProps.optionsLoader` 类型扩展。
+
+**变更检查**：改 `comp.ts` 后必须同步 `comp.d.ts`，否则运行期可渲染但 IDE 无提示或类型校验不一致。
 
 ## 与 useForm / Element Plus 的协作
 
@@ -296,7 +325,6 @@ SchemaFormItem **不会** 监听 `optionsLoader` 或自动请求。
 | `optionsLoader` 非响应式触发 | 必须手动调用 `useLoadOptions` 或 watch 联动 |
 | 未知 `compType` 静默降级 | 渲染 `div`，无开发期 warning |
 | 模板 attrs 非事件不透传至内层控件 | 仅 `on*` 进入 `processedCompProps` |
-| `useAutoExpandOnHover` | 与 SchemaFormItem 渲染无关，仅为同包导出 |
 | `date-picker-panel` / `color-picker-panel` | 已在映射表与类型中注册，开发页未单独示例 |
 
 ## 相关文档与代码
@@ -304,6 +332,6 @@ SchemaFormItem **不会** 监听 `optionsLoader` 或自动请求。
 | 资源 | 路径 |
 |------|------|
 | 用法与 API | [components/schema-form-item.md](../components/schema-form-item.md) |
-| compType 类型维护 | [schema-form-item-comp-type.md](./schema-form-item-comp-type.md) |
+| 架构与 compType 维护 | 本文 |
 | 开发联调页 | `/dev/schema-form-item` → `src/views/dev/schema-form-item/` |
 | E2E | `e2e/schema-form-item.spec.ts` |

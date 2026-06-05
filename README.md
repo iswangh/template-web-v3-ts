@@ -217,8 +217,7 @@ src/
 | Mock 数据 | [guides/mock.md](./docs/guides/mock.md) |
 | 测试约定 | [guides/testing.md](./docs/guides/testing.md) |
 | SchemaFormItem 组件 | [components/schema-form-item.md](./docs/components/schema-form-item.md) |
-| SchemaFormItem 架构设计 | [architecture/schema-form-item.md](./docs/architecture/schema-form-item.md) |
-| compType 类型维护 | [architecture/schema-form-item-comp-type.md](./docs/architecture/schema-form-item-comp-type.md) |
+| SchemaFormItem 架构（含 compType 类型维护） | [architecture/schema-form-item.md](./docs/architecture/schema-form-item.md) |
 
 ## ⚠️ 注意事项
 

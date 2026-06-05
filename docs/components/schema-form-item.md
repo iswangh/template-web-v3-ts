@@ -90,9 +90,7 @@ SchemaFormItem 导出，用于异步加载表单项 options。
 
 ## 类型与扩展
 
-新增 `compType` 时需同时维护运行映射与手写类型，扩展步骤见 [architecture/schema-form-item.md](../architecture/schema-form-item.md#扩展新-comptype)。
-
-详细决策与边界见 [architecture/schema-form-item-comp-type.md](../architecture/schema-form-item-comp-type.md)。
+`src/components/SchemaFormItem/` 为配套模块（组件、types、config、composables、styles 统一从此目录导出）。新增 `compType` 时需同时维护运行映射与手写类型，步骤与类型推导说明见 [architecture/schema-form-item.md](../architecture/schema-form-item.md#comptype-映射与类型体系)。
 
 ## 目录结构
 
